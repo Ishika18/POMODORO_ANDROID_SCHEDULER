@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/textView_monthName"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:text="October" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_1"
+            android:tag="tag_textView_dateCell_1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_2"
+            android:tag="tag_textView_dateCell_2"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_3"
+            android:tag="tag_textView_dateCell_3"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_4"
+            android:tag="tag_textView_dateCell_4"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_5"
+            android:tag="tag_textView_dateCell_5"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_6"
+            android:tag="tag_textView_dateCell_6"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_7"
+            android:tag="tag_textView_dateCell_7"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_8"
+            android:tag="tag_textView_dateCell_8"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_9"
+            android:tag="tag_textView_dateCell_9"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_10"
+            android:tag="tag_textView_dateCell_10"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_11"
+            android:tag="tag_textView_dateCell_11"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_12"
+            android:tag="tag_textView_dateCell_12"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_13"
+            android:tag="tag_textView_dateCell_13"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_14"
+            android:tag="tag_textView_dateCell_14"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_15"
+            android:tag="tag_textView_dateCell_15"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_16"
+            android:tag="tag_textView_dateCell_16"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_17"
+            android:tag="tag_textView_dateCell_17"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_18"
+            android:tag="tag_textView_dateCell_18"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_19"
+            android:tag="tag_textView_dateCell_19"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_20"
+            android:tag="tag_textView_dateCell_20"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_21"
+            android:tag="tag_textView_dateCell_21"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_22"
+            android:tag="tag_textView_dateCell_22"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_23"
+            android:tag="tag_textView_dateCell_23"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_24"
+            android:tag="tag_textView_dateCell_24"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_25"
+            android:tag="tag_textView_dateCell_25"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_26"
+            android:tag="tag_textView_dateCell_26"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_27"
+            android:tag="tag_textView_dateCell_27"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_28"
+            android:tag="tag_textView_dateCell_28"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_29"
+            android:tag="tag_textView_dateCell_29"
+            
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_30"
+            android:tag="tag_textView_dateCell_30"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_31"
+            android:tag="tag_textView_dateCell_31"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_32"
+            android:tag="tag_textView_dateCell_32"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_33"
+            android:tag="tag_textView_dateCell_33"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_34"
+            android:tag="tag_textView_dateCell_34"
+            android:layout_weight="1"
+            
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_35"
+            android:tag="tag_textView_dateCell_35"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_36"
+            android:tag="tag_textView_dateCell_36"
+
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/textView_dateCell_37"
+            android:tag="tag_textView_dateCell_37"
+
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_38"
+            android:tag="tag_textView_dateCell_38"
+            android:layout_weight="1"
+
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_39"
+            android:tag="tag_textView_dateCell_39"
+            android:layout_weight="1"
+
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_40"
+            android:tag="tag_textView_dateCell_40"
+            android:layout_weight="1"
+
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_41"
+            android:tag="tag_textView_dateCell_41"
+            android:layout_weight="1"
+
+            android:textSize="20sp"
+            android:textColor="@color/black">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_dateCell_42"
+            android:tag="tag_textView_dateCell_42"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/grey">
+        </TextView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</LinearLayout>
