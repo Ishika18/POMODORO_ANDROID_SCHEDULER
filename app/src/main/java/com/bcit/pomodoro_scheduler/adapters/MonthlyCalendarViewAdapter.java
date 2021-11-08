@@ -1,5 +1,8 @@
 package com.bcit.pomodoro_scheduler.adapters;
 
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bcit.pomodoro_scheduler.R;
 
 import java.time.YearMonth;
-import java.util.Locale;
 
 
 public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCalendarViewAdapter.ViewHolder> {
@@ -74,10 +76,28 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
 
-        for (int i = startOfMonth; i < endOfMonth; i++) {
+        for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
-            String text = Integer. toString(date);;
-            dateCells[i].setText(text);
+            String text = Integer. toString(date);
+            SpannableString spannableString=  new SpannableString(text);
+
+            if (date < 10) {
+                text = "0" + text;
+                spannableString=  new SpannableString(text);
+                spannableString.setSpan(
+                        new ForegroundColorSpan(Color.WHITE), 0, 1, 0
+                );
+            }
+
+            if (i < startOfMonth || i >= endOfMonth) {
+                text = "00";
+                spannableString=  new SpannableString(text);
+                spannableString.setSpan(
+                        new ForegroundColorSpan(Color.WHITE), 0, 2, 0
+                );
+            }
+
+            dateCells[i].setText(spannableString);
         }
     }
 
