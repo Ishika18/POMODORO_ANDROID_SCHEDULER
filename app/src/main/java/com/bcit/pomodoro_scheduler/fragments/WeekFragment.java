@@ -2,13 +2,19 @@ package com.bcit.pomodoro_scheduler.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.weeklyView.WeekAdapter;
+import com.bcit.pomodoro_scheduler.weeklyView.WeekViewDateItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +54,11 @@ public class WeekFragment extends Fragment {
         return fragment;
     }
 
+    public static WeekFragment newInstance() {
+        WeekFragment fragment = new WeekFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,5 +73,29 @@ public class WeekFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_week, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentWeek_days);
+            setUpRecyclerView(mockWeekItems(4), rv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUpRecyclerView(WeekViewDateItem[] data, RecyclerView rv) {
+        WeekAdapter adapter = new WeekAdapter(data);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.HORIZONTAL, false));
+    }
+
+    private WeekViewDateItem[] mockWeekItems(int weeks) {
+        WeekViewDateItem[] items = new WeekViewDateItem[weeks * 7];
+        String[] days = new String[]{"Mo", "Tu", "We", "Thu", "Fr", "Sa", "Su"};
+        for (int i = 0; i < weeks * 7; i++) items[i] = new WeekViewDateItem(days[i % 6], i + 1);
+        return items;
     }
 }
