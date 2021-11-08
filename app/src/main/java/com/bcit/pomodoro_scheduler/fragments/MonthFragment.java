@@ -69,20 +69,17 @@ public class MonthFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
+        setUpRecyclerView(getYearMonths(year), recyclerView);
+    }
+
+    private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView recyclerView) {
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         // define an adapter
-        MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(getYearMonths(year));
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView rv) {
         MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(yearMonths);
-        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(llm);
+        recyclerView.setAdapter(adapter);
     }
 
     private YearMonth[] getYearMonths(Year year) {
