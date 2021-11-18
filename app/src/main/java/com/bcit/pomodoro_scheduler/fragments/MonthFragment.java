@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.MonthlyCalendarViewAdapter;
 
+import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
 
@@ -26,9 +27,10 @@ import java.time.YearMonth;
 public class MonthFragment extends Fragment {
 
 
-    private static final String YEAR = "year";
+    private static final String YEAR_MONTH = "yearMonth";
 
     private Year year;
+    private Month month;
 
     public MonthFragment() {
         // Required empty public constructor
@@ -41,10 +43,10 @@ public class MonthFragment extends Fragment {
      * @param yearMonth YearMonth object
      * @return A new instance of fragment MonthFragment.
      */
-    public static MonthFragment newInstance(Year yearMonth) {
+    public static MonthFragment newInstance(YearMonth yearMonth) {
         MonthFragment fragment = new MonthFragment();
         Bundle args = new Bundle();
-        args.putSerializable(YEAR, yearMonth);
+        args.putSerializable(YEAR_MONTH, yearMonth);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +56,9 @@ public class MonthFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.year = (Year) getArguments().getSerializable(YEAR);
+            YearMonth yearMonth = (YearMonth) getArguments().getSerializable(YEAR_MONTH);
+            this.year = Year.of(yearMonth.getYear());
+            this.month = yearMonth.getMonth();
         }
     }
 
@@ -75,6 +79,7 @@ public class MonthFragment extends Fragment {
     private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView recyclerView) {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.scrollToPosition(this.month.getValue());
         recyclerView.setLayoutManager(layoutManager);
 
         // define an adapter
