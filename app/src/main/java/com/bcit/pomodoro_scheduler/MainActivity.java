@@ -1,15 +1,14 @@
 package com.bcit.pomodoro_scheduler;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
+import com.bcit.pomodoro_scheduler.goals.FirebaseDB;
+import com.bcit.pomodoro_scheduler.goals.Goal;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -17,8 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-
-import java.time.YearMonth;
+import com.google.firebase.Timestamp;
 
 /**
  * This is where the login logic will go.
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
+            // The Goal returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
@@ -115,6 +113,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CalendarActivity.class);
         intent.putExtra(GOOGLE_ACCOUNT, account);
         startActivity(intent);
-        Log.w("LogIn", "Worked " + account.getEmail());
+
+        FirebaseDB firebaseDB = new FirebaseDB();
+        Goal goal = new Goal(
+                "task1",
+                "title",
+                "location",
+                40,
+                Timestamp.now(),
+                "high",
+                "url",
+                "notes"
+        );
+        firebaseDB.addOrUpdateTask("testEmail", goal);
+        Log.w("LogIn", "Worked " +
+                account.getEmail() + " " + account.getId() + " " + account.getIdToken());
+    }
+
+    public void logOut() {
+        mGoogleSignInClient.signOut();
     }
 }
