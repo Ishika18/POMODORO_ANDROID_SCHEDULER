@@ -1,10 +1,15 @@
 package com.bcit.pomodoro_scheduler.model;
 
+import java.util.Objects;
+
 public abstract class ScheduleEvent  {
+    // Currently decided with creation timestamp as Event ID
+    private String id;
     private String name;
     private String location;
 
-    public ScheduleEvent(String name, String location) {
+    public ScheduleEvent(String id, String name, String location) {
+        this.id = id;
         this.name = name;
         this.location = location;
     }
@@ -23,5 +28,27 @@ public abstract class ScheduleEvent  {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScheduleEvent that = (ScheduleEvent) o;
+        return getId().equals(that.getId()) && getName().equals(that.getName())
+                && Objects.equals(getLocation(), that.getLocation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getLocation());
     }
 }
