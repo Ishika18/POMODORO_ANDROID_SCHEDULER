@@ -5,26 +5,34 @@ import java.sql.Timestamp;
 
 public class Goal extends ScheduleEvent implements Serializable {
 
-    private int totalTime;
+    private String notes;
+    private int totalTimeInMinutes;
     private Timestamp deadline;
-    private Repeat repeat;
     private Priority priority;
 
-    public Goal(String name, String location, int totalTime, Timestamp deadline, Repeat repeat,
-                Priority priority) {
+    public Goal(String name, String location, String notes, int totalTimeInMinutes,
+                Timestamp deadline, Priority priority) {
         super(name, location);
-        this.totalTime = totalTime;
+        this.notes = notes;
+        this.totalTimeInMinutes = totalTimeInMinutes;
         this.deadline = deadline;
-        this.repeat = repeat;
         this.priority = priority;
     }
 
-    public int getTotalTime() {
-        return totalTime;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setTotalTime(int totalTime) {
-        this.totalTime = totalTime;
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public int getTotalTimeInMinutes() {
+        return totalTimeInMinutes;
+    }
+
+    public void setTotalTimeInMinutes(int totalTimeInMinutes) {
+        this.totalTimeInMinutes = totalTimeInMinutes;
     }
 
     public Timestamp getDeadline() {
@@ -33,14 +41,6 @@ public class Goal extends ScheduleEvent implements Serializable {
 
     public void setDeadline(Timestamp deadline) {
         this.deadline = deadline;
-    }
-
-    public Repeat getRepeat() {
-        return repeat;
-    }
-
-    public void setRepeat(Repeat repeat) {
-        this.repeat = repeat;
     }
 
     public Priority getPriority() {
