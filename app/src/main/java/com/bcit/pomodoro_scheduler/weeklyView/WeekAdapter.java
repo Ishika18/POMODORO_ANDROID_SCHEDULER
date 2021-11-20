@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 
 public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
 
-    private WeekViewDateItem[] localDataSet;
+    private LocalDate[] localDataSet;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -44,7 +48,7 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
      * @param dataSet String[] containing the data to populate views to be used
      *                by RecyclerView.
      */
-    public WeekAdapter(WeekViewDateItem[] dataSet) {
+    public WeekAdapter(LocalDate[] dataSet) {
         localDataSet = dataSet;
     }
 
@@ -64,8 +68,8 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getDayNum().setText(Integer.toString(localDataSet[position].getDayNum()));
-        viewHolder.getDayStr().setText(localDataSet[position].getDayStr());
+        viewHolder.getDayNum().setText(Integer.toString(localDataSet[position].getDayOfMonth()));
+        viewHolder.getDayStr().setText(localDataSet[position].getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.US));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

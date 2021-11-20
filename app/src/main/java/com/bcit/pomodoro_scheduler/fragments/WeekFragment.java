@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,11 @@ import android.view.ViewGroup;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.weeklyView.WeekAdapter;
 import com.bcit.pomodoro_scheduler.weeklyView.WeekViewDateItem;
+import androidx.fragment.app.FragmentTransaction;
+
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,22 +86,27 @@ public class WeekFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentWeek_days);
-            setUpRecyclerView(mockWeekItems(4), rv);
+            setUpRecyclerView(mockWeekItems(Year.of(2021).atMonth(11)), rv);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setUpRecyclerView(WeekViewDateItem[] data, RecyclerView rv) {
+    private void setUpRecyclerView(LocalDate[] data, RecyclerView rv) {
         WeekAdapter adapter = new WeekAdapter(data);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.HORIZONTAL, false));
     }
 
-    private WeekViewDateItem[] mockWeekItems(int weeks) {
-        WeekViewDateItem[] items = new WeekViewDateItem[weeks * 7];
-        String[] days = new String[]{"Mo", "Tu", "We", "Thu", "Fr", "Sa", "Su"};
-        for (int i = 0; i < weeks * 7; i++) items[i] = new WeekViewDateItem(days[i % 6], i + 1);
+    private LocalDate[] mockWeekItems(YearMonth month) {
+        LocalDate[] items = new LocalDate[month.lengthOfMonth()];
+        for (int i = 0; i < month.lengthOfMonth(); i++) items[i] = month.atDay(i + 1);
         return items;
+    }
+
+    public void swapDayFragment() {
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentContainerView_fragmentWeek_Day, DayFragment.newInstance());
+        ft.commit();
     }
 }
