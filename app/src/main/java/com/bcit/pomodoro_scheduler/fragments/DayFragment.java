@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
 
+import java.time.LocalDate;
+import java.time.Year;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DayFragment#newInstance} factory method to
@@ -19,12 +22,8 @@ public class DayFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String DAY = "day";
+    private LocalDate date;
 
     public DayFragment() {
         // Required empty public constructor
@@ -37,9 +36,10 @@ public class DayFragment extends Fragment {
      * @return A new instance of fragment DayFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DayFragment newInstance() {
+    public static DayFragment newInstance(LocalDate date) {
         DayFragment fragment = new DayFragment();
         Bundle args = new Bundle();
+        args.putSerializable(DAY, date);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,9 +48,11 @@ public class DayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.date = (LocalDate) getArguments().getSerializable(DAY);
+            this.date = this.date == null ? LocalDate.now() : this.date;
         }
+        if (this.date != null)
+            System.out.println(this.date.toString());
     }
 
     @Override

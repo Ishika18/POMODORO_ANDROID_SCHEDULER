@@ -93,7 +93,7 @@ public class WeekFragment extends Fragment {
     }
 
     private void setUpRecyclerView(LocalDate[] data, RecyclerView rv) {
-        WeekAdapter adapter = new WeekAdapter(data);
+        WeekAdapter adapter = new WeekAdapter(data, this);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.HORIZONTAL, false));
     }
@@ -104,9 +104,9 @@ public class WeekFragment extends Fragment {
         return items;
     }
 
-    public void swapDayFragment() {
+    public void swapDayFragment(LocalDate date) {
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_fragmentWeek_Day, DayFragment.newInstance());
+        ft.replace(R.id.fragmentContainerView_fragmentWeek_Day, DayFragment.newInstance(date));
         ft.commit();
     }
 }
