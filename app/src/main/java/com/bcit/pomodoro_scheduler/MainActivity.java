@@ -8,7 +8,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.bcit.pomodoro_scheduler.goals.FirebaseDB;
-import com.bcit.pomodoro_scheduler.goals.Goal;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Priority;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 "location",
                 40,
                 Timestamp.now(),
-                "high",
+                Priority.HIGH,
                 "url",
                 "notes"
         );

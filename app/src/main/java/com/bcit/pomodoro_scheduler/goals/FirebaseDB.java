@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.bcit.pomodoro_scheduler.model.Goal;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,11 +42,11 @@ public class FirebaseDB {
         HashMap<String, Object> task = new HashMap<>();
         HashMap<String, Object> taskDescription = new HashMap<>();
         taskDescription.put("id", goal.getId());
-        taskDescription.put("title", goal.getTitle());
+        taskDescription.put("name", goal.getName());
         taskDescription.put("location", goal.getLocation());
-        taskDescription.put("taskTimeInMinutes", goal.getTaskTimeInMinutes());
+        taskDescription.put("totalTimeInMinutes", goal.getTotalTimeInMinutes());
         taskDescription.put("deadline", goal.getDeadline());
-        taskDescription.put("priority", goal.getPriority());
+        taskDescription.put("priority", goal.getPriority().name());
         taskDescription.put("url", goal.getUrl());
         taskDescription.put("notes", goal.getNotes());
         task.put(goal.getId(), taskDescription);
@@ -60,7 +61,7 @@ public class FirebaseDB {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("Sucess", document.getId() + " => " + document.getData());
+                                Log.d("Success", document.getId() + " => " + document.getData());
                             }
                         } else {
                             Log.w("Fail", "Error getting documents.", task.getException());
