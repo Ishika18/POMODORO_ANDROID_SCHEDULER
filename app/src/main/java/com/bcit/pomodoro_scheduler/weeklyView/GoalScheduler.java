@@ -17,7 +17,7 @@ public class GoalScheduler {
     }
 
     private void setGoals(ArrayList<GoalDataForScheduler> goals) {
-        Collections.sort(goals);
+        Collections.sort(goals, Collections.reverseOrder());
         separatePriorities(goals);
     }
 
@@ -73,14 +73,14 @@ public class GoalScheduler {
         l = rand.nextInt(20) + 5;
         m = rand.nextInt(20) + 5;
         ArrayList<GoalDataForScheduler> goals = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            goals.add(new GoalDataForScheduler("id", "low " + i, Priority.LOW, rand.nextInt(20) + 2, rand.nextInt(500) + 10, 50));
+        for (int i = 0; i < 10; i++) {
+            goals.add(new GoalDataForScheduler("id", "low " + i, Priority.LOW, i + 1, 150, 50));
         }
-        for (int i = 0; i < m; i++) {
-            goals.add(new GoalDataForScheduler("id", "medium " + i, Priority.MEDIUM, rand.nextInt(20) + 2, rand.nextInt(500) + 10, 50));
+        for (int i = 0; i < 10; i++) {
+            goals.add(new GoalDataForScheduler("id", "medium " + i, Priority.MEDIUM, i + 1, 150, 50));
         }
-        for (int i = 0; i < h; i++) {
-            goals.add(new GoalDataForScheduler("id", "high " + i, Priority.HIGH, rand.nextInt(20) + 2, rand.nextInt(500) + 10, 50));
+        for (int i = 0; i < 10; i++) {
+            goals.add(new GoalDataForScheduler("id", "high " + i, Priority.HIGH, i + 1, 150, 50));
         }
         GoalScheduler scheduler = new GoalScheduler(goals);
         ArrayList<GoalDataForDisplay> schedule =  scheduler.getGoalSchedule();
