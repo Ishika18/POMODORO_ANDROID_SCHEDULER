@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -18,6 +19,10 @@ import java.util.HashMap;
 
 public class FirebaseDB {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    public void deleteGoal(String userEmail, String goalID) {
+
+    }
 
     public void addOrUpdateTask(String userEmail, Goal goal) {
         HashMap<String, Object> task = createTaskObject(goal);
@@ -54,17 +59,16 @@ public class FirebaseDB {
     }
 
     public void getUsersTasks(String userEmail) {
-        db.collection("users")
+        db.collection("users").document(userEmail)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("Success", document.getId() + " => " + document.getData());
-                            }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d("USER_TASKS", "DocumentSnapshot data: " + document.getData());
                         } else {
-                            Log.w("Fail", "Error getting documents.", task.getException());
+                            Log.d("ERROR", "No such user");
                         }
                     }
                 });

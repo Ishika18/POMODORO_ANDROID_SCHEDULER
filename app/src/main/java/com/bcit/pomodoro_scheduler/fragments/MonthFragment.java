@@ -5,19 +5,24 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.MonthlyCalendarViewAdapter;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +77,13 @@ public class MonthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        GoalsViewModel goalsViewModel = new GoalsViewModel("shagunphw@gmail.com");
+        goalsViewModel.getGoalsModelData().observe(getViewLifecycleOwner(), goals -> {
+            // do whatever you want with the goals
+            Log.d("CHANGED", "goals should be updated");
+            Log.d("GOALS", goals.toString());
+        });
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
         setUpRecyclerView(getYearMonths(year), recyclerView);
     }
@@ -94,5 +106,4 @@ public class MonthFragment extends Fragment {
         }
         return yearMonths;
     }
-
 }

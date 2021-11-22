@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setUpGoogleSign();
-        checkForExistingUser();
         setUpSignInBtn();
+        checkForExistingUser();
     }
 
     @Override
@@ -112,23 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
         // for now just go to monthly view
         Intent intent = new Intent(this, CalendarActivity.class);
-        intent.putExtra(GOOGLE_ACCOUNT, account);
+        intent.putExtra(GOOGLE_ACCOUNT, account.getEmail());
         startActivity(intent);
-
-        FirebaseDB firebaseDB = new FirebaseDB();
-        Goal goal = new Goal(
-                "task1",
-                "title",
-                "location",
-                40,
-                Timestamp.now(),
-                Priority.HIGH,
-                "url",
-                "notes"
-        );
-        firebaseDB.addOrUpdateTask("testEmail", goal);
-        Log.w("LogIn", "Worked " +
-                account.getEmail() + " " + account.getId() + " " + account.getIdToken());
     }
 
     public void logOut() {
