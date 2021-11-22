@@ -21,7 +21,6 @@
         android:layout_width="35sp"
         android:layout_height="35sp"
         android:layout_margin="7sp"
-        android:background="@drawable/item_week__circle_background_small"
         android:text="8"
         android:textAlignment="center"
         android:textSize="24sp" />
