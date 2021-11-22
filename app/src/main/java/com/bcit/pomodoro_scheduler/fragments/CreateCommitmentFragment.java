@@ -10,15 +10,20 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.format.DateFormat;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TimePicker;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +74,36 @@ public class CreateCommitmentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Button startTimeDate = view.findViewById(R.id.button_commitment_startTime_date);
+        Button endTimeDate = view.findViewById(R.id.button_commitment_endTime_date);
+        Button startTimeTime = view.findViewById(R.id.button_commitment_startTime_time);
+        Button endTimeTime = view.findViewById(R.id.button_commitment_endTime_time);
 
+        startTimeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
+                        .datePicker()
+                        .setTitleText("Select Start Date")
+                        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                        .build();
+
+                datePicker.addOnPositiveButtonClickListener(selection -> {
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    calendar.setTimeInMillis(selection);
+
+                    String date = calendar.get(Calendar.DAY_OF_MONTH) +
+                            "-" +
+                            calendar.get(Calendar.MONTH) +
+                            "-" +
+                            calendar.get(Calendar.YEAR);
+
+                    startTimeDate.setText(date);
+                });
+
+                datePicker.show(
+                        requireActivity().getSupportFragmentManager(), datePicker.toString());
+            }
+        });
     }
 }
