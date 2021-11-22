@@ -78,20 +78,6 @@ public class MonthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        GoalsViewModel goalsViewModel = new GoalsViewModel("shagunphw@gmail.com");
-        goalsViewModel.getGoalsModelData().observe(getViewLifecycleOwner(), goals -> {
-            // do whatever you want with the goals
-            Log.d("CHANGED", "goals should be updated");
-            Log.d("GOALS", goals.toString());
-        });
-
-        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel("userEmail");
-        commitmentsViewModel.getCommitmentsModelData()
-                .observe(getViewLifecycleOwner(), commitmentsMap -> {
-            // do whatever you want with the commitments
-            Log.d("CHANGED", "commitments should be updated");
-            Log.d("COMMITMENTS", commitmentsMap.toString());
-        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
         setUpRecyclerView(getYearMonths(year), recyclerView);
