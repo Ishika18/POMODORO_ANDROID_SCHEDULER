@@ -2,45 +2,52 @@ package com.bcit.pomodoro_scheduler.repositories;
 
 import androidx.annotation.NonNull;
 
+import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
+import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class GoalRepository {
+public class CommitmentRepository {
 
     private final OnFirestoreTaskComplete onFirestoreTaskComplete;
 
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private final CollectionReference taskRef = firebaseFirestore.collection("tasks");
+    private final CollectionReference taskRef = firebaseFirestore
+            .collection("commitments");
 
-    public GoalRepository(OnFirestoreTaskComplete onFirestoreTaskComplete) {
+    public CommitmentRepository(OnFirestoreTaskComplete onFirestoreTaskComplete) {
         this.onFirestoreTaskComplete = onFirestoreTaskComplete;
     }
 
-    public void getGoalsData(String userEmail){
+    public void getCommitmentsData(String userEmail){
         taskRef.document(userEmail).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<Goal> goals = new ArrayList<>();
+                HashMap<Repeat, List<Commitment>> commitmentRepeats = getCommitmentRepeatHashmap();
+
 
                 Map<String, Object> map = documentSnapshot.getData();
                 if (map != null) {
                     for (Map.Entry<String, Object> entry : map.entrySet()) {
                         HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
-                        goals.add(getGoalFromDocumentMap(result));
+                        Repeat repeat = Repeat.valueOf((String) result.get("repeat"));
+                        Objects.requireNonNull(commitmentRepeats.get(repeat)).
+                                add(getCommitmentFromDocumentMap(result));
                     }
-                    onFirestoreTaskComplete.goalsDataAdded(goals);
+                    onFirestoreTaskComplete.commitmentsDataAdded(commitmentRepeats);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -51,21 +58,27 @@ public class GoalRepository {
         });
     };
 
-    private Goal getGoalFromDocumentMap(HashMap<String, Object> result) {
-        return new Goal (
+    private HashMap<Repeat, List<Commitment>> getCommitmentRepeatHashmap() {
+        HashMap<Repeat, List<Commitment>> commitmentRepeats = new HashMap<>();
+        for (Repeat repeat: Repeat.values()) {
+            commitmentRepeats.put(repeat, new ArrayList<>());
+        }
+        return commitmentRepeats;
+    }
+
+    private Commitment getCommitmentFromDocumentMap(HashMap<String, Object> result) {
+        return new Commitment (
                 (String) result.get("id"),
                 (String) result.get("name"),
                 (String) result.get("location"),
-                ((Long) result.get("totalTimeInMinutes")).intValue(),
-                (Timestamp) result.get("deadline"),
-                Priority.valueOf((String) result.get("priority")),
-                (String) result.get("notes"),
-                (String) result.get("url")
+                (Timestamp) result.get("startTime"),
+                (Timestamp) result.get("endTime"),
+                Repeat.valueOf((String) result.get("repeat"))
         );
     }
 
     public interface  OnFirestoreTaskComplete{
-        void goalsDataAdded(List<Goal> goalsModels);
+        void commitmentsDataAdded(HashMap<Repeat, List<Commitment>> commitmentsModel);
         void onError(Exception e);
     }
 }
