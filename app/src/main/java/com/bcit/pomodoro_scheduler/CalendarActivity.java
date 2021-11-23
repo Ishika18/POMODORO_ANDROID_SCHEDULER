@@ -31,7 +31,7 @@ public class CalendarActivity extends AppCompatActivity {
         // print user email, this will be passed on to the next fragment
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
-        goToMonthlyView(YearMonth.now(), this.userEmail);
+        goToMonthlyView(YearMonth.now());
     }
 
     public void setActionBarFunction() {
@@ -61,7 +61,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
-    public void goToMonthlyView(YearMonth year, String userEmail){
+    public void goToMonthlyView(YearMonth year){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
