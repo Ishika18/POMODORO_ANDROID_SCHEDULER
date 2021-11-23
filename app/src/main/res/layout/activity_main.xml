@@ -17,8 +17,9 @@
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_week" />
+
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
