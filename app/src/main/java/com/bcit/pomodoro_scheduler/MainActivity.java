@@ -1,6 +1,7 @@
 package com.bcit.pomodoro_scheduler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 
 /**
  * This is where the login logic will go.
@@ -114,5 +117,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void logOut() {
         mGoogleSignInClient.signOut();
+    }
+
+
+    public void goToWeeklyView(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentContainerView_main, WeekFragment.newInstance());
+        ft.commit();
     }
 }
