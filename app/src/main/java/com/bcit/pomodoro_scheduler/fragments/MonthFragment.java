@@ -5,24 +5,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bcit.pomodoro_scheduler.CalendarActivity;
-import com.bcit.pomodoro_scheduler.MainActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.MonthlyCalendarViewAdapter;
-import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
-import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
@@ -38,9 +33,8 @@ public class MonthFragment extends Fragment {
 
     private static final String YEAR_MONTH = "yearMonth";
 
-    private Year year;
-    private Month month;
-    private static String userEmail;
+    public Year year;
+    public Month month;
 
 
     public MonthFragment() {
@@ -54,8 +48,7 @@ public class MonthFragment extends Fragment {
      * @param yearMonth YearMonth object
      * @return A new instance of fragment MonthFragment.
      */
-    public static MonthFragment newInstance(YearMonth yearMonth, String currUserEmail) {
-        userEmail = currUserEmail;
+    public static MonthFragment newInstance(YearMonth yearMonth) {
         MonthFragment fragment = new MonthFragment();
         Bundle args = new Bundle();
         args.putSerializable(YEAR_MONTH, yearMonth);
@@ -87,7 +80,6 @@ public class MonthFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
         setUpRecyclerView(getYearMonths(year), recyclerView);
-        addDateCellOnClickFunction(view);
     }
 
     private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView recyclerView) {
@@ -97,7 +89,7 @@ public class MonthFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // define an adapter
-        MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(yearMonths);
+        MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(this, yearMonths);
         recyclerView.setAdapter(adapter);
     }
 
@@ -109,21 +101,7 @@ public class MonthFragment extends Fragment {
         return yearMonths;
     }
 
-    private void addDateCellOnClickFunction(View view) {
-        for (int i = 1; i < 42; i++) {
-            String tag = "tag_textView_dateCell_" + (i + 1);
-            TextView dateCell = view.findViewWithTag(tag);
-            dateCell.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    goToWeekView();
-                }
-            });
-        }
-    }
-
-    private void goToWeekView() {
-        System.out.println(userEmail);
-        ((CalendarActivity) getActivity()).goToWeeklyView();
+    public void goToWeekView(LocalDate date) {
+        ((CalendarActivity) getActivity()).goToWeeklyView(date);
     }
 }

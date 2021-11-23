@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.MainActivity;
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 
 import java.time.YearMonth;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCalendarViewAdapter.ViewHolder> {
 
     private final YearMonth[] yearMonths;
+    private final MonthFragment monthFragment;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -55,8 +57,9 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
      *
      * @param monthDays String[] containing days of months to populate
      */
-    public MonthlyCalendarViewAdapter(YearMonth[] monthDays) {
+    public MonthlyCalendarViewAdapter(MonthFragment monthFragment, YearMonth[] monthDays) {
         this.yearMonths = monthDays;
+        this.monthFragment = monthFragment;
     }
 
     // Create new views (invoked by the layout manager)
@@ -100,6 +103,22 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
             }
 
             dateCells[i].setText(spannableString);
+
+            dateCells[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextView textView = (TextView) view;
+                    String dateText = textView.getText().toString();
+                    int day = Integer.parseInt(dateText);
+
+                    if (day != 0) {
+                        LocalDate date = LocalDate.of(
+                                monthFragment.year.getValue(), monthFragment.month.getValue() + 1, day
+                        );
+                        monthFragment.goToWeekView(date);
+                    }
+                }
+            });
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class WeekFragment extends Fragment {
     private static final String START_DATE = "day";
     private LocalDate startDate;
 
-    private static final String EMAIL = "day";
+    private static final String EMAIL = "email";
     private String userEmail;
 
     public WeekFragment() {
@@ -67,7 +68,7 @@ public class WeekFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             startDate = (LocalDate) getArguments().getSerializable(START_DATE);
-            userEmail = (String) getArguments().get(EMAIL);
+            userEmail = (String) getArguments().getString(EMAIL);
         }
     }
 

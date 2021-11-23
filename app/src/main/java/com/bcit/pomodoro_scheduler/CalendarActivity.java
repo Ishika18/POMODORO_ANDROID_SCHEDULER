@@ -14,6 +14,7 @@ import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -64,14 +65,17 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                MonthFragment.newInstance(year, userEmail)
+                MonthFragment.newInstance(year)
         );
         ft.commit();
     }
 
-    public void goToWeeklyView(){
+    public void goToWeeklyView(LocalDate date){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_main, WeekFragment.newInstance());
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                WeekFragment.newInstance(date, this.userEmail)
+        );
         ft.commit();
     }
 }
