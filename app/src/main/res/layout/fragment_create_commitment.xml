@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginVertical="10dp"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".fragments.CreateCommitmentFragment">
 
@@ -13,25 +13,44 @@
         android:id="@+id/editTextTextPersonName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="15sp"
+        android:layout_marginBottom="15sp"
         android:autofillHints="@string/title"
+        android:backgroundTint="@color/rally_green"
         android:ems="10"
+        android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/commitment_name_hint"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="15sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="15sp"
+        android:layout_marginBottom="75sp"
         android:autofillHints="@string/location"
+        android:backgroundTint="@color/rally_orange"
         android:ems="10"
+        android:fontFamily="@font/roboto_condensed_regular"
         android:hint="@string/location"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="20sp"
         android:orientation="horizontal">
 
         <TextView
@@ -40,8 +59,11 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/start_time" />
+            android:text="@string/start_time"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/button_commitment_startTime_date"
@@ -49,9 +71,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/eczar_regular"
             android:text="@string/placeholder_date"
-            android:textSize="12sp" />
+            android:textColor="@color/rally_green"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/button_commitment_startTime_time"
@@ -59,15 +84,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/eczar_regular"
             android:text="@string/placeholder_time"
-            android:textSize="12sp" />
+            android:textColor="@color/rally_green"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="20sp"
         android:orientation="horizontal">
 
         <TextView
@@ -76,8 +104,11 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/end_time" />
+            android:text="@string/end_time"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/button_commitment_endTime_date"
@@ -85,9 +116,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/eczar_regular"
             android:text="@string/placeholder_date"
-            android:textSize="12sp" />
+            android:textColor="@color/rally_orange"
+            android:textColorHint="@color/white"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/button_commitment_endTime_time"
@@ -95,15 +130,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/eczar_regular"
             android:text="@string/placeholder_time"
-            android:textSize="12sp" />
+            android:textColor="@color/rally_orange"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="20sp"
         android:orientation="horizontal">
 
         <TextView
@@ -111,15 +149,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/repeat" />
+            android:text="@string/repeat"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <Spinner
             android:id="@+id/spinner_commitment_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="3.5" />
 
     </LinearLayout>
 
