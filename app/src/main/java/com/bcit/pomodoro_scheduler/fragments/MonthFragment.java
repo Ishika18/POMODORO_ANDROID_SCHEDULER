@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
@@ -21,7 +20,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
