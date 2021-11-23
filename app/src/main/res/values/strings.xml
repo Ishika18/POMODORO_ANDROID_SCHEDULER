@@ -4,6 +4,8 @@
     <string name="title">Title</string>
     <string name="location">Location</string>
     <string name="placeholder">PLACEHOLDER</string>
+    <string name="placeholder_time">00:00 A.M.</string>
+    <string name="placeholder_date">00-00-0000</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="repeat">Repeat</string>
