@@ -2,13 +2,18 @@ package com.bcit.pomodoro_scheduler.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.weeklyView.DayAdapter;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -60,5 +65,22 @@ public class DayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_day, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
+            setUpRecyclerView(new String[]{date.toString(), date.toString(), date.toString(), date.toString(),}, rv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUpRecyclerView(String[] data, RecyclerView rv) {
+        DayAdapter adapter = new DayAdapter(data);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.VERTICAL, false));
     }
 }

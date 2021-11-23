@@ -13,7 +13,6 @@ import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 
