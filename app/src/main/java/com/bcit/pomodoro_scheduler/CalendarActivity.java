@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -18,6 +19,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 
 public class CalendarActivity extends AppCompatActivity {
+    private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
+    private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
+    private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
     private String userEmail;
 
     @Override
@@ -40,13 +44,19 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MonthFragment monthFragment = (MonthFragment) getSupportFragmentManager()
-                        .findFragmentByTag("MONTH_FRAGMENT");
+                        .findFragmentByTag(MONTH_FRAGMENT_TAG);
                 WeekFragment weekFragment = (WeekFragment) getSupportFragmentManager()
-                        .findFragmentByTag("WEEK_FRAGMENT");
+                        .findFragmentByTag(WEEK_FRAGMENT_TAG);
+                CreateCommitmentFragment createCommitmentFragment =
+                        (CreateCommitmentFragment) getSupportFragmentManager()
+                                .findFragmentByTag(CREATE_COMMITMENT_FRAGMENT_TAG);
                 if (monthFragment != null && monthFragment.isVisible()) {
                     finish();
                 } else if (weekFragment != null && weekFragment.isVisible()) {
                     // just go to the current date
+                    goToMonthlyView(YearMonth.now());
+                } else if (createCommitmentFragment != null
+                        && createCommitmentFragment.isVisible()) {
                     goToMonthlyView(YearMonth.now());
                 }
             }
@@ -61,7 +71,7 @@ public class CalendarActivity extends AppCompatActivity {
                     }
 
                     case R.id.option_2: {
-                        // go to new commitment
+                        goToCreateCommitmentView();
                     }
                 }
 
@@ -75,7 +85,7 @@ public class CalendarActivity extends AppCompatActivity {
         ft.replace(
                 R.id.fragmentContainerView_main,
                 MonthFragment.newInstance(year),
-                "MONTH_FRAGMENT"
+                MONTH_FRAGMENT_TAG
         );
         ft.commit();
     }
@@ -85,7 +95,17 @@ public class CalendarActivity extends AppCompatActivity {
         ft.replace(
                 R.id.fragmentContainerView_main,
                 WeekFragment.newInstance(date, this.userEmail),
-                "WEEK_FRAGMENT"
+                WEEK_FRAGMENT_TAG
+        );
+        ft.commit();
+    }
+
+    public void goToCreateCommitmentView() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                CreateCommitmentFragment.newInstance(),
+                CREATE_COMMITMENT_FRAGMENT_TAG
         );
         ft.commit();
     }

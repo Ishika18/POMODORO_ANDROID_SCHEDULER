@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:autofillHints="@string/title"
         android:ems="10"
-        android:hint="@string/title"
+        android:hint="@string/commitment_name_hint"
         android:inputType="textPersonName" />
 
     <EditText
