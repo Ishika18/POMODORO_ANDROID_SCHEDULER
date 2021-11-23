@@ -13,7 +13,20 @@
           "package_name": "com.bcit.pomodoro_scheduler"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "928081573676-icadi1ua907u1u4pv91d0md0jmqdkvl0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bcit.pomodoro_scheduler",
+            "certificate_hash": "5f54c99cf67472007d6d4d1443137754dc6d9e40"
+          }
+        },
+        {
+          "client_id": "928081573676-tgfm1nb8pu3mo9hovke5cs417fdmv16j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBL1499ZG5kQ3iqj7sPjGOXSPegrKowAa0"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928081573676-tgfm1nb8pu3mo9hovke5cs417fdmv16j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
