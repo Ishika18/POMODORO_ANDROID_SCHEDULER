@@ -2,6 +2,7 @@ package com.bcit.pomodoro_scheduler.adapters;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
@@ -82,6 +84,7 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
         int endOfMonth = yearMonths[position].lengthOfMonth() + startOfMonth;
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
+        monthName.setTextColor(Color.parseColor("#FFFFFF"));
 
         for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
@@ -92,7 +95,7 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                 text = "0" + text;
                 spannableString=  new SpannableString(text);
                 spannableString.setSpan(
-                        new ForegroundColorSpan(Color.WHITE), 0, 1, 0
+                        new ForegroundColorSpan(Color.parseColor("#1B1B1B")), 0, 1, 0
                 );
             }
 
@@ -100,12 +103,12 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                 text = "00";
                 spannableString=  new SpannableString(text);
                 spannableString.setSpan(
-                        new ForegroundColorSpan(Color.WHITE), 0, 2, 0
+                        new ForegroundColorSpan(Color.parseColor("#1B1B1B")), 0, 2, 0
                 );
             }
 
             dateCells[i].setText(spannableString);
-
+            dateCells[i].setTextColor(Color.parseColor("#FFFFFF"));
             dateCells[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
