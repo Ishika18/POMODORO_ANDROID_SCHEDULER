@@ -4,6 +4,8 @@
     <string name="title">My Pomodoro</string>
     <string name="location">Location</string>
     <string name="placeholder">PLACEHOLDER</string>
+    <string name="placeholder_time">00:00 A.M.</string>
+    <string name="placeholder_date">00-00-0000</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="repeat">Repeat</string>
@@ -26,4 +28,7 @@
     <string name="menu_topActionBar_addIconTitle">AddTask</string>
     <string name="menu_topAppBar_addTask">+ Task</string>
     <string name="menu_topAppBar_Commitment">+ Commitment</string>
+    <string name="invalid_time_selection">
+        Error: Cannot select an end time that is before the start time!
+    </string>
 </resources>
