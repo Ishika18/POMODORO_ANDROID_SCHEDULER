@@ -73,7 +73,6 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_week, viewGroup, false); //error here should be expected, this is a template
-
         return new ViewHolder(view);
     }
 
@@ -96,7 +95,7 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         TextView dayNum = viewHolder.getDayNum();
         dayNum.setText(Integer.toString(localDataSet[position].getDayOfMonth()));
 
-        if (localDataSet[position] == adapterPosition) {
+        if (localDataSet[position].equals(adapterPosition)) {
             dayNum.setBackgroundResource(R.drawable.item_week_circle_background_small);
         } else {
             dayNum.setBackgroundResource(0);
@@ -113,16 +112,18 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
                 weekFragment.swapDayFragment(localDataSet[viewHolder.getAdapterPosition()]);
             }
         });
+        weekFragment.swapDayFragment(adapterPosition);
     }
 
     public void updateBackgrounds() {
         for (ViewHolder viewHolder: holder_list) {
-            if (viewHolder.getDay() != null && viewHolder.getDay() == adapterPosition) {
+            if (viewHolder.getDay() != null && viewHolder.getDay().equals(adapterPosition)) {
                 TextView dayNumOld = viewHolder.getDayNum();
                 dayNumOld.setBackgroundResource(0);
             }
         }
     }
+
 
     public void notifyAdapterOfChange(int position) {
         this.notifyAdapterOfChange(position);

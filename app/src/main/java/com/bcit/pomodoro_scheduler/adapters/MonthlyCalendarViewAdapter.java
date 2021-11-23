@@ -3,6 +3,7 @@ package com.bcit.pomodoro_scheduler.adapters;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,19 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 
+import java.time.Month;
 import java.time.YearMonth;
+import java.time.LocalDate;
 
 
 public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCalendarViewAdapter.ViewHolder> {
 
     private final YearMonth[] yearMonths;
+    private final MonthFragment monthFragment;
+    private Month month;
+    private int year;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -53,8 +60,11 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
      *
      * @param monthDays String[] containing days of months to populate
      */
-    public MonthlyCalendarViewAdapter(YearMonth[] monthDays) {
+    public MonthlyCalendarViewAdapter(MonthFragment monthFragment, YearMonth[] monthDays) {
         this.yearMonths = monthDays;
+        this.monthFragment = monthFragment;
+        this.year = 0;
+        this.month = null;
     }
 
     // Create new views (invoked by the layout manager)
@@ -75,6 +85,9 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
         int endOfMonth = yearMonths[position].lengthOfMonth() + startOfMonth;
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
+
+        this.month = yearMonths[position].getMonth();
+        this.year = yearMonths[position].getYear();
 
         for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
@@ -98,6 +111,22 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
             }
 
             dateCells[i].setText(spannableString);
+
+            dateCells[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextView textView = (TextView) view;
+                    String dateText = textView.getText().toString();
+                    int day = Integer.parseInt(dateText);
+
+                    if (day != 0) {
+                        LocalDate date = LocalDate.of(
+                                year, month.getValue(), day
+                        );
+                        monthFragment.goToWeekView(date);
+                    }
+                }
+            });
         }
     }
 

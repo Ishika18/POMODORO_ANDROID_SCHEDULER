@@ -11,8 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
+import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -37,7 +39,16 @@ public class CalendarActivity extends AppCompatActivity {
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                MonthFragment monthFragment = (MonthFragment) getSupportFragmentManager()
+                        .findFragmentByTag("MONTH_FRAGMENT");
+                WeekFragment weekFragment = (WeekFragment) getSupportFragmentManager()
+                        .findFragmentByTag("WEEK_FRAGMENT");
+                if (monthFragment != null && monthFragment.isVisible()) {
+                    finish();
+                } else if (weekFragment != null && weekFragment.isVisible()) {
+                    // just go to the current date
+                    goToMonthlyView(YearMonth.now());
+                }
             }
         });
 
@@ -61,7 +72,21 @@ public class CalendarActivity extends AppCompatActivity {
 
     public void goToMonthlyView(YearMonth year){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_main, MonthFragment.newInstance(year));
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                MonthFragment.newInstance(year),
+                "MONTH_FRAGMENT"
+        );
+        ft.commit();
+    }
+
+    public void goToWeeklyView(LocalDate date){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                WeekFragment.newInstance(date, this.userEmail),
+                "WEEK_FRAGMENT"
+        );
         ft.commit();
     }
 }

@@ -5,21 +5,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.MonthlyCalendarViewAdapter;
-import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
-import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
@@ -35,8 +33,9 @@ public class MonthFragment extends Fragment {
 
     private static final String YEAR_MONTH = "yearMonth";
 
-    private Year year;
-    private Month month;
+    public Year year;
+    public Month month;
+
 
     public MonthFragment() {
         // Required empty public constructor
@@ -90,7 +89,7 @@ public class MonthFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // define an adapter
-        MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(yearMonths);
+        MonthlyCalendarViewAdapter adapter = new MonthlyCalendarViewAdapter(this, yearMonths);
         recyclerView.setAdapter(adapter);
     }
 
@@ -100,5 +99,9 @@ public class MonthFragment extends Fragment {
             yearMonths[i - 1] = year.atMonth(i);
         }
         return yearMonths;
+    }
+
+    public void goToWeekView(LocalDate date) {
+        ((CalendarActivity) getActivity()).goToWeeklyView(date);
     }
 }
