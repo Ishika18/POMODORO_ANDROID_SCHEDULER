@@ -1,5 +1,6 @@
 package com.bcit.pomodoro_scheduler.adapters;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -23,8 +24,6 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
 
     private final YearMonth[] yearMonths;
     private final MonthFragment monthFragment;
-    private Month month;
-    private int year;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -63,8 +62,6 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
     public MonthlyCalendarViewAdapter(MonthFragment monthFragment, YearMonth[] monthDays) {
         this.yearMonths = monthDays;
         this.monthFragment = monthFragment;
-        this.year = 0;
-        this.month = null;
     }
 
     // Create new views (invoked by the layout manager)
@@ -85,9 +82,6 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
         int endOfMonth = yearMonths[position].lengthOfMonth() + startOfMonth;
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
-
-        this.month = yearMonths[position].getMonth();
-        this.year = yearMonths[position].getYear();
 
         for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
@@ -119,10 +113,14 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                     String dateText = textView.getText().toString();
                     int day = Integer.parseInt(dateText);
 
+                    Month month = yearMonths[viewHolder.getAdapterPosition()].getMonth();
+                    int year = yearMonths[viewHolder.getAdapterPosition()].getYear();
+
                     if (day != 0) {
                         LocalDate date = LocalDate.of(
                                 year, month.getValue(), day
                         );
+                        Log.d("DATE", date.toString());
                         monthFragment.goToWeekView(date);
                     }
                 }
