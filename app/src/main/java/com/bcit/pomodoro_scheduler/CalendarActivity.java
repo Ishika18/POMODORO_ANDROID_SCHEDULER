@@ -39,7 +39,16 @@ public class CalendarActivity extends AppCompatActivity {
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                MonthFragment monthFragment = (MonthFragment) getSupportFragmentManager()
+                        .findFragmentByTag("MONTH_FRAGMENT");
+                WeekFragment weekFragment = (WeekFragment) getSupportFragmentManager()
+                        .findFragmentByTag("WEEK_FRAGMENT");
+                if (monthFragment != null && monthFragment.isVisible()) {
+                    finish();
+                } else if (weekFragment != null && weekFragment.isVisible()) {
+                    // just go to the current date
+                    goToMonthlyView(YearMonth.now());
+                }
             }
         });
 
@@ -65,7 +74,8 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                MonthFragment.newInstance(year)
+                MonthFragment.newInstance(year),
+                "MONTH_FRAGMENT"
         );
         ft.commit();
     }
@@ -74,7 +84,8 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                WeekFragment.newInstance(date, this.userEmail)
+                WeekFragment.newInstance(date, this.userEmail),
+                "WEEK_FRAGMENT"
         );
         ft.commit();
     }
