@@ -26,4 +26,5 @@
     <string name="menu_topActionBar_addIconTitle">AddTask</string>
     <string name="menu_topAppBar_addTask">+ Task</string>
     <string name="menu_topAppBar_Commitment">+ Commitment</string>
+    <string name="server_client_id">928081573676-tgfm1nb8pu3mo9hovke5cs417fdmv16j.apps.googleusercontent.com</string>
 </resources>
