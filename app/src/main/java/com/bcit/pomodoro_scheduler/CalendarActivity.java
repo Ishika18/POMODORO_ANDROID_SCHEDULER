@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
+import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.YearMonth;
@@ -29,7 +30,7 @@ public class CalendarActivity extends AppCompatActivity {
         // print user email, this will be passed on to the next fragment
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
-        goToMonthlyView(YearMonth.now());
+        goToMonthlyView(YearMonth.now(), this.userEmail);
     }
 
     public void setActionBarFunction() {
@@ -59,9 +60,18 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
-    public void goToMonthlyView(YearMonth year){
+    public void goToMonthlyView(YearMonth year, String userEmail){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_main, MonthFragment.newInstance(year));
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                MonthFragment.newInstance(year, userEmail)
+        );
+        ft.commit();
+    }
+
+    public void goToWeeklyView(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentContainerView_main, WeekFragment.newInstance());
         ft.commit();
     }
 }

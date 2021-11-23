@@ -118,11 +118,4 @@ public class MainActivity extends AppCompatActivity {
     public void logOut() {
         mGoogleSignInClient.signOut();
     }
-
-
-    public void goToWeeklyView(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_main, WeekFragment.newInstance());
-        ft.commit();
-    }
 }

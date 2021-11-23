@@ -13,7 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
+import com.bcit.pomodoro_scheduler.MainActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.MonthlyCalendarViewAdapter;
 import com.bcit.pomodoro_scheduler.model.Goal;
@@ -37,6 +40,8 @@ public class MonthFragment extends Fragment {
 
     private Year year;
     private Month month;
+    private static String userEmail;
+
 
     public MonthFragment() {
         // Required empty public constructor
@@ -49,7 +54,8 @@ public class MonthFragment extends Fragment {
      * @param yearMonth YearMonth object
      * @return A new instance of fragment MonthFragment.
      */
-    public static MonthFragment newInstance(YearMonth yearMonth) {
+    public static MonthFragment newInstance(YearMonth yearMonth, String currUserEmail) {
+        userEmail = currUserEmail;
         MonthFragment fragment = new MonthFragment();
         Bundle args = new Bundle();
         args.putSerializable(YEAR_MONTH, yearMonth);
@@ -81,6 +87,7 @@ public class MonthFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
         setUpRecyclerView(getYearMonths(year), recyclerView);
+        addDateCellOnClickFunction(view);
     }
 
     private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView recyclerView) {
@@ -100,5 +107,23 @@ public class MonthFragment extends Fragment {
             yearMonths[i - 1] = year.atMonth(i);
         }
         return yearMonths;
+    }
+
+    private void addDateCellOnClickFunction(View view) {
+        for (int i = 1; i < 42; i++) {
+            String tag = "tag_textView_dateCell_" + (i + 1);
+            TextView dateCell = view.findViewWithTag(tag);
+            dateCell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToWeekView();
+                }
+            });
+        }
+    }
+
+    private void goToWeekView() {
+        System.out.println(userEmail);
+        ((CalendarActivity) getActivity()).goToWeeklyView();
     }
 }
