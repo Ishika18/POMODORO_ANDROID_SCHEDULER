@@ -15,6 +15,7 @@ import com.bcit.pomodoro_scheduler.MainActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 
+import java.time.Month;
 import java.time.YearMonth;
 import java.time.LocalDate;
 
@@ -23,6 +24,8 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
 
     private final YearMonth[] yearMonths;
     private final MonthFragment monthFragment;
+    private Month month;
+    private int year;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -61,6 +64,8 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
     public MonthlyCalendarViewAdapter(MonthFragment monthFragment, YearMonth[] monthDays) {
         this.yearMonths = monthDays;
         this.monthFragment = monthFragment;
+        this.year = 0;
+        this.month = null;
     }
 
     // Create new views (invoked by the layout manager)
@@ -81,6 +86,9 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
         int endOfMonth = yearMonths[position].lengthOfMonth() + startOfMonth;
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
+
+        this.month = yearMonths[position].getMonth();
+        this.year = yearMonths[position].getYear();
 
         for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
@@ -114,10 +122,9 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
 
                     if (day != 0) {
                         LocalDate date = LocalDate.of(
-                                monthFragment.year.getValue(), monthFragment.month.getValue() + 1, day
+                                year, month.getValue(), day
                         );
                         monthFragment.goToWeekView(date);
-                        Log.d("date", date.toString());
                     }
                 }
             });
