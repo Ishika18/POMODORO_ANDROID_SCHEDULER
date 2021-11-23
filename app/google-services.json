@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "928081573676",
+    "firebase_url": "https://pomodoro-scheduler-default-rtdb.firebaseio.com",
+    "project_id": "pomodoro-scheduler",
+    "storage_bucket": "pomodoro-scheduler.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928081573676:android:36e6174e3ca77901731e89",
+        "android_client_info": {
+          "package_name": "com.bcit.pomodoro_scheduler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL1499ZG5kQ3iqj7sPjGOXSPegrKowAa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
