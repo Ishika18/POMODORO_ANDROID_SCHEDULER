@@ -3,6 +3,7 @@ package com.bcit.pomodoro_scheduler.adapters;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +117,7 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                                 monthFragment.year.getValue(), monthFragment.month.getValue() + 1, day
                         );
                         monthFragment.goToWeekView(date);
+                        Log.d("date", date.toString());
                     }
                 }
             });

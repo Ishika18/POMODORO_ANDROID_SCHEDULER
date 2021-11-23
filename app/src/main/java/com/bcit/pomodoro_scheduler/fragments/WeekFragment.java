@@ -94,6 +94,7 @@ public class WeekFragment extends Fragment {
         WeekAdapter adapter = new WeekAdapter(data, this, currentDay);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.HORIZONTAL, false));
+        rv.getLayoutManager().scrollToPosition(calculateScrollPosition(currentDay));
     }
 
     private LocalDate[] getDaysInMonth(LocalDate day) {
@@ -101,6 +102,12 @@ public class WeekFragment extends Fragment {
         LocalDate[] items = new LocalDate[month.lengthOfMonth()];
         for (int i = 0; i < month.lengthOfMonth(); i++) items[i] = month.atDay(i + 1);
         return items;
+    }
+
+    private int calculateScrollPosition(LocalDate currentDay) {
+        YearMonth month = YearMonth.of(currentDay.getYear(), currentDay.getMonth());
+        int scroll_position = currentDay.getDayOfMonth() - 4 >= 5? currentDay.getDayOfMonth() - 4 : currentDay.getDayOfMonth() - 1;
+        return scroll_position;
     }
 
 
