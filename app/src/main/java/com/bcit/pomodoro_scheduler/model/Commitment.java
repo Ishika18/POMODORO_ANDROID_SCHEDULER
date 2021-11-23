@@ -1,7 +1,7 @@
 package com.bcit.pomodoro_scheduler.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import com.google.firebase.Timestamp;
 import java.util.Objects;
 
 public class Commitment extends ScheduleEvent implements Serializable {

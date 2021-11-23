@@ -1,6 +1,6 @@
 package com.bcit.pomodoro_scheduler.model;
 
-enum Priority {
+public enum Priority {
     LOW(0),
     MEDIUM(1),
     HIGH(2);
