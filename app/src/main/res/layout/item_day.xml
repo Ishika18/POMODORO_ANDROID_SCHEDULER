@@ -29,6 +29,7 @@
             android:textSize="24sp" />
 
         <View
+            android:id="@+id/view_itemDay_line"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@color/rally_green" />

@@ -13,16 +13,21 @@ import android.view.View;
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
+import com.bcit.pomodoro_scheduler.model.Schedule;
+import com.bcit.pomodoro_scheduler.model.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CalendarActivity extends AppCompatActivity {
     private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
     private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
     private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
     private String userEmail;
+    private HashMap<LocalDate, ArrayList<Task>> schedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class CalendarActivity extends AppCompatActivity {
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
         goToMonthlyView(YearMonth.now());
+        Schedule s = new Schedule();
+        schedule = s.getSchedule();
     }
 
     public void setActionBarFunction() {
@@ -108,5 +115,9 @@ public class CalendarActivity extends AppCompatActivity {
                 CREATE_COMMITMENT_FRAGMENT_TAG
         );
         ft.commit();
+    }
+
+    public HashMap<LocalDate, ArrayList<Task>> getSchedule() {
+        return schedule;
     }
 }

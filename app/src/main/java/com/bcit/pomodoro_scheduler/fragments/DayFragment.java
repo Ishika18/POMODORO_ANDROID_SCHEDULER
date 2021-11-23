@@ -12,11 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.weeklyView.DayAdapter;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,15 +74,19 @@ public class DayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
-            setUpRecyclerView(new String[]{date.toString(), date.toString(), date.toString(), date.toString(),}, rv);
+            HashMap<LocalDate, ArrayList<Task>> schedule =  ((CalendarActivity)getActivity()).getSchedule();
+            ArrayList<Task> daySchedule = schedule.get(date) != null ? schedule.get(date) : new ArrayList<>();
+            setUpRecyclerView(daySchedule, rv);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setUpRecyclerView(String[] data, RecyclerView rv) {
+    private void setUpRecyclerView(ArrayList<Task> data, RecyclerView rv) {
         DayAdapter adapter = new DayAdapter(data);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.VERTICAL, false));
     }
+
+
 }

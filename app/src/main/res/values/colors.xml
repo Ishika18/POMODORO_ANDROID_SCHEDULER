@@ -11,4 +11,5 @@
     <color name="grey">#838282</color>
     <color name="rally_orange">#FF6859</color>
     <color name="rally_green">#1EB980</color>
+    <color name = "rally_yellow">#FFCF44</color>
 </resources>
