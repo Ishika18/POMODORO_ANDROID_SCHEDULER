@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
 
@@ -104,25 +105,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateUI(GoogleSignInAccount account) {
-        if (account == null) {
-            Log.w("LogIn", "Didn't Work");
-            return;
-        }
+//        if (account == null) {
+//            Log.w("LogIn", "Didn't Work");
+//            return;
+//        }
 
         // for now just go to monthly view
         Intent intent = new Intent(this, CalendarActivity.class);
-        intent.putExtra(GOOGLE_ACCOUNT, account.getEmail());
+        intent.putExtra(GOOGLE_ACCOUNT, "poopypoop@farts.com");
         startActivity(intent);
     }
 
     public void logOut() {
         mGoogleSignInClient.signOut();
-    }
-
-
-    public void goToWeeklyView(){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragmentContainerView_main, WeekFragment.newInstance());
-        ft.commit();
     }
 }

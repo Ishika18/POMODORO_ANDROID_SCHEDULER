@@ -56,8 +56,6 @@ public class DayFragment extends Fragment {
             this.date = (LocalDate) getArguments().getSerializable(DAY);
             this.date = this.date == null ? LocalDate.now() : this.date;
         }
-        if (this.date != null)
-            System.out.println(this.date.toString());
     }
 
     @Override
