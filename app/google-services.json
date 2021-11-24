@@ -1,21 +1,20 @@
 {
   "project_info": {
-    "project_number": "928081573676",
-    "firebase_url": "https://pomodoro-scheduler-default-rtdb.firebaseio.com",
-    "project_id": "pomodoro-scheduler",
-    "storage_bucket": "pomodoro-scheduler.appspot.com"
+    "project_number": "812168882963",
+    "project_id": "my-pomodoro-79132",
+    "storage_bucket": "my-pomodoro-79132.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:928081573676:android:428d8bf76f3848e2731e89",
+        "mobilesdk_app_id": "1:812168882963:android:c8a10c229751c93615c8e6",
         "android_client_info": {
           "package_name": "com.bcit.pomodoro_scheduler"
         }
       },
       "oauth_client": [
         {
-          "client_id": "928081573676-ufmpikuiui48suvhojs1pd7tm5j02jnj.apps.googleusercontent.com",
+          "client_id": "812168882963-8ff9fmiqf4t5kkcfj7qnshgtmnlonb77.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bcit.pomodoro_scheduler",
@@ -23,20 +22,20 @@
           }
         },
         {
-          "client_id": "928081573676-tgfm1nb8pu3mo9hovke5cs417fdmv16j.apps.googleusercontent.com",
+          "client_id": "812168882963-3gnv2a44ej6llphevtt25da9iqubjhda.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBL1499ZG5kQ3iqj7sPjGOXSPegrKowAa0"
+          "current_key": "AIzaSyCLO3OMrmu-vBDAmVjTlnyltPJsf64Y_4A"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "928081573676-tgfm1nb8pu3mo9hovke5cs417fdmv16j.apps.googleusercontent.com",
+              "client_id": "812168882963-3gnv2a44ej6llphevtt25da9iqubjhda.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
