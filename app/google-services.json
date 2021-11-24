@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:928081573676:android:36e6174e3ca77901731e89",
+        "mobilesdk_app_id": "1:928081573676:android:428d8bf76f3848e2731e89",
         "android_client_info": {
           "package_name": "com.bcit.pomodoro_scheduler"
         }
       },
       "oauth_client": [
         {
-          "client_id": "928081573676-icadi1ua907u1u4pv91d0md0jmqdkvl0.apps.googleusercontent.com",
+          "client_id": "928081573676-ufmpikuiui48suvhojs1pd7tm5j02jnj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bcit.pomodoro_scheduler",
-            "certificate_hash": "5f54c99cf67472007d6d4d1443137754dc6d9e40"
+            "certificate_hash": "3621a50e32d5b5f4aa27b27262385b9c7380761e"
           }
         },
         {

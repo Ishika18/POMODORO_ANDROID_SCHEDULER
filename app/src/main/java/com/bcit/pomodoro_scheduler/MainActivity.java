@@ -105,14 +105,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateUI(GoogleSignInAccount account) {
-//        if (account == null) {
-//            Log.w("LogIn", "Didn't Work");
-//            return;
-//        }
+        if (account == null) {
+            Log.w("LogIn", "Didn't Work");
+            return;
+        }
 
         // for now just go to monthly view
         Intent intent = new Intent(this, CalendarActivity.class);
-        intent.putExtra(GOOGLE_ACCOUNT, "myemail@gmail.com");
+        intent.putExtra(GOOGLE_ACCOUNT, account.getEmail());
         startActivity(intent);
     }
 
