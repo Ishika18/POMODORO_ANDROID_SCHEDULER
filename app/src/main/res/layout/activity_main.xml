@@ -10,7 +10,8 @@
     tools:context=".MainActivity">
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
+        android:id="@+id/btn_main_signIn"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="140dp"
@@ -21,6 +22,38 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.584" />
 
+    <Button
+        android:id="@+id/btn_main_launchBtn"
+        android:visibility="gone"
+        android:text="@string/launch_btnText"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="240dp"
+        android:layout_marginBottom="281dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.671" />
+
+    <Button
+        android:id="@+id/btn_main_signOut"
+        android:visibility="gone"
+        android:text="@string/logOut_btnText"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="92dp"
+        android:layout_marginBottom="281dp"
+        android:backgroundTint="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.671" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="357dp"
@@ -29,7 +62,6 @@
         android:layout_marginTop="100dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="27dp"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
