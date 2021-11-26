@@ -34,9 +34,13 @@ import java.util.TimeZone;
  * A simple {@link Fragment} subclass.
  * Use the {@link CreateCommitmentFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class CreateCommitmentFragment extends Fragment {
+
+    private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
+            Locale.getDefault());
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",
+            Locale.getDefault());
 
     /**
      * Use this factory method to create a new instance of
@@ -73,26 +77,24 @@ public class CreateCommitmentFragment extends Fragment {
                 getActivity(), android.R.layout.simple_spinner_dropdown_item, Repeat.values()));
 
 
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
-                Locale.getDefault());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",
-                Locale.getDefault());
-
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
         Button startTimeDate = view.findViewById(R.id.button_commitment_startTime_date);
         Button endTimeDate = view.findViewById(R.id.button_commitment_endTime_date);
         Button startTimeTime = view.findViewById(R.id.button_commitment_startTime_time);
         Button endTimeTime = view.findViewById(R.id.button_commitment_endTime_time);
 
-        String date = calendar.get(Calendar.DAY_OF_MONTH)+ "-" +
+        String startDate = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
                 (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
+        String startTime = timeFormatter.format(new Date());
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        String endDate = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
+                (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
+        String endTime = timeFormatter.format(calendar.getTime());
 
-        String time = timeFormatter.format(calendar.getTime());
-
-        startTimeDate.setText(date);
-        endTimeDate.setText(date);
-        startTimeTime.setText(time);
-        endTimeTime.setText(time);
+        startTimeDate.setText(startDate);
+        endTimeDate.setText(endDate);
+        startTimeTime.setText(startTime);
+        endTimeTime.setText(endTime);
 
         startTimeDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +116,7 @@ public class CreateCommitmentFragment extends Fragment {
                             calendar.get(Calendar.YEAR);
 
                     startTimeDate.setText(date);
+                    endTimeDate.setText(date);
                 });
 
                 datePicker.show(
@@ -147,14 +150,14 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                    calendar.setTimeInMillis(selection);
+                    Calendar selectionCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    selectionCalendar.setTimeInMillis(selection);
 
-                    String date = calendar.get(Calendar.DAY_OF_MONTH) +
+                    String date = selectionCalendar.get(Calendar.DAY_OF_MONTH) +
                             "-" +
-                            (calendar.get(Calendar.MONTH) + 1) +
+                            (selectionCalendar.get(Calendar.MONTH) + 1) +
                             "-" +
-                            calendar.get(Calendar.YEAR);
+                            selectionCalendar.get(Calendar.YEAR);
 
                     endTimeDate.setText(date);
                 });
@@ -173,9 +176,21 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 timePicker.addOnPositiveButtonClickListener(selection -> {
-                    String time = String.format(Locale.getDefault(), "%02d:%02d",
+                    String startTime = String.format(Locale.getDefault(), "%02d:%02d",
                             timePicker.getHour(), timePicker.getMinute());
-                    startTimeTime.setText(time);
+
+                    String endTime;
+
+                    if (timePicker.getHour() >= 23) {
+                        endTime = String.format(Locale.getDefault(), "%02d:%02d",
+                                0, timePicker.getMinute());
+                    } else {
+                        endTime = String.format(Locale.getDefault(), "%02d:%02d",
+                                timePicker.getHour() + 1, timePicker.getMinute());
+                    }
+
+                    startTimeTime.setText(startTime);
+                    endTimeTime.setText(endTime);
                 });
 
                 timePicker.show(
@@ -195,19 +210,13 @@ public class CreateCommitmentFragment extends Fragment {
                     String time = String.format(Locale.getDefault(), "%02d:%02d",
                             timePicker.getHour(), timePicker.getMinute());
                     try {
-                        Date startDate = dateFormat.parse(startTimeDate.getText().toString());
-                        Date endDate = dateFormat.parse(endTimeDate.getText().toString());
-
-                        assert endDate != null;
-                        if (endDate.equals(startDate)) {
-                            Date startTime = timeFormatter.parse(startTimeTime.getText().toString());
-                            Date endTime = timeFormatter.parse(time);
-                            assert endTime != null;
-                            if (endTime.before(startTime)) {
-                                Snackbar.make(view, R.string.invalid_time_selection,
-                                        Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
+                        if (isEqualDates(startTimeDate.getText().toString(),
+                                endTimeDate.getText().toString())
+                                && !isValidStartEndTimeState(
+                                        startTimeTime.getText().toString(), time)) {
+                            Snackbar.make(view, R.string.invalid_time_selection,
+                                    Snackbar.LENGTH_LONG).show();
+                            return;
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -219,5 +228,20 @@ public class CreateCommitmentFragment extends Fragment {
                         requireActivity().getSupportFragmentManager(), timePicker.toString());
             }
         });
+    }
+
+    private boolean isValidStartEndTimeState(String startTimeStr, String endTimeStr)
+            throws ParseException {
+        Date startTime = timeFormatter.parse(startTimeStr);
+        Date endTime = timeFormatter.parse(endTimeStr);
+        assert startTime != null && endTime != null;
+        return endTime.after(startTime);
+    }
+
+    private boolean isEqualDates(String startDateStr, String endDateStr) throws ParseException {
+        Date startDate = dateFormat.parse(startDateStr);
+        Date endDate = dateFormat.parse(endDateStr);
+        assert startDate != null && endDate != null;
+        return startDate.equals(endDate);
     }
 }
