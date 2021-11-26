@@ -9,7 +9,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        style="?android:attr/listSeparatorTextViewStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:id="@+id/btn_fragmentMonth_prevMonth"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:padding="10sp"
+                android:src="@drawable/ic_sharp_arrow_back_ios_24" />
+            <TextView
+                android:id="@+id/textView_fragmentMonth_year"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:padding="10sp"
+                android:text=""
+                android:textAlignment="center"
+                android:pointerIcon="arrow"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:id="@+id/btn_fragmentMonth_nextMonth"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:padding="10sp"
+                android:src="@drawable/ic_sharp_arrow_forward_ios_24" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +58,7 @@
                 android:text="@string/weekday_sunday"
                 android:textAlignment="center"
                 android:textColor="@color/grey"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -35,7 +68,7 @@
                 android:text="@string/weekday_monday"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -45,7 +78,7 @@
                 android:text="@string/weekday_tuesday"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -55,7 +88,7 @@
                 android:text="@string/weekday_wednesday"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -65,7 +98,7 @@
                 android:text="@string/weekday_thursday"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -75,7 +108,7 @@
                 android:text="@string/weekday_friday"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0sp"
@@ -85,7 +118,7 @@
                 android:text="@string/weekday_saturday"
                 android:textAlignment="center"
                 android:textColor="@color/grey"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -93,7 +126,7 @@
             android:id="@+id/recyclerView_fragmentMonth_monthDays"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="7sp"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginStart="7sp" />
     </LinearLayout>
 
 </FrameLayout>
