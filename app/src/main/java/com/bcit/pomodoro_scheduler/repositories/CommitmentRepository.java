@@ -1,16 +1,10 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
-import androidx.annotation.NonNull;
 
 import com.bcit.pomodoro_scheduler.model.Commitment;
-import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Repeat;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -33,30 +27,22 @@ public class CommitmentRepository {
     }
 
     public void getCommitmentsData(String userEmail){
-        taskRef.document(userEmail).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                HashMap<Repeat, List<Commitment>> commitmentRepeats = getCommitmentRepeatHashmap();
+        taskRef.document(userEmail).get().addOnSuccessListener(documentSnapshot -> {
+            HashMap<Repeat, List<Commitment>> commitmentRepeats = getCommitmentRepeatHashmap();
 
 
-                Map<String, Object> map = documentSnapshot.getData();
-                if (map != null) {
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
-                        Repeat repeat = Repeat.valueOf((String) result.get("repeat"));
-                        Objects.requireNonNull(commitmentRepeats.get(repeat)).
-                                add(getCommitmentFromDocumentMap(result));
-                    }
-                    onFirestoreTaskComplete.commitmentsDataAdded(commitmentRepeats);
+            Map<String, Object> map = documentSnapshot.getData();
+            if (map != null) {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
+                    Repeat repeat = Repeat.valueOf((String) result.get("repeat"));
+                    Objects.requireNonNull(commitmentRepeats.get(repeat)).
+                            add(getCommitmentFromDocumentMap(result));
                 }
+                onFirestoreTaskComplete.commitmentsDataAdded(commitmentRepeats);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                onFirestoreTaskComplete.onError(e);
-            }
-        });
-    };
+        }).addOnFailureListener(onFirestoreTaskComplete::onError);
+    }
 
     private HashMap<Repeat, List<Commitment>> getCommitmentRepeatHashmap() {
         HashMap<Repeat, List<Commitment>> commitmentRepeats = new HashMap<>();
