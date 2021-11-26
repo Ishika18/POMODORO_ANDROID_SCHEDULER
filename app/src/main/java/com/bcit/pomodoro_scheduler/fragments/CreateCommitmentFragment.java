@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -180,10 +183,14 @@ public class CreateCommitmentFragment extends Fragment {
                             timePicker.getHour(), timePicker.getMinute());
 
                     String endTime;
+                    String endDate = null;
 
                     if (timePicker.getHour() >= 23) {
                         endTime = String.format(Locale.getDefault(), "%02d:%02d",
                                 0, timePicker.getMinute());
+                        endDate = endTimeDate.getText().toString();
+                        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        endDate = df.format(LocalDate.parse(endDate, df).plusDays(1));
                     } else {
                         endTime = String.format(Locale.getDefault(), "%02d:%02d",
                                 timePicker.getHour() + 1, timePicker.getMinute());
@@ -191,6 +198,10 @@ public class CreateCommitmentFragment extends Fragment {
 
                     startTimeTime.setText(startTime);
                     endTimeTime.setText(endTime);
+
+                    if (endDate != null) {
+                        endTimeDate.setText(endDate);
+                    }
                 });
 
                 timePicker.show(
