@@ -34,4 +34,6 @@
         Error: Cannot select an end time that is before the start time!
     </string>
     <string name="server_client_id">812168882963-3gnv2a44ej6llphevtt25da9iqubjhda.apps.googleusercontent.com</string>
+    <string name="logOut_btnText">Log Out</string>
+    <string name="launch_btnText">Launch</string>
 </resources>
