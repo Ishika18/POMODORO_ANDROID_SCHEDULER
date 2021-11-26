@@ -92,6 +92,12 @@ public class CreateCommitmentFragment extends Fragment {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         String endDate = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
                 (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
+
+        int startHour = Integer.parseInt(startTime.substring(0, 2));
+        if (startHour >= 23) {
+            endDate = calendar.get(Calendar.DAY_OF_MONTH + 1) + "-" +
+                    (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
+        }
         String endTime = timeFormatter.format(calendar.getTime());
 
         startTimeDate.setText(startDate);
