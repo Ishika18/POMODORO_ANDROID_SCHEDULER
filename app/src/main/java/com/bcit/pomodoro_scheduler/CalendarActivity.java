@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
+import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -22,6 +23,7 @@ public class CalendarActivity extends AppCompatActivity {
     private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
     private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
     private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
+    private static final String CREATE_GOAL_FRAGMENT_TAG = "CREATE_GOAL_FRAGMENT";
     private String userEmail;
 
     @Override
@@ -50,6 +52,9 @@ public class CalendarActivity extends AppCompatActivity {
                 CreateCommitmentFragment createCommitmentFragment =
                         (CreateCommitmentFragment) getSupportFragmentManager()
                                 .findFragmentByTag(CREATE_COMMITMENT_FRAGMENT_TAG);
+                CreateGoalFragment createGoalFragment =
+                        (CreateGoalFragment) getSupportFragmentManager()
+                                .findFragmentByTag(CREATE_GOAL_FRAGMENT_TAG);
                 if (monthFragment != null && monthFragment.isVisible()) {
                     finish();
                 } else if (weekFragment != null && weekFragment.isVisible()) {
@@ -58,6 +63,8 @@ public class CalendarActivity extends AppCompatActivity {
                 } else if (createCommitmentFragment != null
                         && createCommitmentFragment.isVisible()) {
                     goToMonthlyView(YearMonth.now());
+                } else if (createGoalFragment != null && createGoalFragment.isVisible()) {
+                    goToMonthlyView(YearMonth.now());
                 }
             }
         });
@@ -65,14 +72,10 @@ public class CalendarActivity extends AppCompatActivity {
         topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.option_1: {
-                        // go to new task
-                    }
-
-                    case R.id.option_2: {
-                        goToCreateCommitmentView();
-                    }
+                if (item.getItemId() == R.id.option_1) {
+                    goToCreateGoalView();
+                } else if (item.getItemId() == R.id.option_2) {
+                    goToCreateCommitmentView();
                 }
 
                 return true;
@@ -106,6 +109,16 @@ public class CalendarActivity extends AppCompatActivity {
                 R.id.fragmentContainerView_main,
                 CreateCommitmentFragment.newInstance(),
                 CREATE_COMMITMENT_FRAGMENT_TAG
+        );
+        ft.commit();
+    }
+
+    public void goToCreateGoalView() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                CreateGoalFragment.newInstance(),
+                CREATE_GOAL_FRAGMENT_TAG
         );
         ft.commit();
     }
