@@ -84,7 +84,9 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
         int endOfMonth = yearMonths[position].lengthOfMonth() + startOfMonth;
 
         monthName.setText(yearMonths[position].getMonth().toString().toLowerCase());
-        monthName.setTextColor(Color.parseColor("#FFFFFF"));
+        monthName.setTextColor(
+                ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.white)
+        );
 
         for (int i = 0; i < dateCells.length; i++) {
             int date = i - startOfMonth + 1;
@@ -95,7 +97,11 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                 text = "0" + text;
                 spannableString=  new SpannableString(text);
                 spannableString.setSpan(
-                        new ForegroundColorSpan(Color.parseColor("#1B1B1B")), 0, 1, 0
+                        new ForegroundColorSpan(
+                                ContextCompat.getColor(
+                                        viewHolder.itemView.getContext(), R.color.background
+                                )
+                        ), 0, 1, 0
                 );
             }
 
@@ -103,12 +109,15 @@ public class MonthlyCalendarViewAdapter extends RecyclerView.Adapter<MonthlyCale
                 text = "00";
                 spannableString=  new SpannableString(text);
                 spannableString.setSpan(
-                        new ForegroundColorSpan(Color.parseColor("#1B1B1B")), 0, 2, 0
+                        new ForegroundColorSpan(
+                                ContextCompat.getColor(
+                                        viewHolder.itemView.getContext(), R.color.background
+                                )
+                        ), 0, 2, 0
                 );
             }
 
             dateCells[i].setText(spannableString);
-            dateCells[i].setTextColor(Color.parseColor("#FFFFFF"));
             dateCells[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
