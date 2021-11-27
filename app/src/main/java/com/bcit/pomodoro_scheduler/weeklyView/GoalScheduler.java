@@ -1,5 +1,7 @@
 package com.bcit.pomodoro_scheduler.weeklyView;
 
+import com.bcit.pomodoro_scheduler.model.Priority;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -35,32 +37,36 @@ public class GoalScheduler {
         }
     }
 
-    private ArrayList<GoalDataForDisplay> getGoalSchedule() {
-        ArrayList<GoalDataForDisplay> schedule = new ArrayList<>();
+    private ArrayList<GoalWorkBlock> getGoalSchedule() {
+        ArrayList<GoalWorkBlock> schedule = new ArrayList<>();
         addPriorityToSchedule(schedule, high_priority);
         addPriorityToSchedule(schedule, med_priority);
         addPriorityToSchedule(schedule, low_priority);
         return schedule;
     }
 
-    private void addPriorityToSchedule(ArrayList<GoalDataForDisplay> schedule, ArrayList<GoalDataForScheduler> priority) {
+    private void addPriorityToSchedule(ArrayList<GoalWorkBlock> schedule, ArrayList<GoalDataForScheduler> priority) {
         addHighPriorityGoalsInInterleavedGroups(schedule, priority, 3);
         addHighPriorityGoalsInInterleavedGroups(schedule, priority, 2);
         addHighPriorityGoalsInInterleavedGroups(schedule, priority, 1);
     }
 
-    private void addHighPriorityGoalsInInterleavedGroups(ArrayList<GoalDataForDisplay> schedule,
+    private void addHighPriorityGoalsInInterleavedGroups(ArrayList<GoalWorkBlock> schedule,
                                                          ArrayList<GoalDataForScheduler> priority,
                                                          int groupSize) {
         while (priority.size() >= groupSize) {
             for (int i = 0; i < groupSize && i < priority.size(); i++) {
                 GoalDataForScheduler goalData = priority.get(i);
                 if (goalData.getMinutes() > 0) {
-                    GoalDataForDisplay goal = new GoalDataForDisplay(goalData.getID(), goalData.getName(), goalData.takeWorkBlock());
+                    GoalWorkBlock goal = new GoalWorkBlock(goalData.getID(), goalData.getName(), goalData.takeWorkBlock());
                     schedule.add(goal);
-                    if (goalData.getMinutes() <= 0) priority.remove(i);
+                    if (goalData.getMinutes() <= 0) {
+                        priority.remove(i);
+                        i = 0;
+                    }
                 } else {
                     priority.remove(i);
+                    i = 0;
                 }
             }
         }
@@ -73,7 +79,7 @@ public class GoalScheduler {
         l = rand.nextInt(20) + 5;
         m = rand.nextInt(20) + 5;
         ArrayList<GoalDataForScheduler> goals = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             goals.add(new GoalDataForScheduler("id", "low " + i, Priority.LOW, i + 1, 150, 50));
         }
         for (int i = 0; i < 10; i++) {
@@ -83,35 +89,19 @@ public class GoalScheduler {
             goals.add(new GoalDataForScheduler("id", "high " + i, Priority.HIGH, i + 1, 150, 50));
         }
         GoalScheduler scheduler = new GoalScheduler(goals);
-        ArrayList<GoalDataForDisplay> schedule =  scheduler.getGoalSchedule();
-        for(GoalDataForDisplay goal: schedule) {
+        ArrayList<GoalWorkBlock> schedule =  scheduler.getGoalSchedule();
+        for(GoalWorkBlock goal: schedule) {
             System.out.println(goal);
         }
     }
 }
 
-enum Priority {
-    LOW(0),
-    MEDIUM(1),
-    HIGH(2);
-
-    private final Integer priority;
-
-    private Priority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public Integer getPriority() {
-        return this.priority;
-    }
-}
-
-class GoalDataForDisplay {
+class GoalWorkBlock {
     private String ID;
     private String name;
     private int minutes;
 
-    public GoalDataForDisplay(String ID, String name, int minutes) {
+    public GoalWorkBlock(String ID, String name, int minutes) {
         this.ID = ID;
         this.name = name;
         this.minutes = minutes;
@@ -139,7 +129,7 @@ class GoalDataForDisplay {
     }
 }
 
-class GoalDataForScheduler implements Comparable<GoalDataForScheduler> {
+public class GoalDataForScheduler implements Comparable<GoalDataForScheduler> {
     private String ID;
     private String name;
 
@@ -193,10 +183,19 @@ class GoalDataForScheduler implements Comparable<GoalDataForScheduler> {
         }
     }
 
+    public int takeMinutes(int minutesToTake) {
+        if (minutes - minutesToTake < 0) {
+            int return_val = minutes;
+            minutes = 0;
+            return return_val;
+        } else {
+            minutes -= minutesToTake;
+            return minutesToTake;
+        }
+    }
+
     @Override
     public int compareTo(GoalDataForScheduler o) {
-        GoalDataForScheduler other = (GoalDataForScheduler) o;
-
         Integer this_priority = task_priority.getPriority();
         Integer other_priority = o.getTask_priority().getPriority();
         if (this_priority.compareTo(other_priority) != 0)

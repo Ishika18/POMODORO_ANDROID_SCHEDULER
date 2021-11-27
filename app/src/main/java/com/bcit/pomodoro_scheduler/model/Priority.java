@@ -5,13 +5,13 @@ public enum Priority {
     MEDIUM(1),
     HIGH(2);
 
-    private final int priority;
+    private final Integer priority;
 
-    private Priority(int priority) {
+    private Priority(Integer priority) {
         this.priority = priority;
     }
 
-    private int getPriority() {
+    public Integer getPriority() {
         return this.priority;
     }
 }
