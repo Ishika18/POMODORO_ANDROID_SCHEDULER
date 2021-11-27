@@ -1,11 +1,13 @@
 package com.bcit.pomodoro_scheduler.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +16,27 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.Timestamp;
 
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.stream.Stream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,11 +44,6 @@ import java.util.TimeZone;
  * create an instance of this fragment.
  */
 public class CreateCommitmentFragment extends Fragment {
-
-    private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
-            Locale.getDefault());
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",
-            Locale.getDefault());
 
     /**
      * Use this factory method to create a new instance of
@@ -72,29 +75,60 @@ public class CreateCommitmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Spinner repeat = view.findViewById(R.id.spinner_commitment_repeat);
-        repeat.setAdapter(new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_spinner_dropdown_item, Repeat.values()));
+        Calendar startCalendar = Calendar.getInstance(TimeZone.getDefault());
+        Calendar endCalendar = Calendar.getInstance(TimeZone.getDefault());
+        endCalendar.add(Calendar.HOUR, 1);
 
+        if (endCalendar.get(Calendar.HOUR_OF_DAY) == 0) {
+            endCalendar.add(Calendar.DATE, 1);
+        }
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
         Button startTimeDate = view.findViewById(R.id.button_commitment_startTime_date);
         Button endTimeDate = view.findViewById(R.id.button_commitment_endTime_date);
         Button startTimeTime = view.findViewById(R.id.button_commitment_startTime_time);
         Button endTimeTime = view.findViewById(R.id.button_commitment_endTime_time);
 
-        String startDate = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
-        String startTime = timeFormatter.format(new Date());
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        String endDate = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
-        String endTime = timeFormatter.format(calendar.getTime());
 
-        startTimeDate.setText(startDate);
-        endTimeDate.setText(endDate);
-        startTimeTime.setText(startTime);
-        endTimeTime.setText(endTime);
+        Commitment commitment = new Commitment(Timestamp.now().toString(), "", "",
+                new Timestamp(startCalendar.getTime()), new Timestamp(endCalendar.getTime()),
+                Repeat.NEVER, "", "");
+
+        Button repeat = view.findViewById(R.id.button_commitment_repeat);
+        String[] repeats = Stream.of(Repeat.values()).map(Repeat::toString).toArray(String[]::new);
+
+        repeat.setOnClickListener(new View.OnClickListener() {
+            private int selection;
+
+            @Override
+            public void onClick(View view) {
+                selection = 0;
+                new MaterialAlertDialogBuilder(view.getContext())
+                        .setTitle(R.string.repeat_picker_title)
+                        .setNeutralButton(getResources().getString(R.string.cancel),
+                                (dialogInterface, i) -> {
+                                })
+                        .setPositiveButton(getResources().getString(R.string.ok),
+                                ((dialogInterface, i) -> {
+                                    commitment.setRepeat(Repeat.fromValue(repeats[selection]));
+                                    repeat.setText(repeats[selection].toUpperCase());
+                                }))
+                        .setSingleChoiceItems(repeats, selection, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setSelection(i);
+                            }
+                        }).show();
+            }
+
+            private void setSelection(int i) {
+                selection = i;
+            }
+        });
+
+        startTimeDate.setText(getFormattedDate(startCalendar));
+        endTimeDate.setText(getFormattedDate(endCalendar));
+        startTimeTime.setText(getFormattedTime(startCalendar));
+        endTimeTime.setText(getFormattedTime(endCalendar));
 
         startTimeDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,13 +142,20 @@ public class CreateCommitmentFragment extends Fragment {
                 datePicker.addOnPositiveButtonClickListener(selection -> {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selection);
+                    startCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH));
+                    endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH));
+                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
-                    String date = calendar.get(Calendar.DAY_OF_MONTH) +
-                            "-" +
-                            (calendar.get(Calendar.MONTH) + 1) +
-                            "-" +
-                            calendar.get(Calendar.YEAR);
+                    if (startCalendar.get(Calendar.HOUR_OF_DAY) >= 23) {
+                        endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    }
 
+                    String date = getFormattedDate(calendar);
+
+                    commitment.setStartTime(new Timestamp(startCalendar.getTime()));
+                    commitment.setEndTime(new Timestamp(endCalendar.getTime()));
                     startTimeDate.setText(date);
                     endTimeDate.setText(date);
                 });
@@ -128,14 +169,8 @@ public class CreateCommitmentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
-                Date startDate = null;
-                try {
-                    startDate = dateFormat.parse(startTimeDate.getText().toString());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                assert startDate != null;
-                c.setTime(startDate);
+
+                c.setTime(startCalendar.getTime());
                 c.add(Calendar.DATE, -1);
                 CalendarConstraints constraint = new CalendarConstraints.Builder()
                         .setStart(c.getTimeInMillis())
@@ -150,16 +185,14 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar selectionCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                    selectionCalendar.setTimeInMillis(selection);
+                    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+                    calendar.setTimeInMillis(selection);
 
-                    String date = selectionCalendar.get(Calendar.DAY_OF_MONTH) +
-                            "-" +
-                            (selectionCalendar.get(Calendar.MONTH) + 1) +
-                            "-" +
-                            selectionCalendar.get(Calendar.YEAR);
+                    endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH));
 
-                    endTimeDate.setText(date);
+                    commitment.setEndTime(new Timestamp(endCalendar.getTime()));
+                    endTimeDate.setText(getFormattedDate(calendar));
                 });
 
                 datePicker.show(
@@ -176,21 +209,21 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 timePicker.addOnPositiveButtonClickListener(selection -> {
-                    String startTime = String.format(Locale.getDefault(), "%02d:%02d",
-                            timePicker.getHour(), timePicker.getMinute());
+                    startCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    startCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                    String endTime;
-
-                    if (timePicker.getHour() >= 23) {
-                        endTime = String.format(Locale.getDefault(), "%02d:%02d",
-                                0, timePicker.getMinute());
+                    if (timePicker.getHour() >= 23
+                            && startCalendar.get(Calendar.DATE) == endCalendar.get(Calendar.DATE)) {
+                        endCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                        endCalendar.add(Calendar.DAY_OF_MONTH, 1);
                     } else {
-                        endTime = String.format(Locale.getDefault(), "%02d:%02d",
-                                timePicker.getHour() + 1, timePicker.getMinute());
+                        endCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour() + 1);
                     }
+                    endCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                    startTimeTime.setText(startTime);
-                    endTimeTime.setText(endTime);
+                    startTimeTime.setText(getFormattedTime(startCalendar));
+                    endTimeTime.setText(getFormattedTime(endCalendar));
+                    endTimeDate.setText(getFormattedDate(endCalendar));
                 });
 
                 timePicker.show(
@@ -207,21 +240,19 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 timePicker.addOnPositiveButtonClickListener(selection -> {
-                    String time = String.format(Locale.getDefault(), "%02d:%02d",
-                            timePicker.getHour(), timePicker.getMinute());
-                    try {
-                        if (isEqualDates(startTimeDate.getText().toString(),
-                                endTimeDate.getText().toString())
-                                && !isValidStartEndTimeState(
-                                        startTimeTime.getText().toString(), time)) {
-                            Snackbar.make(view, R.string.invalid_time_selection,
-                                    Snackbar.LENGTH_LONG).show();
-                            return;
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(endCalendar.getTime());
+                    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    calendar.set(Calendar.MINUTE, timePicker.getMinute());
+
+                    if (calendar.before(startCalendar)) {
+                        Snackbar.make(view, R.string.invalid_time_selection,
+                                Snackbar.LENGTH_LONG).show();
+                        return;
                     }
-                    endTimeTime.setText(time);
+                    endCalendar.setTime(calendar.getTime());
+                    commitment.setEndTime(new Timestamp(endCalendar.getTime()));
+                    endTimeTime.setText(getFormattedTime(endCalendar));
                 });
 
                 timePicker.show(
@@ -230,18 +261,16 @@ public class CreateCommitmentFragment extends Fragment {
         });
     }
 
-    private boolean isValidStartEndTimeState(String startTimeStr, String endTimeStr)
-            throws ParseException {
-        Date startTime = timeFormatter.parse(startTimeStr);
-        Date endTime = timeFormatter.parse(endTimeStr);
-        assert startTime != null && endTime != null;
-        return endTime.after(startTime);
+    private String getFormattedDate(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) +
+                "-" +
+                (calendar.get(Calendar.MONTH) + 1) +
+                "-" +
+                calendar.get(Calendar.YEAR);
     }
 
-    private boolean isEqualDates(String startDateStr, String endDateStr) throws ParseException {
-        Date startDate = dateFormat.parse(startDateStr);
-        Date endDate = dateFormat.parse(endDateStr);
-        assert startDate != null && endDate != null;
-        return startDate.equals(endDate);
+    private String getFormattedTime(Calendar calendar) {
+        return String.format(Locale.getDefault(), "%02d:%02d",
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 }
