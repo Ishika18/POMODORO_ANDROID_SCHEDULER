@@ -5,31 +5,31 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".fragments.CreateCommitmentFragment">
+    tools:context=".fragments.CreateGoalFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/editText_commitment_name"
+        android:id="@+id/editText_goal_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15sp"
         android:layout_marginTop="20sp"
         android:layout_marginRight="15sp"
         android:layout_marginBottom="15sp"
-        android:autofillHints="@string/title"
+        android:autofillHints="@string/goal_name_hint"
         android:backgroundTint="@color/rally_green"
         android:ems="10"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:hint="@string/commitment_name_hint"
+        android:hint="@string/goal_name_hint"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColor="@color/white"
-        android:textColorHint="@color/grey"
+        android:textColorHint="@color/white"
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/editText_commitment_location"
+        android:id="@+id/editText_goal_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15sp"
@@ -44,7 +44,7 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColor="@color/white"
-        android:textColorHint="@color/grey"
+        android:textColorHint="@color/white"
         android:textSize="24sp" />
 
     <LinearLayout
@@ -54,40 +54,26 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView_commitment_startTime"
+            android:id="@+id/textView_goal_task_time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/start_time"
+            android:text="@string/task_time"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button_commitment_startTime_date"
+            android:id="@+id/button_goal_task_time_time"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1.5"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/eczar_regular"
-            android:text="@string/placeholder_date"
-            android:textColor="@color/rally_green"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/button_commitment_startTime_time"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="1.5"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/eczar_regular"
-            android:text="@string/placeholder_time"
+            android:text="@string/default_task_time"
             android:textColor="@color/rally_green"
             android:textSize="16sp" />
     </LinearLayout>
@@ -99,19 +85,19 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView_commitment_endTime"
+            android:id="@+id/textView_goal_deadline"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/end_time"
+            android:text="@string/deadline"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button_commitment_endTime_date"
+            android:id="@+id/button_goal_deadline_date"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -125,7 +111,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/button_commitment_endTime_time"
+            android:id="@+id/button_goal_deadline_time"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -145,30 +131,30 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView_commitment_repeat"
+            android:id="@+id/textView_goal_priority"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="4"
             android:fontFamily="@font/roboto_condensed_regular"
             android:gravity="center_vertical"
-            android:text="@string/repeat"
+            android:text="@string/priority"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button_commitment_repeat"
+            android:id="@+id/button_goal_priority"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="0dp"
-            android:text="@string/default_repeat_selection" />
-
+            android:text="@string/default_priority_selection"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editText_commitment_url"
+        android:id="@+id/editText_goal_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15sp"
@@ -182,7 +168,7 @@
         android:textColorHint="@color/grey" />
 
     <EditText
-        android:id="@+id/editText_commitment_notes"
+        android:id="@+id/editText_goal_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15sp"

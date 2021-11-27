@@ -69,18 +69,21 @@ public class CommitmentRepository {
     }
 
     private Commitment getCommitmentFromDocumentMap(HashMap<String, Object> result) {
-        return new Commitment (
+        return new Commitment(
                 (String) result.get("id"),
                 (String) result.get("name"),
                 (String) result.get("location"),
                 (Timestamp) result.get("startTime"),
                 (Timestamp) result.get("endTime"),
-                Repeat.valueOf((String) result.get("repeat"))
+                Repeat.valueOf((String) result.get("repeat")),
+                (String) result.get("url"),
+                (String) result.get("notes")
         );
     }
 
-    public interface  OnFirestoreTaskComplete{
+    public interface OnFirestoreTaskComplete {
         void commitmentsDataAdded(HashMap<Repeat, List<Commitment>> commitmentsModel);
+
         void onError(Exception e);
     }
 }
