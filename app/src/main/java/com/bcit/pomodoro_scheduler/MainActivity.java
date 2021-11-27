@@ -1,12 +1,12 @@
 package com.bcit.pomodoro_scheduler;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -15,8 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-
-import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 
 /**
  * This is where the login logic will go.
@@ -56,24 +54,24 @@ public class MainActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
+            updateLoginUI(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("Error", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
+            updateLoginUI(null);
         }
     }
 
     public void setUpSignInBtn() {
         // Set the dimensions of the sign-in button.
-        signInButton = findViewById(R.id.sign_in_button);
+        signInButton = findViewById(R.id.btn_main_signIn);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_main_signIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (view.getId()) {
-                    case R.id.sign_in_button:
+                    case R.id.btn_main_signIn:
                         signIn();
                         break;
                 }
@@ -100,23 +98,46 @@ public class MainActivity extends AppCompatActivity {
     public void checkForExistingUser() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            updateUI(account);
+            updateLoginUI(account);
         }
     }
 
-    public void updateUI(GoogleSignInAccount account) {
+    public void updateLoginUI(GoogleSignInAccount account) {
         if (account == null) {
             Log.w("LogIn", "Didn't Work");
             return;
         }
 
-        // for now just go to monthly view
+        com.google.android.gms.common.SignInButton signInBtn = findViewById(R.id.btn_main_signIn);
+        signInBtn.setVisibility(View.GONE);
+
+        Button logOutBtn = findViewById(R.id.btn_main_signOut);
+        logOutBtn.setVisibility(View.VISIBLE);
+        logOutBtn.setOnClickListener(view -> logOut());
+
+        Button launchBtn = findViewById(R.id.btn_main_launchBtn);
+        launchBtn.setVisibility(View.VISIBLE);
+        launchBtn.setOnClickListener(view -> {goToCalendarActivity(account.getEmail());});
+
+        goToCalendarActivity(account.getEmail());
+    }
+
+    public void goToCalendarActivity(String userEmail) {
         Intent intent = new Intent(this, CalendarActivity.class);
-        intent.putExtra(GOOGLE_ACCOUNT, account.getEmail());
+        intent.putExtra(GOOGLE_ACCOUNT, userEmail);
         startActivity(intent);
     }
 
     public void logOut() {
+        com.google.android.gms.common.SignInButton signInBtn = findViewById(R.id.btn_main_signIn);
+        signInBtn.setVisibility(View.VISIBLE);
+
+        Button logOutBtn = findViewById(R.id.btn_main_signOut);
+        logOutBtn.setVisibility(View.GONE);
+
+        Button launchBtn = findViewById(R.id.btn_main_launchBtn);
+        launchBtn.setVisibility(View.GONE);
+
         mGoogleSignInClient.signOut();
     }
 }

@@ -1,5 +1,6 @@
 package com.bcit.pomodoro_scheduler.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
@@ -76,8 +79,34 @@ public class MonthFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setYearViewText(view);
+
+        setUpYearScrollButtons(view);
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_fragmentMonth_monthDays);
         setUpRecyclerView(getYearMonths(year), recyclerView);
+    }
+
+    private void setUpYearScrollButtons(View view) {
+        ImageButton goToPrevMonth = view.findViewById(R.id.btn_fragmentMonth_prevMonth);
+        ImageButton goToNextMonth = view.findViewById(R.id.btn_fragmentMonth_nextMonth);
+
+        goToPrevMonth.setOnClickListener(view1 -> {
+            year = Year.of(year.getValue() - 1);
+            ((CalendarActivity)getActivity())
+                    .goToMonthlyView(YearMonth.of(year.getValue(), 1));
+        });
+
+        goToNextMonth.setOnClickListener(view2 -> {
+            year = Year.of(year.getValue() + 1);
+            ((CalendarActivity)getActivity())
+                    .goToMonthlyView(YearMonth.of(year.getValue(), 1));
+        });
+    }
+
+    private void setYearViewText(View view) {
+        TextView yearTextView = view.findViewById(R.id.textView_fragmentMonth_year);
+        yearTextView.setText(this.year.toString());
     }
 
     private void setUpRecyclerView(YearMonth[] yearMonths, RecyclerView recyclerView) {
