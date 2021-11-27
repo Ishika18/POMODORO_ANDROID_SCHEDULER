@@ -3,25 +3,33 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="select">Select</string>
     <string name="title">My Pomodoro</string>
     <string name="commitment_name_hint">Commitment Name</string>
     <string name="goal_name_hint">Name of Goal</string>
     <string name="location">Location</string>
     <string name="url">URL</string>
     <string name="notes">Notes</string>
+
     <string name="placeholder">PLACEHOLDER</string>
     <string name="placeholder_time">00:00</string>
     <string name="placeholder_date">09–09–2020</string>
+
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="task_time">Task Time</string>
+    <string name="task_time_picker_title">Select Total Task Time</string>
+    <string name="default_task_time">30 mins</string>
     <string name="deadline">Deadline</string>
-    <string name="repeat">Repeat</string>
-    <string name="default_repeat_selection">Never</string>
-    <string name="repeat_picker_title">Choose Repeat Option</string>
+    <string name="deadline_picker_title">Select Deadline Date</string>
+
     <string name="priority">Priority</string>
     <string name="default_priority_selection">Low</string>
     <string name="priority_picker_title">Choose Priority</string>
+
+    <string name="repeat">Repeat</string>
+    <string name="default_repeat_selection">Never</string>
+    <string name="repeat_picker_title">Choose Repeat Option</string>
     <string name="weekday_monday">Mo</string>
     <string name="weekday_tuesday">Tu</string>
     <string name="weekday_wednesday">We</string>

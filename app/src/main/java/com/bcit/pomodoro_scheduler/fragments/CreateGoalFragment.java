@@ -2,42 +2,29 @@ package com.bcit.pomodoro_scheduler.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.Spinner;
-
 import com.bcit.pomodoro_scheduler.R;
-import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
-import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.Timestamp;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -47,11 +34,15 @@ import java.util.stream.Stream;
  */
 public class CreateGoalFragment extends Fragment {
 
-    private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
-            Locale.getDefault());
+    private static final int HOUR_DAY_LIMIT = 10;
+    private static final int HOUR_TO_MINUTES = 60;
+    private static final int DAY_TO_MINUTES = 1440;
+
+    private final Map<String, Integer> taskTimeOptions;
 
     public CreateGoalFragment() {
-        // Required empty public constructor
+        this.taskTimeOptions = new LinkedHashMap<>();
+        setUpTaskTimeOptions();
     }
 
     /**
@@ -89,8 +80,36 @@ public class CreateGoalFragment extends Fragment {
         deadlineDate.setText(getFormattedDate(deadlineCalendar));
         deadlineTime.setText(getFormattedTime(deadlineCalendar));
 
-        Goal goal = new Goal(Timestamp.now().toString(), "", "", 60,
+        Goal goal = new Goal(Timestamp.now().toString(), "", "", 30,
                 new Timestamp(deadlineCalendar.getTime()), Priority.LOW, "", "");
+
+        Button taskTime = view.findViewById(R.id.button_goal_task_time_time);
+        String[] taskTimes = taskTimeOptions.keySet().toArray(new String[0]);
+
+        taskTime.setOnClickListener(new View.OnClickListener() {
+            private int selection;
+
+            @Override
+            public void onClick(View view) {
+                selection = 0;
+                new MaterialAlertDialogBuilder(view.getContext())
+                        .setTitle(getResources().getString(R.string.task_time_picker_title))
+                        .setNeutralButton(getResources().getString(R.string.cancel), null)
+                        .setPositiveButton(getResources().getString(R.string.select),
+                                ((dialogInterface, i) -> {
+                                    goal.setTotalTimeInMinutes(
+                                            taskTimeOptions.get(taskTimes[selection]));
+                                    taskTime.setText(taskTimes[selection]);
+                                }))
+                        .setSingleChoiceItems(taskTimes, selection,
+                                ((dialogInterface, i) -> {
+                                    setSelection(i);
+                                })).show();
+            }
+            private void setSelection(int i) {
+                selection = i;
+            }
+        });
 
         Button priority = view.findViewById(R.id.button_goal_priority);
         String[] priorities = Stream.of(Priority.values())
@@ -99,26 +118,26 @@ public class CreateGoalFragment extends Fragment {
 
         priority.setOnClickListener(new View.OnClickListener() {
             private int selection;
+
             @Override
             public void onClick(View view) {
                 selection = 0;
                 new MaterialAlertDialogBuilder(view.getContext())
                         .setTitle(R.string.priority_picker_title)
-                        .setNeutralButton(getResources().getString(R.string.cancel),
-                                (dialogInterface, i) -> {
-                                })
-                .setPositiveButton(getResources().getString(R.string.ok),
-                        ((dialogInterface, i) -> {
-                            goal.setPriority(Priority.fromValue(selection));
-                            priority.setText(goal.getPriority().name());
-                        }))
-                .setSingleChoiceItems(priorities, selection, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        setSelection(i);
-                    }
-                }).show();
+                        .setNeutralButton(getResources().getString(R.string.cancel), null)
+                        .setPositiveButton(getResources().getString(R.string.ok),
+                                ((dialogInterface, i) -> {
+                                    goal.setPriority(Priority.fromValue(selection));
+                                    priority.setText(goal.getPriority().name());
+                                }))
+                        .setSingleChoiceItems(priorities, selection, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setSelection(i);
+                            }
+                        }).show();
             }
+
             private void setSelection(int i) {
                 selection = i;
             }
@@ -129,7 +148,7 @@ public class CreateGoalFragment extends Fragment {
             public void onClick(View view) {
                 MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
                         .datePicker()
-                        .setTitleText("Select Start Date")
+                        .setTitleText(getResources().getString(R.string.deadline_picker_title))
                         .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                         .build();
 
@@ -167,6 +186,18 @@ public class CreateGoalFragment extends Fragment {
                         requireActivity().getSupportFragmentManager(), timePicker.toString());
             }
         });
+    }
+
+    private void setUpTaskTimeOptions() {
+        taskTimeOptions.put("30 Mins", 30);
+        taskTimeOptions.put("1 Hour", HOUR_TO_MINUTES);
+        for (int i = 2; i <= HOUR_DAY_LIMIT; i++) {
+            taskTimeOptions.put(i + " Hours", i * HOUR_TO_MINUTES);
+        }
+        taskTimeOptions.put(1 + " Day", DAY_TO_MINUTES);
+        for (int i = 2; i <= HOUR_DAY_LIMIT; i++) {
+            taskTimeOptions.put(i + " Days", i * DAY_TO_MINUTES);
+        }
     }
 
     private String getFormattedDate(Calendar calendar) {

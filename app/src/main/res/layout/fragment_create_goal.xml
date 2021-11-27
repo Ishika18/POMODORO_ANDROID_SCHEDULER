@@ -73,7 +73,7 @@
             android:layout_marginHorizontal="10dp"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/eczar_regular"
-            android:text="@string/placeholder_time"
+            android:text="@string/default_task_time"
             android:textColor="@color/rally_green"
             android:textSize="16sp" />
     </LinearLayout>
