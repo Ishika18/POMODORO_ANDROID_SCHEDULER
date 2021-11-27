@@ -11,8 +11,8 @@ public class Commitment extends ScheduleEvent implements Serializable {
     private Repeat repeat;
 
     public Commitment(String id, String name, String location, Timestamp startTime, Timestamp endTime,
-                      Repeat repeat) {
-        super(id, name, location);
+                      Repeat repeat, String url, String notes) {
+        super(id, name, location, url, notes);
         this.startTime = startTime;
         this.endTime = endTime;
         this.repeat = repeat;
@@ -48,8 +48,9 @@ public class Commitment extends ScheduleEvent implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Commitment that = (Commitment) o;
-        return getStartTime().equals(that.getStartTime()) &&
-                getEndTime().equals(that.getEndTime()) && getRepeat() == that.getRepeat();
+        return getStartTime().equals(that.getStartTime())
+                && getEndTime().equals(that.getEndTime())
+                && getRepeat() == that.getRepeat();
     }
 
     @Override

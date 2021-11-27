@@ -1,23 +1,37 @@
 package com.bcit.pomodoro_scheduler.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.model.Commitment;
+import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+import com.google.firebase.Timestamp;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +48,6 @@ import java.util.stream.Stream;
 public class CreateGoalFragment extends Fragment {
 
     private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
-            Locale.getDefault());
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",
             Locale.getDefault());
 
     public CreateGoalFragment() {
@@ -68,28 +80,105 @@ public class CreateGoalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Spinner priority = view.findViewById(R.id.spinner_goal_priority);
-        List<String> priorities = Stream.of(Priority.values())
-                .map(Priority::name)
-                .collect(Collectors.toList());
-        priority.setAdapter(new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_spinner_dropdown_item, priorities));
-
-        Spinner repeat = view.findViewById(R.id.spinner_goal_repeat);
-        repeat.setAdapter(new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_spinner_dropdown_item, Repeat.values()));
-
-
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
+        Calendar deadlineCalendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
         Button deadlineDate = view.findViewById(R.id.button_goal_deadline_date);
         Button deadlineTime = view.findViewById(R.id.button_goal_deadline_time);
 
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        String date = calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
-        String time = timeFormatter.format(new Date());
+        deadlineCalendar.add(Calendar.DAY_OF_YEAR, 1);
 
-        deadlineDate.setText(date);
-        deadlineTime.setText(time);
+        deadlineDate.setText(getFormattedDate(deadlineCalendar));
+        deadlineTime.setText(getFormattedTime(deadlineCalendar));
+
+        Goal goal = new Goal(Timestamp.now().toString(), "", "", 60,
+                new Timestamp(deadlineCalendar.getTime()), Priority.LOW, "", "");
+
+        Button priority = view.findViewById(R.id.button_goal_priority);
+        String[] priorities = Stream.of(Priority.values())
+                .map(value -> value.name().charAt(0) + value.name().substring(1).toLowerCase())
+                .toArray(String[]::new);
+
+        priority.setOnClickListener(new View.OnClickListener() {
+            private int selection;
+            @Override
+            public void onClick(View view) {
+                selection = 0;
+                new MaterialAlertDialogBuilder(view.getContext())
+                        .setTitle(R.string.priority_picker_title)
+                        .setNeutralButton(getResources().getString(R.string.cancel),
+                                (dialogInterface, i) -> {
+                                })
+                .setPositiveButton(getResources().getString(R.string.ok),
+                        ((dialogInterface, i) -> {
+                            goal.setPriority(Priority.fromValue(selection));
+                            priority.setText(goal.getPriority().name());
+                        }))
+                .setSingleChoiceItems(priorities, selection, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setSelection(i);
+                    }
+                }).show();
+            }
+            private void setSelection(int i) {
+                selection = i;
+            }
+        });
+
+        deadlineDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
+                        .datePicker()
+                        .setTitleText("Select Start Date")
+                        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                        .build();
+
+                datePicker.addOnPositiveButtonClickListener(selection -> {
+                    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    c.setTimeInMillis(selection);
+
+                    deadlineCalendar.set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
+                            c.get(Calendar.YEAR));
+
+                    goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
+                    deadlineDate.setText(getFormattedDate(deadlineCalendar));
+                });
+                datePicker.show(
+                        requireActivity().getSupportFragmentManager(), datePicker.toString());
+            }
+        });
+
+        deadlineTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                        .setTimeFormat(TimeFormat.CLOCK_24H)
+                        .setTitleText("Select Deadline Time")
+                        .build();
+
+                timePicker.addOnPositiveButtonClickListener(selection -> {
+                    deadlineCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                    deadlineCalendar.set(Calendar.MINUTE, timePicker.getMinute());
+
+                    goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
+                    deadlineTime.setText(getFormattedTime(deadlineCalendar));
+                });
+                timePicker.show(
+                        requireActivity().getSupportFragmentManager(), timePicker.toString());
+            }
+        });
+    }
+
+    private String getFormattedDate(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) +
+                "-" +
+                (calendar.get(Calendar.MONTH) + 1) +
+                "-" +
+                calendar.get(Calendar.YEAR);
+    }
+
+    private String getFormattedTime(Calendar calendar) {
+        return String.format(Locale.getDefault(), "%02d:%02d",
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 }
