@@ -1,14 +1,12 @@
 package com.bcit.pomodoro_scheduler.model;
 
-import com.bcit.pomodoro_scheduler.weeklyView.GoalDataForScheduler;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class Schedule {
+public class Scheduler {
     private HashMap<LocalDate, ArrayList<Task>> schedule;
 
     private HashMap<DayOfWeek, ArrayList<Task>> repeatCommitments;
@@ -29,7 +27,7 @@ public class Schedule {
     private int interleaveIndex = 0;
     private int maxInterleaves;
 
-    public Schedule() {
+    public Scheduler() {
         this.repeatCommitments = getStudentCommitments();
         this.singleCommitments = new HashMap<>();
         this.startMinutes = 420;
@@ -45,10 +43,10 @@ public class Schedule {
         createSchedule();
     }
 
-    public Schedule(HashMap<DayOfWeek, ArrayList<Task>> repeatCommitments,
-                    HashMap<LocalDate, ArrayList<Task>> singleCommitments,
-                    ArrayList<GoalDataForScheduler> goals,
-                    int startMinutes, int endMinutes, int maxInterleaves) {
+    public Scheduler(HashMap<DayOfWeek, ArrayList<Task>> repeatCommitments,
+                     HashMap<LocalDate, ArrayList<Task>> singleCommitments,
+                     ArrayList<GoalDataForScheduler> goals,
+                     int startMinutes, int endMinutes, int maxInterleaves) {
         this.repeatCommitments = repeatCommitments;
         this.singleCommitments = singleCommitments;
         this.startMinutes = startMinutes;
@@ -69,7 +67,7 @@ public class Schedule {
         separatePriorities(goals);
     }
 
-    public void separatePriorities(ArrayList<GoalDataForScheduler> goals) {
+    private void separatePriorities(ArrayList<GoalDataForScheduler> goals) {
         for (GoalDataForScheduler goal : goals) {
             if (goal.getTask_priority() == Priority.HIGH) {
                 high_priority.add(goal);
@@ -83,7 +81,7 @@ public class Schedule {
         }
     }
 
-    public boolean goalsLeft() {
+    private boolean goalsLeft() {
         return (high_priority.size() + med_priority.size() + low_priority.size()) > 0;
     }
 
@@ -256,7 +254,7 @@ public class Schedule {
     }
 
     public static void main(String[] args) {
-        Schedule s = new Schedule();
+        Scheduler s = new Scheduler();
         HashMap<LocalDate, ArrayList<Task>> sched = s.getSchedule();
         for (LocalDate date: sched.keySet()) {
             System.out.println("DATE------" + date.toString());
