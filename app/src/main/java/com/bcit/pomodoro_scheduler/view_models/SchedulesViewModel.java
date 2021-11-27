@@ -7,16 +7,21 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.repositories.ScheduleRepository;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SchedulesViewModel extends ViewModel implements ScheduleRepository.OnFirestoreTaskComplete {
 
-    private final MutableLiveData<List<Goal>> goalsModelData = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<LocalDate, ArrayList<Task>>>
+            schedulesModelData = new MutableLiveData<>();
 
-    public LiveData<List<Goal>> getSchedulesModelData() {
-        return goalsModelData;
+    public LiveData<HashMap<LocalDate, ArrayList<Task>>> getSchedulesModelData() {
+        return schedulesModelData;
     }
 
     private final ScheduleRepository scheduleRepository = new ScheduleRepository(this);
@@ -27,8 +32,8 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
     }
     
     @Override
-    public void goalsDataAdded(List<Goal> goalsModels) {
-        goalsModelData.setValue(goalsModels);
+    public void schedulesDataAdded(HashMap<LocalDate, ArrayList<Task>> schedulesModel) {
+        schedulesModelData.setValue(schedulesModel);
     }
 
     @Override

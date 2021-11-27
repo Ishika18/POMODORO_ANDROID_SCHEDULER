@@ -16,12 +16,15 @@ import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class CalendarActivity extends AppCompatActivity {
     private String userEmail;
     private List<Goal> goals;
     private HashMap<Repeat, List<Commitment>> commitmentHashMap;
+    private HashMap<LocalDate, ArrayList<Task>> scheduleHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +54,21 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void getDataFromFirebaseViewModels() {
-        GoalsViewModel goalsViewModel = new GoalsViewModel("shagunphw@gmail.com");
+        GoalsViewModel goalsViewModel = new GoalsViewModel(userEmail);
         goalsViewModel.getGoalsModelData().observe(this, goals -> {
             this.goals = goals;
         });
 
-        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel("shagunphw@gmail.com");
+        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel(userEmail);
         commitmentsViewModel.getCommitmentsModelData()
                 .observe(this, commitmentsMap -> {
                     this.commitmentHashMap = commitmentsMap;
+                });
+
+        SchedulesViewModel schedulesViewModel = new SchedulesViewModel(userEmail);
+        schedulesViewModel.getSchedulesModelData()
+                .observe(this, scheduleMap -> {
+                    this.scheduleHashMap = scheduleMap;
                 });
     }
 
