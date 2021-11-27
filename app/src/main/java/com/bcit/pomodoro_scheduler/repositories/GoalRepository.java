@@ -17,7 +17,7 @@ public class GoalRepository {
 
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private final CollectionReference taskRef = firebaseFirestore.collection("tasks");
+    private final CollectionReference taskRef = firebaseFirestore.collection("goals");
 
     public GoalRepository(OnFirestoreTaskComplete onFirestoreTaskComplete) {
         this.onFirestoreTaskComplete = onFirestoreTaskComplete;

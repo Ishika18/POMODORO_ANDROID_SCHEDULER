@@ -13,16 +13,21 @@ import android.view.View;
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
     private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
     private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
     private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
     private String userEmail;
+    private List<Goal> goals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,22 @@ public class CalendarActivity extends AppCompatActivity {
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
         goToMonthlyView(YearMonth.now());
+
+        GoalsViewModel goalsViewModel = new GoalsViewModel("shagunphw@gmail.com");
+        goalsViewModel.getGoalsModelData().observe(this, goals -> {
+            // do whatever you want with the goals
+            Log.d("CHANGED", "goals should be updated");
+            Log.d("GOALS", goals.toString());
+        });
+
+        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel("shagunphw@gmail.com");
+        commitmentsViewModel.getCommitmentsModelData()
+                .observe(this, commitmentsMap -> {
+                    // do whatever you want with the commitments
+                    Log.d("CHANGED", "commitments should be updated");
+                    Log.d("COMMITMENTS", commitmentsMap.toString());
+                });
+
     }
 
     public void setActionBarFunction() {
