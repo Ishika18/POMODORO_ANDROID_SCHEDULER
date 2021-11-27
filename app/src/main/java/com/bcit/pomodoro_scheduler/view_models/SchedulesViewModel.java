@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.repositories.GoalRepository;
 import com.bcit.pomodoro_scheduler.repositories.ScheduleRepository;
 
 import java.util.List;
