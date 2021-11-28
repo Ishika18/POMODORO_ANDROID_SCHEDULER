@@ -3,6 +3,7 @@ package com.bcit.pomodoro_scheduler.repositories;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Task;
+import com.bcit.pomodoro_scheduler.model.TaskType;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ScheduleRepository {
 
@@ -33,16 +35,13 @@ public class ScheduleRepository {
                 .addOnFailureListener(onFirestoreTaskComplete::onError);
     }
 
-    private Goal getScheduleDataFromMap(HashMap<String, Object> result) {
-        return new Goal (
+    private Task getTaskDataFromMap(HashMap<String, Object> result) {
+        return new Task (
                 (String) result.get("id"),
                 (String) result.get("name"),
-                (String) result.get("location"),
-                ((Long) result.get("totalTimeInMinutes")).intValue(),
-                (Timestamp) result.get("deadline"),
-                Priority.valueOf((String) result.get("priority")),
-                (String) result.get("notes"),
-                (String) result.get("url")
+                ((Long) result.get("startTime")).intValue(),
+                ((Long) result.get("endTime")).intValue(),
+                TaskType.valueOf((String) result.get("type"))
         );
     }
 
@@ -52,8 +51,13 @@ public class ScheduleRepository {
         Map<String, Object> map = documentSnapshot.getData();
         if (map != null) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
-//                    schedules.add(getScheduleDataFromMap(result));
+                LocalDate key = LocalDate.parse(entry.getKey());
+                schedules.put(key, new ArrayList<>());
+
+                for (HashMap<String, Object> taskObj: (ArrayList<HashMap<String, Object>>) entry.getValue()) {
+                    Task task = getTaskDataFromMap(taskObj);
+                    Objects.requireNonNull(schedules.get(key)).add(task);
+                }
             }
 
             onFirestoreTaskComplete.schedulesDataAdded(schedules);
