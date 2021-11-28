@@ -22,7 +22,9 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.jar.JarEntry;
 
 
 public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.ViewHolder> {
@@ -76,16 +78,21 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         this.activity = activity;
         this.userEmail = userEmail;
         this.commitments = new ArrayList<>();
+        HashMap<String, Commitment> commitmentsMap = new HashMap<>();
         CommitmentsViewModel viewModel = new ViewModelProvider(activity)
                 .get(CommitmentsViewModel.class);
 
         viewModel.getCommitmentsModelData().observe(activity, commitmentHashMap -> {
             for (List<Commitment> listValue : commitmentHashMap.values()) {
                 if (listValue != null) {
-                    this.commitments.addAll(listValue);
+                    for (Commitment commitment: listValue) {
+                        commitmentsMap.put(commitment.getId(), commitment);
+                    }
                 }
             }
+            this.commitments.addAll(commitmentsMap.values());
         });
+
     }
 
     // Create new views (invoked by the layout manager)
