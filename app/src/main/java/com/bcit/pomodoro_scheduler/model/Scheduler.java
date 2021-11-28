@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,17 +109,16 @@ public class Scheduler {
     }
 
     private int getDaysBetween(Date date1, Date date2) {
-        LocalDate dateBefore = LocalDate.parse(date1.toString());
-        LocalDate dateAfter = LocalDate.parse(date2.toString());
-        int noOfDaysBetween = (int) ChronoUnit.DAYS.between(dateBefore, dateAfter);
-        return noOfDaysBetween;
+        LocalDate dateBefore = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dateAfter = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return (int) ChronoUnit.DAYS.between(dateBefore, dateAfter);
     }
 
     private HashMap<LocalDate, ArrayList<Task>> getSingleCommitments(List<Commitment> commitments) {
         HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
         for (Commitment commitment : commitments) {
             Date date = commitment.getStartTime().toDate();
-            LocalDate key = LocalDate.parse(date.toString());
+            LocalDate key = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
             singleCommitmentHashMap.putIfAbsent(key, new ArrayList<>());
             Objects.requireNonNull(singleCommitmentHashMap.get(key))
