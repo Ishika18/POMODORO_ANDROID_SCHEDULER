@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -178,7 +179,7 @@ public class Scheduler {
         while (workBlockMinutes > 0 && goalsLeft()) {
             if (workBlockMinutes >= workBlockSize) {
                 Task task = getGoalWorkBlock(workBlockL, currentMinutes);
-                if (task.getDaysLeft() > 0) {
+                if (task.getDaysLeft() > 0 && task.getEndTime() - task.getStartTime() >= 10) {
                     int restSize = workBlockSize - workBlockL;
                     Task rest = new Task("rest", "Break " + restSize, task.getEndTime(),
                             task.getEndTime() + restSize, 1, TaskType.BREAK);
@@ -191,7 +192,7 @@ public class Scheduler {
                 }
             } else {
                 Task task = getGoalWorkBlock(workBlockMinutes, currentMinutes);
-                if (task.getDaysLeft() > 0) {
+                if (task.getDaysLeft() > 0 && task.getEndTime() - task.getStartTime() >= 10) {
                     scheduleToday.add(task);
                     currentMinutes += workBlockMinutes;
                     workBlockMinutes = 0;
