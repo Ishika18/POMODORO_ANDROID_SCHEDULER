@@ -5,14 +5,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.DayAdapter;
 import com.bcit.pomodoro_scheduler.model.Commitment;
@@ -82,45 +85,43 @@ public class DayFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SchedulesViewModel scheduleViewModel = new ViewModelProvider(requireActivity())
-                .get(SchedulesViewModel.class);
 
-        scheduleViewModel.getSchedulesModelData().observe(getViewLifecycleOwner(), schedule -> {
-            if (schedule.isEmpty()) {
-                updateSchedule(scheduleViewModel);
-            } else {
-                ArrayList<Task> tasks = schedule.get(date);
-                RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
-                setUpRecyclerView(tasks, rv);
-            }
+        GoalsViewModel goalsViewModel = new ViewModelProvider(requireActivity())
+                .get(GoalsViewModel.class);
+        goalsViewModel.getGoalsModelData().observe(getViewLifecycleOwner(), goals -> {
+            this.goals = goals;
         });
+
+        CommitmentsViewModel commitmentsViewModel = new ViewModelProvider(requireActivity())
+                .get(CommitmentsViewModel.class);
+        commitmentsViewModel.getCommitmentsModelData()
+                .observe(getViewLifecycleOwner(), commitmentsMap -> {
+                    this.commitmentHashMap = commitmentsMap;
+                });
+
+        SchedulesViewModel schedulesViewModel = new ViewModelProvider(requireActivity())
+                .get(SchedulesViewModel.class);
+        LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
+        schedulesViewModel.getSchedulesModelData()
+                .observe(lifecycleOwner, scheduleMap -> {
+                    this.scheduleHashMap = scheduleMap;
+
+                    if (scheduleHashMap.isEmpty()) {
+                        Scheduler scheduler = new Scheduler(commitmentHashMap, goals);
+                        this.scheduleHashMap = scheduler.getSchedule();
+                        schedulesViewModel.updateScheduleData(scheduleMap);
+                    };
+
+                    ArrayList<Task> tasks = scheduleHashMap.get(date) == null?
+                            new ArrayList<>(): scheduleHashMap.get(date);
+                    RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
+                    setUpRecyclerView(tasks, rv);
+                });
     }
 
     private void setUpRecyclerView(ArrayList<Task> tasks, RecyclerView rv) {
         DayAdapter adapter = new DayAdapter(tasks);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.VERTICAL, false));
-    }
-
-    private void updateSchedule(SchedulesViewModel scheduleViewModel) {
-        CommitmentsViewModel commitmentsViewModel = new ViewModelProvider(requireActivity())
-                .get(CommitmentsViewModel.class);
-        GoalsViewModel goalsViewModel = new ViewModelProvider(requireActivity())
-                .get(GoalsViewModel.class);
-
-        commitmentsViewModel.getCommitmentsModelData().observe(getViewLifecycleOwner(), commitments -> {
-            this.commitmentHashMap = commitments;
-        });
-
-        goalsViewModel.getGoalsModelData().observe(getViewLifecycleOwner(), goals -> {
-            this.goals = goals;
-        });
-
-        Scheduler scheduler = new Scheduler(commitmentHashMap, goals);
-        this.scheduleHashMap = scheduler.getSchedule();
-
-        scheduleViewModel.updateScheduleData(this.scheduleHashMap).observe(getViewLifecycleOwner(), updated -> {
-            System.out.println("UPDATING SCHEDULE YO, SUCCESSFUL FOOL? " + updated);
-        });
     }
 }

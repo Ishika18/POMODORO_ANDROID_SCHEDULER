@@ -4,6 +4,8 @@ import com.google.firebase.Timestamp;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -108,65 +110,6 @@ public class Scheduler {
         return goalDataForSchedulers;
     }
 
-    private int getDaysBetween(Date date1, Date date2) {
-        LocalDate dateBefore = LocalDate.parse(date1.toString());
-        LocalDate dateAfter = LocalDate.parse(date2.toString());
-        int noOfDaysBetween = (int) ChronoUnit.DAYS.between(dateBefore, dateAfter);
-        return noOfDaysBetween;
-    }
-
-    private HashMap<LocalDate, ArrayList<Task>> getSingleCommitments(List<Commitment> commitments) {
-        HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
-        for (Commitment commitment : commitments) {
-            Date date = commitment.getStartTime().toDate();
-            LocalDate key = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            LocalDate key = LocalDate.parse(date.toString());
-
-            singleCommitmentHashMap.putIfAbsent(key, new ArrayList<>());
-            Objects.requireNonNull(singleCommitmentHashMap.get(key))
-                    .add(getTaskFromCommitment(commitment));
-        }
-        return singleCommitmentHashMap;
-    }
-
-    private HashMap<DayOfWeek, ArrayList<Task>> getRepeatCommitments(
-            HashMap<Repeat, List<Commitment>> commitmentHashMap) {
-        HashMap<DayOfWeek, ArrayList<Task>> repeatCommitmentHashMap = new HashMap<>();
-        for (Map.Entry<Repeat, List<Commitment>> entry : commitmentHashMap.entrySet()) {
-            if (entry.getKey() == Repeat.NEVER) {
-                continue;
-            }
-
-            DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString().toUpperCase());
-            repeatCommitmentHashMap.put(key, new ArrayList<>());
-
-            for (Commitment commitment : entry.getValue()) {
-                Task task = getTaskFromCommitment(commitment);
-                Objects.requireNonNull(repeatCommitmentHashMap.get(key)).add(task);
-            }
-        }
-        return repeatCommitmentHashMap;
-    }
-
-    private Task getTaskFromCommitment(Commitment commitment) {
-        Date startTimeDate = commitment.getStartTime().toDate();
-        Date endTimeDate = commitment.getEndTime().toDate();
-        Calendar startTimeCalendar = Calendar.getInstance();
-        Calendar endTimeCalendar = Calendar.getInstance();
-        startTimeCalendar.setTime(startTimeDate);
-        endTimeCalendar.setTime(endTimeDate);
-        int startTime = startTimeCalendar.HOUR_OF_DAY * 60 + startTimeCalendar.MINUTE;
-        int endTime = endTimeCalendar.HOUR_OF_DAY * 60 + endTimeCalendar.MINUTE;
-        return new Task(
-                commitment.getId(),
-                commitment.getName(),
-                startTime,
-                endTime,
-                1,
-                TaskType.COMMITMENT
-        );
-    }
-
     private void setGoals(ArrayList<GoalDataForScheduler> goals) {
         Collections.sort(goals, Collections.reverseOrder());
         separatePriorities(goals);
@@ -189,7 +132,6 @@ public class Scheduler {
     private boolean goalsLeft() {
         return (high_priority.size() + med_priority.size() + low_priority.size()) > 0;
     }
-
 
     public HashMap<LocalDate, ArrayList<Task>> getSchedule() {
         return schedule;
@@ -237,7 +179,7 @@ public class Scheduler {
         while (workBlockMinutes > 0 && goalsLeft()) {
             if (workBlockMinutes >= workBlockSize) {
                 Task task = getGoalWorkBlock(workBlockL, currentMinutes);
-                if (task.getDaysLeft() > 0) {
+                if (task.getDaysLeft() > 0 && task.getEndTime() - task.getStartTime() >= 10) {
                     int restSize = workBlockSize - workBlockL;
                     Task rest = new Task("rest", "Break " + restSize, task.getEndTime(),
                             task.getEndTime() + restSize, 1, TaskType.BREAK);
@@ -250,7 +192,7 @@ public class Scheduler {
                 }
             } else {
                 Task task = getGoalWorkBlock(workBlockMinutes, currentMinutes);
-                if (task.getDaysLeft() > 0) {
+                if (task.getDaysLeft() > 0 && task.getEndTime() - task.getStartTime() >= 10) {
                     scheduleToday.add(task);
                     currentMinutes += workBlockMinutes;
                     workBlockMinutes = 0;
@@ -283,6 +225,61 @@ public class Scheduler {
             return med_priority;
         }
         return low_priority;
+    }
+
+    private int getDaysBetween(Date date1, Date date2) {
+        LocalDate dateBefore = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dateAfter = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return (int) ChronoUnit.DAYS.between(dateAfter, dateBefore);
+    }
+
+    private HashMap<LocalDate, ArrayList<Task>> getSingleCommitments(List<Commitment> commitments) {
+        HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
+        for (Commitment commitment : commitments) {
+            Date date = commitment.getStartTime().toDate();
+            LocalDate key = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            singleCommitmentHashMap.putIfAbsent(key, new ArrayList<>());
+            Objects.requireNonNull(singleCommitmentHashMap.get(key))
+                    .add(getTaskFromCommitment(commitment));
+        }
+        return singleCommitmentHashMap;
+    }
+
+    private HashMap<DayOfWeek, ArrayList<Task>> getRepeatCommitments(
+            HashMap<Repeat, List<Commitment>> commitmentHashMap) {
+        HashMap<DayOfWeek, ArrayList<Task>> repeatCommitmentHashMap = new HashMap<>();
+        for (Map.Entry<Repeat, List<Commitment>> entry : commitmentHashMap.entrySet()) {
+            if (entry.getKey() == Repeat.NEVER) {
+                continue;
+            }
+
+            DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString().toUpperCase());
+            repeatCommitmentHashMap.put(key, new ArrayList<>());
+
+            for (Commitment commitment : entry.getValue()) {
+                Task task = getTaskFromCommitment(commitment);
+                Objects.requireNonNull(repeatCommitmentHashMap.get(key)).add(task);
+            }
+        }
+        return repeatCommitmentHashMap;
+    }
+
+    private Task getTaskFromCommitment(Commitment commitment) {
+        Date startTimeDate = commitment.getStartTime().toDate();
+        Date endTimeDate = commitment.getEndTime().toDate();
+        LocalDateTime startLocalDateTime = startTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime endLocalDateTime = endTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        int startTime = startLocalDateTime.getHour() * 60 + startLocalDateTime.getMinute();
+        int endTime = endLocalDateTime.getHour() * 60 + endLocalDateTime.getMinute();
+        return new Task(
+                commitment.getId(),
+                commitment.getName(),
+                startTime,
+                endTime,
+                1,
+                TaskType.COMMITMENT
+        );
     }
 
 

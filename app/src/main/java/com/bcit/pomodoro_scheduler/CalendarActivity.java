@@ -19,6 +19,7 @@ import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.model.Scheduler;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
@@ -56,7 +57,6 @@ public class CalendarActivity extends AppCompatActivity {
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
         goToMonthlyView(YearMonth.now());
-
         getDataFromFirebaseViewModels();
     }
 
@@ -82,8 +82,6 @@ public class CalendarActivity extends AppCompatActivity {
                     this.scheduleHashMap = scheduleMap;
                 });
     }
-
-
 
     public void setActionBarFunction() {
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
