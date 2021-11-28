@@ -32,14 +32,19 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.Timestamp;
 
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.stream.Stream;
@@ -99,9 +104,6 @@ public class CreateCommitmentFragment extends Fragment {
         Calendar endCalendar = Calendar.getInstance(TimeZone.getDefault());
         endCalendar.add(Calendar.HOUR, 1);
 
-        if (endCalendar.get(Calendar.HOUR_OF_DAY) == 0) {
-            endCalendar.add(Calendar.DATE, 1);
-        }
 
         Button startTimeDate = view.findViewById(R.id.button_commitment_startTime_date);
         Button endTimeDate = view.findViewById(R.id.button_commitment_endTime_date);
@@ -166,18 +168,15 @@ public class CreateCommitmentFragment extends Fragment {
                             calendar.get(Calendar.DAY_OF_MONTH));
                     endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH));
-                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
-                    if (startCalendar.get(Calendar.HOUR_OF_DAY) >= 23) {
+                    if (endCalendar.before(startCalendar)) {
                         endCalendar.add(Calendar.DAY_OF_MONTH, 1);
                     }
 
-                    String date = getFormattedDate(calendar);
-
                     commitment.setStartTime(new Timestamp(startCalendar.getTime()));
                     commitment.setEndTime(new Timestamp(endCalendar.getTime()));
-                    startTimeDate.setText(date);
-                    endTimeDate.setText(date);
+                    startTimeDate.setText(getFormattedDate(startCalendar));
+                    endTimeDate.setText(getFormattedDate(endCalendar));
                 });
 
                 datePicker.show(
@@ -188,7 +187,7 @@ public class CreateCommitmentFragment extends Fragment {
         endTimeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
+                Calendar c = Calendar.getInstance(TimeZone.getDefault());
 
                 c.setTime(startCalendar.getTime());
                 c.add(Calendar.DATE, -1);
@@ -205,7 +204,7 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selection);
 
                     endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
@@ -232,13 +231,7 @@ public class CreateCommitmentFragment extends Fragment {
                     startCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                     startCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                    if (timePicker.getHour() >= 23
-                            && startCalendar.get(Calendar.DATE) == endCalendar.get(Calendar.DATE)) {
-                        endCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                        endCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                    } else {
-                        endCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour() + 1);
-                    }
+                    endCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour() + 1);
                     endCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
                     startTimeTime.setText(getFormattedTime(startCalendar));
@@ -289,16 +282,16 @@ public class CreateCommitmentFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                commitment.setName(name.getText().toString());
-                commitment.setLocation(location.getText().toString());
-                commitment.setUrl(url.getText().toString());
-                commitment.setNotes(notes.getText().toString());
-
-                if (commitment.getName().isEmpty()) {
+                if (name.getText().toString().isEmpty()) {
                     Snackbar.make(view, R.string.commitment_name_error,
                             Snackbar.LENGTH_LONG).show();
                     return;
                 }
+
+                commitment.setName(name.getText().toString());
+                commitment.setLocation(location.getText().toString());
+                commitment.setUrl(url.getText().toString());
+                commitment.setNotes(notes.getText().toString());
 
                 viewModel.updateCommitmentData(userEmail, commitment).observe(getViewLifecycleOwner(),
                         updated -> {

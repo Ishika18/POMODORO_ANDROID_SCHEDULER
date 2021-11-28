@@ -1,18 +1,14 @@
 package com.bcit.pomodoro_scheduler.view_models;
 
-import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.bcit.pomodoro_scheduler.repositories.CommitmentRepository;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,16 +33,13 @@ public class CommitmentsViewModel extends ViewModel implements CommitmentReposit
         return commitmentDeleted;
     }
 
-    private final Context context;
     private final String userEmail;
 
     private final CommitmentRepository commitmentRepository = new CommitmentRepository(
             this
     );
 
-
-    public CommitmentsViewModel(Context context, String userEmail) {
-        this.context = context;
+    public CommitmentsViewModel(String userEmail) {
         this.userEmail = userEmail;
         commitmentRepository.getCommitmentsData(this.userEmail);
     }
