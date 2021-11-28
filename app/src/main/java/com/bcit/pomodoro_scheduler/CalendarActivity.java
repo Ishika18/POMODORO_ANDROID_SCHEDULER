@@ -83,17 +83,6 @@ public class CalendarActivity extends AppCompatActivity {
                 });
     }
 
-    public void updateSchedule(SchedulesViewModel schedulesViewModel) {
-        Scheduler scheduler = new Scheduler(commitmentHashMap, goals);
-        this.scheduleHashMap = scheduler.getSchedule();
-
-        schedulesViewModel.updateScheduleData(this.scheduleHashMap)
-                .observe(this, updated -> {
-                    Log.d("SCHEDULE_UPDATE",
-                            "UPDATING SCHEDULE YO, SUCCESSFUL FOOL? " + updated.toString());
-                });
-    }
-
     public void setActionBarFunction() {
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
