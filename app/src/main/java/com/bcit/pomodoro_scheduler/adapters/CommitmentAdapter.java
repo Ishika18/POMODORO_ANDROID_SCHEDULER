@@ -1,6 +1,5 @@
 package com.bcit.pomodoro_scheduler.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +7,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.Timestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -53,7 +47,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             commitmentTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             commitmentTime = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-            editButton = view.findViewById(R.id.button__itemEvent_editButton);
+            editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
         public TextView getCommitmentTitle() {

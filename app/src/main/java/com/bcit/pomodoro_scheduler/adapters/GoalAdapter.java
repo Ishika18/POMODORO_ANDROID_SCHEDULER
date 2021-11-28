@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
-import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
@@ -45,7 +44,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             goalTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             goalHours = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-            editButton = view.findViewById(R.id.button__itemEvent_editButton);
+            editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
         public TextView getGoalTitle() {

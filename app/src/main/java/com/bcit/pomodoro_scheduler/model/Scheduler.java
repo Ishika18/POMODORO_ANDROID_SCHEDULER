@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -118,7 +119,8 @@ public class Scheduler {
         HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
         for (Commitment commitment : commitments) {
             Date date = commitment.getStartTime().toDate();
-            LocalDate key = LocalDate.parse(date.toString());
+            LocalDate key = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate key = LocalDate.parse(date.toString());
 
             singleCommitmentHashMap.putIfAbsent(key, new ArrayList<>());
             Objects.requireNonNull(singleCommitmentHashMap.get(key))
