@@ -75,7 +75,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         // contents of the view with that element
         viewHolder.getGoalTitle().setText(localDataSet[position] + "COMMITMENT");
         viewHolder.getGoalHours().setText(localDataSet[position]);
-        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
+        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_orange));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

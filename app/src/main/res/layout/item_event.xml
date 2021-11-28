@@ -26,33 +26,59 @@
         app:strokeWidth="2dp">
 
         <LinearLayout
-            android:id="@+id/linearLayout_itemEvent_cardInner"
+            android:id="@+id/linearLayout_itemEvent_cardHoriz"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <!-- Title, secondary and supporting text -->
-            <TextView
-                android:id="@+id/textview_itemEvent_cardMain"
+            <LinearLayout
+                android:id="@+id/linearLayout_itemEvent_cardInner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_regular"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/textview_itemEvent_cardSub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="0"
-                android:fontFamily="@font/eczar_regular"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <!-- Title, secondary and supporting text -->
+                <TextView
+                    android:id="@+id/textview_itemEvent_cardMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_condensed_regular"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textview_itemEvent_cardSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="0"
+                    android:fontFamily="@font/eczar_regular"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/view_itemEvent_spacer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/button__itemEvent_editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0"
+                android:background="@color/background"
+                android:padding="10sp"
+                android:src="@drawable/ic_sharp_edit_note_24"
+                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
