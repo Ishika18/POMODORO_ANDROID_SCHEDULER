@@ -1,13 +1,8 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
-import androidx.annotation.NonNull;
-
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.Timestamp;
@@ -22,34 +17,26 @@ public class GoalRepository {
 
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private final CollectionReference taskRef = firebaseFirestore.collection("tasks");
+    private final CollectionReference taskRef = firebaseFirestore.collection("goals");
 
     public GoalRepository(OnFirestoreTaskComplete onFirestoreTaskComplete) {
         this.onFirestoreTaskComplete = onFirestoreTaskComplete;
     }
 
     public void getGoalsData(String userEmail){
-        taskRef.document(userEmail).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<Goal> goals = new ArrayList<>();
+        taskRef.document(userEmail).get().addOnSuccessListener(documentSnapshot -> {
+            List<Goal> goals = new ArrayList<>();
 
-                Map<String, Object> map = documentSnapshot.getData();
-                if (map != null) {
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
-                        goals.add(getGoalFromDocumentMap(result));
-                    }
-                    onFirestoreTaskComplete.goalsDataAdded(goals);
+            Map<String, Object> map = documentSnapshot.getData();
+            if (map != null) {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    HashMap<String, Object> result = (HashMap<String, Object>) entry.getValue();
+                    goals.add(getGoalFromDocumentMap(result));
                 }
+                onFirestoreTaskComplete.goalsDataAdded(goals);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                onFirestoreTaskComplete.onError(e);
-            }
-        });
-    };
+        }).addOnFailureListener(onFirestoreTaskComplete::onError);
+    }
 
     private Goal getGoalFromDocumentMap(HashMap<String, Object> result) {
         return new Goal (

@@ -1,10 +1,17 @@
 package com.bcit.pomodoro_scheduler.model;
 
+import com.google.firebase.Timestamp;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Scheduler {
     private HashMap<LocalDate, ArrayList<Task>> schedule;
@@ -18,14 +25,14 @@ public class Scheduler {
     private ArrayList<GoalDataForScheduler> med_priority;
     private ArrayList<GoalDataForScheduler> low_priority;
 
-    private int startMinutes;
-    private int endMinutes;
+    private int startMinutes = 420;
+    private int endMinutes = 1200;
     private int currentMinutes;
 
     private final int workBlockL = 50;
 
     private int interleaveIndex = 0;
-    private int maxInterleaves;
+    private int maxInterleaves = 10; // hard coded?
 
     public Scheduler() {
         this.repeatCommitments = getStudentCommitments();
@@ -60,6 +67,93 @@ public class Scheduler {
 
         this.schedule = new HashMap<>();
         createSchedule();
+    }
+
+    public Scheduler(HashMap<Repeat, List<Commitment>> commitmentHashMap, List<Goal> goals) {
+        // TODO - ask Owen for default values of startMinutes, endMinutes and maxInterleaves
+        this.repeatCommitments = getRepeatCommitments(commitmentHashMap);
+        this.singleCommitments = getSingleCommitments(
+                Objects.requireNonNull(commitmentHashMap.get(Repeat.NEVER))
+        );
+        this.goals = getGoalDataForScheduler(goals);
+
+        high_priority = new ArrayList<>();
+        med_priority = new ArrayList<>();
+        low_priority = new ArrayList<>();
+
+        this.schedule = new HashMap<>();
+        createSchedule();
+    }
+
+    private ArrayList<GoalDataForScheduler> getGoalDataForScheduler(List<Goal> goals) {
+        ArrayList<GoalDataForScheduler> goalDataForSchedulers = new ArrayList<>();
+        for (Goal goal: goals) {
+            int days = getDaysBetween(goal.getDeadline().toDate(), new Date());
+            GoalDataForScheduler goalData = new GoalDataForScheduler(
+                    goal.getId(),
+                    goal.getName(),
+                    goal.getPriority(),
+                    days,
+                    goal.getTotalTimeInMinutes(),
+                    workBlockL
+            );
+            goalDataForSchedulers.add(goalData);
+        }
+        return goalDataForSchedulers;
+    }
+
+    private int getDaysBetween(Date date1, Date date2) {
+        LocalDate dateBefore = LocalDate.parse(date1.toString());
+        LocalDate dateAfter = LocalDate.parse(date2.toString());
+        int noOfDaysBetween = (int) ChronoUnit.DAYS.between(dateBefore, dateAfter);
+        if (noOfDaysBetween == 0) {
+            return 1;
+        }
+        return noOfDaysBetween;
+    }
+
+    private HashMap<LocalDate, ArrayList<Task>> getSingleCommitments(List<Commitment> commitments) {
+        HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
+        for (Commitment commitment: commitments) {
+            Date date = commitment.getStartTime().toDate();
+            LocalDate key = LocalDate.parse(date.toString());
+
+            singleCommitmentHashMap.putIfAbsent(key, new ArrayList<>());
+            Objects.requireNonNull(singleCommitmentHashMap.get(key))
+                    .add(getTaskFromCommitment(commitment));
+        }
+        return singleCommitmentHashMap;
+    }
+
+    private HashMap<DayOfWeek, ArrayList<Task>> getRepeatCommitments(
+            HashMap<Repeat, List<Commitment>> commitmentHashMap
+    ) {
+        HashMap<DayOfWeek, ArrayList<Task>> repeatCommitmentHashMap = new HashMap<>();
+        for (Map.Entry<Repeat, List<Commitment>> entry : commitmentHashMap.entrySet()) {
+            if (entry.getKey() == Repeat.DAILY) {
+                continue;
+            }
+
+            DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString());
+            repeatCommitmentHashMap.put(key, new ArrayList<>());
+
+            for (Commitment commitment: entry.getValue()) {
+                Task task = getTaskFromCommitment(commitment);
+                Objects.requireNonNull(repeatCommitmentHashMap.get(key)).add(task);
+            }
+        }
+        return repeatCommitmentHashMap;
+    }
+
+    private Task getTaskFromCommitment(Commitment commitment) {
+        // TODO - confirm start/end time coversion
+        return new Task(
+                commitment.getId(),
+                commitment.getName(),
+                (int) commitment.getStartTime().getSeconds(),
+                (int) commitment.getEndTime().getSeconds(),
+                TaskType.COMMITMENT
+        );
     }
 
     private void setGoals(ArrayList<GoalDataForScheduler> goals) {

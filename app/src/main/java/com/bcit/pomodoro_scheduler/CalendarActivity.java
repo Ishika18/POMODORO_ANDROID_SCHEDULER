@@ -14,10 +14,20 @@ import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
+import com.bcit.pomodoro_scheduler.model.Commitment;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.model.Task;
+import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
     private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
@@ -25,6 +35,9 @@ public class CalendarActivity extends AppCompatActivity {
     private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
     private static final String CREATE_GOAL_FRAGMENT_TAG = "CREATE_GOAL_FRAGMENT";
     private String userEmail;
+    private List<Goal> goals;
+    private HashMap<Repeat, List<Commitment>> commitmentHashMap;
+    private HashMap<LocalDate, ArrayList<Task>> scheduleHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,27 @@ public class CalendarActivity extends AppCompatActivity {
         Log.d("EMAIL", this.userEmail);
         setActionBarFunction();
         goToMonthlyView(YearMonth.now());
+
+        getDataFromFirebaseViewModels();
+    }
+
+    private void getDataFromFirebaseViewModels() {
+        GoalsViewModel goalsViewModel = new GoalsViewModel(userEmail);
+        goalsViewModel.getGoalsModelData().observe(this, goals -> {
+            this.goals = goals;
+        });
+
+        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel(userEmail);
+        commitmentsViewModel.getCommitmentsModelData()
+                .observe(this, commitmentsMap -> {
+                    this.commitmentHashMap = commitmentsMap;
+                });
+
+        SchedulesViewModel schedulesViewModel = new SchedulesViewModel(userEmail);
+        schedulesViewModel.getSchedulesModelData()
+                .observe(this, scheduleMap -> {
+                    this.scheduleHashMap = scheduleMap;
+                });
     }
 
     public void setActionBarFunction() {
