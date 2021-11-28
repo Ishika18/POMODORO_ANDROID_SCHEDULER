@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.CommitmentAdapter;
@@ -37,6 +38,7 @@ public class EditScheduleFragment extends Fragment {
     private static final String USER_EMAIL = "USER_EMAIL";
     private boolean isEditingGoals = true;
     private String userEmail;
+    private TextView currentRecycler;
 
     public EditScheduleFragment() {
         // Required empty public constructor
@@ -79,7 +81,8 @@ public class EditScheduleFragment extends Fragment {
                 R.id.recyclerView__FragmentEditSchedule_scheduleEvents);
         setUpRecyclerView(rv);
         setUpRecyclerViewScrollButtons(view, rv);
-
+        this.currentRecycler = view.findViewById(R.id.button__FragmentEditSchedule_currentRecycler);
+        currentRecycler.setText(isEditingGoals ? "Goals" : "Commitments");
     }
 
     private void setUpRecyclerView(RecyclerView rv) {
@@ -101,11 +104,13 @@ public class EditScheduleFragment extends Fragment {
         nextRecycler.setOnClickListener(view1 -> {
             isEditingGoals = !isEditingGoals;
             setUpRecyclerView(rv);
+            currentRecycler.setText(isEditingGoals ? "Goals" : "Commitments");
         });
 
         prevRecycler.setOnClickListener(view2 -> {
             isEditingGoals = !isEditingGoals;
             setUpRecyclerView(rv);
+            currentRecycler.setText(isEditingGoals ? "Goals" : "Commitments");
         });
     }
 

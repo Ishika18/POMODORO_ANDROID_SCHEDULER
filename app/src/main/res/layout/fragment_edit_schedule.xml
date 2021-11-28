@@ -26,12 +26,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_condensed_regular"
             android:padding="10sp"
             android:pointerIcon="arrow"
             android:text=""
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/button__FragmentEditSchedule_next"

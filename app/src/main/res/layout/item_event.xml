@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraingLayout_itemEvent_outer"
+    android:id="@+id/linearLayout_itemEvent_outer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_itemEvent_eventInfo"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="@color/elevation1"
@@ -19,9 +21,6 @@
         app:cardBackgroundColor="@color/background"
         app:cardElevation="5dp"
         app:cardMaxElevation="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/rally_green"
         app:strokeWidth="2dp">
 
@@ -29,7 +28,7 @@
             android:id="@+id/linearLayout_itemEvent_cardHoriz"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -63,23 +62,38 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/view_itemEvent_spacer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/button__itemEvent_editButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="0"
-                android:background="@color/background"
-                android:padding="10sp"
-                android:src="@drawable/ic_sharp_edit_note_24"
-                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_itemEvent_butthonHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button__itemEvent_deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_weight="0"
+            android:background="@color/background"
+            android:padding="10sp"
+            android:src="@drawable/ic_baseline_delete_30"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/button__itemEvent_editButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:layout_weight="0"
+            android:background="@color/background"
+            android:padding="10sp"
+            android:src="@drawable/ic_sharp_edit_note_40"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+</LinearLayout>

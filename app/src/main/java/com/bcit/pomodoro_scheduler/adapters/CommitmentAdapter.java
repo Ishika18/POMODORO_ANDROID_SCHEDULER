@@ -49,7 +49,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             commitmentTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             commitmentTime = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-            editButton = view.findViewById(R.id.button__itemEvent_editButton);
+            editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
         public TextView getCommitmentTitle() {
