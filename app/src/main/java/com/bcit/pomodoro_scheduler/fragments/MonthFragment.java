@@ -1,6 +1,5 @@
 package com.bcit.pomodoro_scheduler.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -88,8 +87,8 @@ public class MonthFragment extends Fragment {
     }
 
     private void setUpYearScrollButtons(View view) {
-        ImageButton goToPrevMonth = view.findViewById(R.id.btn_fragmentMonth_prevMonth);
-        ImageButton goToNextMonth = view.findViewById(R.id.btn_fragmentMonth_nextMonth);
+        ImageButton goToPrevMonth = view.findViewById(R.id.button__FragmentEditSchedule_prev);
+        ImageButton goToNextMonth = view.findViewById(R.id.button__FragmentEditSchedule_next);
 
         goToPrevMonth.setOnClickListener(view1 -> {
             year = Year.of(year.getValue() - 1);
@@ -105,7 +104,7 @@ public class MonthFragment extends Fragment {
     }
 
     private void setYearViewText(View view) {
-        TextView yearTextView = view.findViewById(R.id.textView_fragmentMonth_year);
+        TextView yearTextView = view.findViewById(R.id.button__FragmentEditSchedule_currentRecycler);
         yearTextView.setText(this.year.toString());
     }
 

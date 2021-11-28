@@ -82,6 +82,8 @@ public class CalendarActivity extends AppCompatActivity {
                 });
     }
 
+
+
     public void setActionBarFunction() {
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         topAppBar.setNavigationOnClickListener(new View.OnClickListener() {

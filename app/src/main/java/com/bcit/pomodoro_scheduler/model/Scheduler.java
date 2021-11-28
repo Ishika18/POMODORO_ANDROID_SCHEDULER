@@ -123,8 +123,7 @@ public class Scheduler {
     }
 
     private HashMap<DayOfWeek, ArrayList<Task>> getRepeatCommitments(
-            HashMap<Repeat, List<Commitment>> commitmentHashMap
-    ) {
+            HashMap<Repeat, List<Commitment>> commitmentHashMap) {
         HashMap<DayOfWeek, ArrayList<Task>> repeatCommitmentHashMap = new HashMap<>();
         for (Map.Entry<Repeat, List<Commitment>> entry : commitmentHashMap.entrySet()) {
             if (entry.getKey() == Repeat.DAILY) {

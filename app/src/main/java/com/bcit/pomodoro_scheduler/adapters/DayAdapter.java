@@ -1,4 +1,4 @@
-package com.bcit.pomodoro_scheduler.weeklyView;
+package com.bcit.pomodoro_scheduler.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

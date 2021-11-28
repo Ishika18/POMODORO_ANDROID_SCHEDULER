@@ -13,10 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
-import com.bcit.pomodoro_scheduler.weeklyView.DayAdapter;
+import com.bcit.pomodoro_scheduler.adapters.DayAdapter;
 
 import java.time.LocalDate;
-import java.time.Year;
 
 /**
  * A simple {@link Fragment} subclass.
