@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +15,19 @@ import android.view.ViewGroup;
 
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.DayAdapter;
+import com.bcit.pomodoro_scheduler.model.Commitment;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.model.Scheduler;
+import com.bcit.pomodoro_scheduler.model.Task;
+import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +40,9 @@ public class DayFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String DAY = "day";
     private LocalDate date;
+    private List<Goal> goals;
+    private HashMap<Repeat, List<Commitment>> commitmentHashMap;
+    private HashMap<LocalDate, ArrayList<Task>> scheduleHashMap;
 
     public DayFragment() {
         // Required empty public constructor
@@ -67,17 +82,45 @@ public class DayFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        try {
-            RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
-            setUpRecyclerView(new String[]{date.toString(), date.toString(), date.toString(), date.toString(),}, rv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SchedulesViewModel scheduleViewModel = new ViewModelProvider(requireActivity())
+                .get(SchedulesViewModel.class);
+
+        scheduleViewModel.getSchedulesModelData().observe(getViewLifecycleOwner(), schedule -> {
+            if (schedule.isEmpty()) {
+                updateSchedule(scheduleViewModel);
+            } else {
+                ArrayList<Task> tasks = schedule.get(date);
+                RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentDay_dailySchedule);
+                setUpRecyclerView(tasks, rv);
+            }
+        });
     }
 
-    private void setUpRecyclerView(String[] data, RecyclerView rv) {
-        DayAdapter adapter = new DayAdapter(data);
+    private void setUpRecyclerView(ArrayList<Task> tasks, RecyclerView rv) {
+        DayAdapter adapter = new DayAdapter(tasks);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.VERTICAL, false));
+    }
+
+    private void updateSchedule(SchedulesViewModel scheduleViewModel) {
+        CommitmentsViewModel commitmentsViewModel = new ViewModelProvider(requireActivity())
+                .get(CommitmentsViewModel.class);
+        GoalsViewModel goalsViewModel = new ViewModelProvider(requireActivity())
+                .get(GoalsViewModel.class);
+
+        commitmentsViewModel.getCommitmentsModelData().observe(getViewLifecycleOwner(), commitments -> {
+            this.commitmentHashMap = commitments;
+        });
+
+        goalsViewModel.getGoalsModelData().observe(getViewLifecycleOwner(), goals -> {
+            this.goals = goals;
+        });
+
+        Scheduler scheduler = new Scheduler(commitmentHashMap, goals);
+        this.scheduleHashMap = scheduler.getSchedule();
+
+        scheduleViewModel.updateScheduleData(this.scheduleHashMap).observe(getViewLifecycleOwner(), updated -> {
+            System.out.println("UPDATING SCHEDULE YO, SUCCESSFUL FOOL? " + updated);
+        });
     }
 }

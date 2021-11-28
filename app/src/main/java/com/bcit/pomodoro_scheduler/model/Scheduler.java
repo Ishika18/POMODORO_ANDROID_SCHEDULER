@@ -26,14 +26,14 @@ public class Scheduler {
     private ArrayList<GoalDataForScheduler> med_priority;
     private ArrayList<GoalDataForScheduler> low_priority;
 
-    private int startMinutes = 420;
-    private int endMinutes = 1200;
+    private int startMinutes;
+    private int endMinutes;
     private int currentMinutes;
 
     private final int workBlockL = 50;
 
     private int interleaveIndex = 0;
-    private int maxInterleaves = 3; // hard coded?
+    private int maxInterleaves;
 
     public Scheduler() {
         this.repeatCommitments = getStudentCommitments();
@@ -82,6 +82,11 @@ public class Scheduler {
         low_priority = new ArrayList<>();
 
         this.schedule = new HashMap<>();
+
+        this.startMinutes = 420;
+        this.endMinutes = 1200;
+        this.maxInterleaves = 1;
+
         createSchedule();
     }
 
@@ -126,11 +131,11 @@ public class Scheduler {
             HashMap<Repeat, List<Commitment>> commitmentHashMap) {
         HashMap<DayOfWeek, ArrayList<Task>> repeatCommitmentHashMap = new HashMap<>();
         for (Map.Entry<Repeat, List<Commitment>> entry : commitmentHashMap.entrySet()) {
-            if (entry.getKey() == Repeat.DAILY) {
+            if (entry.getKey() == Repeat.NEVER) {
                 continue;
             }
 
-            DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString());
+            DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString().toUpperCase());
             repeatCommitmentHashMap.put(key, new ArrayList<>());
 
             for (Commitment commitment : entry.getValue()) {
