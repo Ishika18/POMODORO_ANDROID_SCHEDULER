@@ -43,10 +43,6 @@ public class CalendarActivity extends AppCompatActivity {
     private HashMap<Repeat, List<Commitment>> commitmentHashMap;
     private HashMap<LocalDate, ArrayList<Task>> scheduleHashMap;
 
-    private CommitmentsViewModel commitmentsViewModel;
-    private GoalsViewModel goalsViewModel;
-    private SchedulesViewModel schedulesViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,27 +62,21 @@ public class CalendarActivity extends AppCompatActivity {
     private void getDataFromFirebaseViewModels() {
         ViewModelFactory factory = new ViewModelFactory(getApplicationContext(), userEmail);
 
-        this.goalsViewModel = new ViewModelProvider(this, factory).get(GoalsViewModel.class);
-        this.goalsViewModel.getGoalsModelData().observe(this, goals -> {
+        GoalsViewModel goalsViewModel = new ViewModelProvider(this, factory).get(GoalsViewModel.class);
+        goalsViewModel.getGoalsModelData().observe(this, goals -> {
             this.goals = goals;
         });
 
-        this.commitmentsViewModel = new ViewModelProvider(this, factory)
+        CommitmentsViewModel commitmentsViewModel = new ViewModelProvider(this, factory)
                 .get(CommitmentsViewModel.class);
-        this.commitmentsViewModel.getCommitmentsModelData()
+        commitmentsViewModel.getCommitmentsModelData()
                 .observe(this, commitmentsMap -> {
                     this.commitmentHashMap = commitmentsMap;
                 });
 
-        this.commitmentsViewModel.deleteCommitmentData(userEmail, testCommitment.getId()).observe(
-                this, aBoolean -> {
-                    Log.d("CALENDAR ACTIVITY", aBoolean.toString());
-                }
-        );
-
-        this.schedulesViewModel = new ViewModelProvider(this, factory)
+        SchedulesViewModel schedulesViewModel = new ViewModelProvider(this, factory)
                 .get(SchedulesViewModel.class);
-        this.schedulesViewModel.getSchedulesModelData()
+        schedulesViewModel.getSchedulesModelData()
                 .observe(this, scheduleMap -> {
                     this.scheduleHashMap = scheduleMap;
                 });
