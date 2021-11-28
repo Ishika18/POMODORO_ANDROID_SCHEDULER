@@ -90,54 +90,6 @@ public class FirebaseDB {
                 });
     }
 
-    public void addOrUpdateCommitment(String userEmail, Commitment commitment) {
-        HashMap<String, Object> commitmentObject = createCommitmentObject(commitment);
-
-        db.collection("commitments").document(userEmail)
-                .set(commitmentObject)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("Worked", "commitment added");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Error", e.getLocalizedMessage());
-                    }
-                });
-    }
-
-    public HashMap<String, Object> createCommitmentObject(Commitment commitment) {
-        HashMap<String, Object> commitmentObject = new HashMap<>();
-        HashMap<String, Object> commitmentDescription = new HashMap<>();
-        commitmentDescription.put("id", commitment.getId());
-        commitmentDescription.put("name", commitment.getName());
-        commitmentDescription.put("location", commitment.getLocation());
-        commitmentDescription.put("startTime", commitment.getEndTime());
-        commitmentDescription.put("endTime", commitment.getEndTime());
-        commitmentDescription.put("repeat", commitment.getRepeat().name());
-        commitmentObject.put(commitment.getId(), commitmentDescription);
-        return commitmentObject;
-    }
-
-    public void deleteCommitment(String userEmail, String commitmentID) {
-        Map<String, Object> deleteCommitment = new HashMap<>();
-        deleteCommitment.put(commitmentID, FieldValue.delete());
-        db.collection("commitments").document(userEmail)
-                .update(deleteCommitment).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d("DELETE", "Commitment deleted");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("DELETE_COMMITMENT_ERROR", e.getMessage());
-            }
-        });
-    }
 
     public void addOrUpdateSchedule(
             String userEmail, HashMap<LocalDate,

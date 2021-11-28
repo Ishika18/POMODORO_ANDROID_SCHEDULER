@@ -1,16 +1,15 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
-
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -47,15 +46,52 @@ public class CommitmentRepository {
                     } else {
                         Stream.of(Repeat.values())
                                 .forEach(
-                                        c -> Objects.requireNonNull(commitmentRepeats
-                                                .get(c))
-                                                .add(getCommitmentFromDocumentMap(result))
+                                        c -> {
+                                            if (c != Repeat.DAILY) {
+                                                Objects.requireNonNull(commitmentRepeats
+                                                        .get(c))
+                                                        .add(getCommitmentFromDocumentMap(result));
+                                            }
+                                        }
                                 );
                     }
                 }
                 onFirestoreTaskComplete.commitmentsDataAdded(commitmentRepeats);
             }
-        }).addOnFailureListener(onFirestoreTaskComplete::onError);
+        }).addOnFailureListener(onFirestoreTaskComplete::onErrorGetCommitmentData);
+    }
+
+    public void addOrUpdateCommitment(String userEmail, Commitment commitment) {
+        HashMap<String, Object> commitmentObject = createCommitmentObject(commitment);
+
+        firebaseFirestore.collection("commitments").document(userEmail)
+                .update(commitmentObject)
+                .addOnSuccessListener(unused -> {
+                    onFirestoreTaskComplete.onCommitmentUpdated();
+                })
+                .addOnFailureListener(onFirestoreTaskComplete::onErrorUpdateCommitmentData);
+    }
+
+    public void deleteCommitment(String userEmail, String commitmentID) {
+        Map<String, Object> deleteCommitment = new HashMap<>();
+        deleteCommitment.put(commitmentID, FieldValue.delete());
+        firebaseFirestore.collection("commitments").document(userEmail)
+                .update(deleteCommitment)
+                .addOnSuccessListener(unused -> onFirestoreTaskComplete.onCommitmentDeleted())
+                .addOnFailureListener(onFirestoreTaskComplete::onErrorDeleteCommitmentData);
+    }
+
+    public HashMap<String, Object> createCommitmentObject(Commitment commitment) {
+        HashMap<String, Object> commitmentObject = new HashMap<>();
+        HashMap<String, Object> commitmentDescription = new HashMap<>();
+        commitmentDescription.put("id", commitment.getId());
+        commitmentDescription.put("name", commitment.getName());
+        commitmentDescription.put("location", commitment.getLocation());
+        commitmentDescription.put("startTime", commitment.getEndTime());
+        commitmentDescription.put("endTime", commitment.getEndTime());
+        commitmentDescription.put("repeat", commitment.getRepeat().name());
+        commitmentObject.put(commitment.getId(), commitmentDescription);
+        return commitmentObject;
     }
 
     private HashMap<Repeat, List<Commitment>> getCommitmentRepeatHashmap() {
@@ -83,7 +119,10 @@ public class CommitmentRepository {
 
     public interface OnFirestoreTaskComplete {
         void commitmentsDataAdded(HashMap<Repeat, List<Commitment>> commitmentsModel);
-
-        void onError(Exception e);
+        void onCommitmentDeleted();
+        void onCommitmentUpdated();
+        void onErrorGetCommitmentData(Exception e);
+        void onErrorUpdateCommitmentData(Exception e);
+        void onErrorDeleteCommitmentData(Exception e);
     }
 }
