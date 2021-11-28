@@ -33,11 +33,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
-    private static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
-    private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
-    private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
-    private static final String CREATE_GOAL_FRAGMENT_TAG = "CREATE_GOAL_FRAGMENT";
-    private static final String EDIT_SCHEDULE_TAG = "EDIT_SCHEDULE_FRAGMENT";
+    public static final String MONTH_FRAGMENT_TAG = "MONTH_FRAGMENT";
+    public static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
+    public static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
+    public static final String CREATE_GOAL_FRAGMENT_TAG = "CREATE_GOAL_FRAGMENT";
+    public static final String EDIT_SCHEDULE_TAG = "EDIT_SCHEDULE_FRAGMENT";
+
     private String userEmail;
     private List<Goal> goals;
     private HashMap<Repeat, List<Commitment>> commitmentHashMap;
@@ -139,7 +140,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateCommitmentFragment.newInstance(userEmail),
+                CreateCommitmentFragment.newInstance(userEmail, null),
                 CREATE_COMMITMENT_FRAGMENT_TAG
         );
         ft.commit();
@@ -149,7 +150,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateGoalFragment.newInstance(userEmail),
+                CreateGoalFragment.newInstance(userEmail, null),
                 CREATE_GOAL_FRAGMENT_TAG
         );
         ft.commit();

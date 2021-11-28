@@ -182,13 +182,13 @@
         android:textColorHint="@color/grey" />
 
     <Button
-        android:id="@+id/button_goal_create"
+        android:id="@+id/button_goal_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20sp"
         android:backgroundTint="@color/white"
-        android:text="@string/create"
+        android:text="@string/update"
         android:textColor="@color/black" />
 
 </LinearLayout>

@@ -84,10 +84,10 @@ public class EditScheduleFragment extends Fragment {
 
     private void setUpRecyclerView(RecyclerView rv) {
         if (isEditingGoals) {
-            GoalAdapter adapter = new GoalAdapter(requireActivity());
+            GoalAdapter adapter = new GoalAdapter(requireActivity(), userEmail);
             rv.setAdapter(adapter);
         } else {
-            CommitmentAdapter adapter = new CommitmentAdapter(requireActivity());
+            CommitmentAdapter adapter = new CommitmentAdapter(requireActivity(), userEmail);
             rv.setAdapter(adapter);
         }
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(),

@@ -30,11 +30,13 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
 
     public LiveData<Boolean> updateGoalData(String userEmail, Goal goal) {
         goalRepository.addOrUpdateGoal(userEmail, goal);
+        goalRepository.getGoalsData(userEmail);
         return goalDataUpdated;
     }
 
     public LiveData<Boolean> deleteGoalData(String userEmail, String goalId) {
         goalRepository.deleteGoal(userEmail, goalId);
+        goalRepository.getGoalsData(userEmail);
         return goalDataDeleted;
     }
 

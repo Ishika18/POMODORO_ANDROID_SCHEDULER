@@ -4,14 +4,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.google.android.material.card.MaterialCardView;
@@ -28,7 +33,9 @@ import java.util.List;
 
 public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.ViewHolder> {
 
-    private List<Commitment> commitments;
+    private final FragmentActivity activity;
+    private final String userEmail;
+    private final List<Commitment> commitments;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -38,6 +45,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         private final TextView commitmentTitle;
         private final TextView commitmentTime;
         private final MaterialCardView card;
+        private final ImageButton editButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -45,6 +53,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             commitmentTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             commitmentTime = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
+            editButton = view.findViewById(R.id.button__itemEvent_editButton);
         }
 
         public TextView getCommitmentTitle() {
@@ -58,6 +67,10 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         public MaterialCardView getCard() {
             return card;
         }
+
+        public ImageButton getEditButton() {
+            return editButton;
+        }
     }
 
     /**
@@ -65,7 +78,9 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
      *
      * @param activity The FragmentActivity this GoalAdapter needs for MVVM context
      */
-    public CommitmentAdapter(FragmentActivity activity) {
+    public CommitmentAdapter(FragmentActivity activity, String userEmail) {
+        this.activity = activity;
+        this.userEmail = userEmail;
         this.commitments = new ArrayList<>();
         CommitmentsViewModel viewModel = new ViewModelProvider(activity)
                 .get(CommitmentsViewModel.class);
@@ -107,7 +122,19 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
                 .toLocalDateTime().format(DateTimeFormatter.ofPattern("HH:mm")));
 
         viewHolder.getCommitmentTime().setText(sb.toString());
-        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_orange));
+        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(),
+                R.color.rally_orange));
+
+        viewHolder.getEditButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragmentContainerView_main,
+                        CreateCommitmentFragment.newInstance(userEmail,
+                                commitments.get(viewHolder.getAdapterPosition())));
+                ft.commit();
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

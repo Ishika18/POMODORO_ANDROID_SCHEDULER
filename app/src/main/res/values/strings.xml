@@ -5,6 +5,7 @@
     <string name="ok">OK</string>
     <string name="select">Select</string>
     <string name="create">Create</string>
+    <string name="update">Update</string>
     <string name="title">My Pomodoro</string>
     <string name="commitment_name_hint">Commitment Name</string>
     <string name="goal_name_hint">Name of Goal</string>

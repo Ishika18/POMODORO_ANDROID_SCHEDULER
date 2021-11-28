@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
@@ -41,6 +42,7 @@ import java.util.stream.Stream;
 public class CreateGoalFragment extends Fragment {
 
     private static final String USER_EMAIL = "userEmail";
+    private static final String GOAL = "goal";
 
     private static final int HOUR_DAY_LIMIT = 10;
     private static final int HOUR_TO_MINUTES = 60;
@@ -49,6 +51,7 @@ public class CreateGoalFragment extends Fragment {
     private final Map<String, Integer> taskTimeOptions;
 
     private String userEmail;
+    private Goal goal;
 
     public CreateGoalFragment() {
         this.taskTimeOptions = new LinkedHashMap<>();
@@ -60,12 +63,14 @@ public class CreateGoalFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param userEmail account email from login
+     * @param goal the goal to update if updating
      * @return A new instance of fragment CreateGoalFragment.
      */
-    public static CreateGoalFragment newInstance(String userEmail) {
+    public static CreateGoalFragment newInstance(String userEmail, Goal goal) {
         CreateGoalFragment fragment = new CreateGoalFragment();
         Bundle args = new Bundle();
         args.putString(USER_EMAIL, userEmail);
+        args.putSerializable(GOAL, goal);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +80,9 @@ public class CreateGoalFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userEmail = getArguments().getString(USER_EMAIL);
+            if (getArguments().getSerializable(GOAL) != null) {
+                goal = (Goal) getArguments().getSerializable(GOAL);
+            }
         }
     }
 
@@ -91,17 +99,9 @@ public class CreateGoalFragment extends Fragment {
 
         GoalsViewModel viewModel = new ViewModelProvider(requireActivity())
                 .get(GoalsViewModel.class);
-        Calendar deadlineCalendar = Calendar.getInstance(TimeZone.getDefault());
+
         Button deadlineDate = view.findViewById(R.id.button_goal_deadline_date);
         Button deadlineTime = view.findViewById(R.id.button_goal_deadline_time);
-
-        deadlineCalendar.add(Calendar.DAY_OF_YEAR, 1);
-
-        deadlineDate.setText(getFormattedDate(deadlineCalendar));
-        deadlineTime.setText(getFormattedTime(deadlineCalendar));
-
-        Goal goal = new Goal(Timestamp.now().toString(), "", "", 30,
-                new Timestamp(deadlineCalendar.getTime()), Priority.LOW, "", "");
 
         Button taskTime = view.findViewById(R.id.button_goal_task_time_time);
         String[] taskTimes = taskTimeOptions.keySet().toArray(new String[0]);
@@ -163,6 +163,36 @@ public class CreateGoalFragment extends Fragment {
             }
         });
 
+        Calendar deadlineCalendar = Calendar.getInstance(TimeZone.getDefault());
+        deadlineCalendar.add(Calendar.DAY_OF_YEAR, 1);
+
+        if (goal == null) {
+            goal = new Goal(Timestamp.now().toString(), "", "", 30,
+                    new Timestamp(deadlineCalendar.getTime()), Priority.LOW, "", "");
+        }
+
+        deadlineCalendar.setTime(goal.getDeadline().toDate());
+
+        deadlineDate.setText(getFormattedDate(deadlineCalendar));
+        deadlineTime.setText(getFormattedTime(deadlineCalendar));
+
+        Button createButton = view.findViewById(R.id.button_goal_confirm);
+        EditText name = view.findViewById(R.id.editText_goal_name);
+        EditText location = view.findViewById(R.id.editText_goal_location);
+        EditText url = view.findViewById(R.id.editText_goal_url);
+        EditText notes = view.findViewById(R.id.editText_goal_notes);
+
+        if (goal == null) {
+            createButton.setText(R.string.create);
+        }
+
+        name.setText(goal.getName());
+        location.setText(goal.getLocation());
+        url.setText(goal.getUrl());
+        notes.setText(goal.getNotes());
+        priority.setText(goal.getPriority().name());
+        taskTime.setText(getKeyByTaskTimeValue(goal.getTotalTimeInMinutes()));
+
         deadlineDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,11 +237,6 @@ public class CreateGoalFragment extends Fragment {
             }
         });
 
-        Button createButton = view.findViewById(R.id.button_goal_create);
-        EditText name = view.findViewById(R.id.editText_goal_name);
-        EditText location = view.findViewById(R.id.editText_goal_location);
-        EditText url = view.findViewById(R.id.editText_goal_url);
-        EditText notes = view.findViewById(R.id.editText_goal_notes);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -263,5 +288,14 @@ public class CreateGoalFragment extends Fragment {
     private String getFormattedTime(Calendar calendar) {
         return String.format(Locale.getDefault(), "%02d:%02d",
                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+    }
+
+    private String getKeyByTaskTimeValue(int value) {
+        for (Map.Entry<String, Integer> entry : taskTimeOptions.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }

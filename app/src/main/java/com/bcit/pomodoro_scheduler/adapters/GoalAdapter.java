@@ -4,14 +4,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
+import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.card.MaterialCardView;
@@ -21,6 +25,8 @@ import java.util.List;
 
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
+    private FragmentActivity activity;
+    private final String userEmail;
     private List<Goal> goals;
 
     /**
@@ -31,6 +37,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         private final TextView goalTitle;
         private final TextView goalHours;
         private final MaterialCardView card;
+        private final ImageButton editButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -38,7 +45,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             goalTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             goalHours = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-
+            editButton = view.findViewById(R.id.button__itemEvent_editButton);
         }
 
         public TextView getGoalTitle() {
@@ -52,6 +59,10 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         public MaterialCardView getCard() {
             return card;
         }
+
+        public ImageButton getEditButton() {
+            return editButton;
+        }
     }
 
     /**
@@ -59,7 +70,9 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
      *
      * @param activity The FragmentActivity this GoalAdapter needs for MVVM context
      */
-    public GoalAdapter(FragmentActivity activity) {
+    public GoalAdapter(FragmentActivity activity, String userEmail) {
+        this.activity = activity;
+        this.userEmail = userEmail;
         GoalsViewModel goalsViewModel = new ViewModelProvider(activity).get(GoalsViewModel.class);
         goalsViewModel.getGoalsModelData().observe(activity, goalsData -> {
             this.goals = goalsData;
@@ -87,6 +100,17 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         String goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
         viewHolder.getGoalHours().setText(goalHours);
         viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
+
+        viewHolder.getEditButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragmentContainerView_main,
+                        CreateGoalFragment.newInstance(userEmail,
+                                goals.get(viewHolder.getAdapterPosition())));
+                ft.commit();
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -8,14 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
@@ -32,19 +29,8 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.Timestamp;
 
 
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.YearMonth;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.stream.Stream;
@@ -57,8 +43,10 @@ import java.util.stream.Stream;
 public class CreateCommitmentFragment extends Fragment {
 
     private static final String USER_EMAIL = "USER_EMAIL";
+    private static final String COMMITMENT = "commitment";
 
     private String userEmail;
+    private Commitment commitment;
 
     public CreateCommitmentFragment() {
         // Required empty public constructor
@@ -69,12 +57,14 @@ public class CreateCommitmentFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param userEmail User account email from login
+     * @param commitment commitment to update if updating
      * @return A new instance of fragment CreateCommitmentFragment.
      */
-    public static CreateCommitmentFragment newInstance(String userEmail) {
+    public static CreateCommitmentFragment newInstance(String userEmail, Commitment commitment) {
         CreateCommitmentFragment fragment = new CreateCommitmentFragment();
         Bundle args = new Bundle();
         args.putString(USER_EMAIL, userEmail);
+        args.putSerializable(COMMITMENT, commitment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,6 +74,9 @@ public class CreateCommitmentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userEmail = getArguments().getString(USER_EMAIL);
+            if (getArguments().getSerializable(COMMITMENT) != null) {
+                commitment = (Commitment) getArguments().getSerializable(COMMITMENT);
+            }
         }
     }
 
@@ -100,20 +93,10 @@ public class CreateCommitmentFragment extends Fragment {
         CommitmentsViewModel viewModel = new ViewModelProvider(requireActivity())
                 .get(CommitmentsViewModel.class);
 
-        Calendar startCalendar = Calendar.getInstance(TimeZone.getDefault());
-        Calendar endCalendar = Calendar.getInstance(TimeZone.getDefault());
-        endCalendar.add(Calendar.HOUR, 1);
-
-
         Button startTimeDate = view.findViewById(R.id.button_commitment_startTime_date);
         Button endTimeDate = view.findViewById(R.id.button_commitment_endTime_date);
         Button startTimeTime = view.findViewById(R.id.button_commitment_startTime_time);
         Button endTimeTime = view.findViewById(R.id.button_commitment_endTime_time);
-
-
-        Commitment commitment = new Commitment(Timestamp.now().toString(), "", "",
-                new Timestamp(startCalendar.getTime()), new Timestamp(endCalendar.getTime()),
-                Repeat.NEVER, "", "");
 
         Button repeat = view.findViewById(R.id.button_commitment_repeat);
         String[] repeats = Stream.of(Repeat.values()).map(Repeat::toString).toArray(String[]::new);
@@ -147,10 +130,38 @@ public class CreateCommitmentFragment extends Fragment {
             }
         });
 
+        Calendar startCalendar = Calendar.getInstance(TimeZone.getDefault());
+        Calendar endCalendar = Calendar.getInstance(TimeZone.getDefault());
+        endCalendar.add(Calendar.HOUR, 1);
+
+        if (commitment == null) {
+            this.commitment = new Commitment(Timestamp.now().toString(), "", "",
+                    new Timestamp(startCalendar.getTime()), new Timestamp(endCalendar.getTime()),
+                    Repeat.NEVER, "", "");
+        }
+
+        startCalendar.setTime(commitment.getStartTime().toDate());
+        endCalendar.setTime(commitment.getEndTime().toDate());
+
         startTimeDate.setText(getFormattedDate(startCalendar));
         endTimeDate.setText(getFormattedDate(endCalendar));
         startTimeTime.setText(getFormattedTime(startCalendar));
         endTimeTime.setText(getFormattedTime(endCalendar));
+
+        Button createButton = view.findViewById(R.id.button_commitment_confirm);
+        EditText name = view.findViewById(R.id.editText_commitment_name);
+        EditText location = view.findViewById(R.id.editText_commitment_location);
+        EditText url = view.findViewById(R.id.editText_commitment_url);
+        EditText notes = view.findViewById(R.id.editText_commitment_notes);
+
+        if (commitment == null) {
+            createButton.setText(R.string.create);
+        }
+
+        name.setText(commitment.getName());
+        location.setText(commitment.getLocation());
+        url.setText(commitment.getUrl());
+        notes.setText(commitment.getNotes());
 
         startTimeDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,12 +286,6 @@ public class CreateCommitmentFragment extends Fragment {
                         requireActivity().getSupportFragmentManager(), timePicker.toString());
             }
         });
-
-        Button createButton = view.findViewById(R.id.button_commitment_create);
-        EditText name = view.findViewById(R.id.editText_commitment_name);
-        EditText location = view.findViewById(R.id.editText_commitment_location);
-        EditText url = view.findViewById(R.id.editText_commitment_url);
-        EditText notes = view.findViewById(R.id.editText_commitment_notes);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
