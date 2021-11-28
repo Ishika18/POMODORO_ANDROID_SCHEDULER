@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -31,6 +35,8 @@ import com.google.firebase.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,23 +51,35 @@ import java.util.stream.Stream;
  */
 public class CreateCommitmentFragment extends Fragment {
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CreateCommitmentFragment.
-     */
-    public static CreateCommitmentFragment newInstance() {
-        return new CreateCommitmentFragment();
-    }
+    private static final String USER_EMAIL = "USER_EMAIL";
+
+    private String userEmail;
 
     public CreateCommitmentFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param userEmail User account email from login
+     * @return A new instance of fragment CreateCommitmentFragment.
+     */
+    public static CreateCommitmentFragment newInstance(String userEmail) {
+        CreateCommitmentFragment fragment = new CreateCommitmentFragment();
+        Bundle args = new Bundle();
+        args.putString(USER_EMAIL, userEmail);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userEmail = getArguments().getString(USER_EMAIL);
+        }
     }
 
     @Override
@@ -74,6 +92,8 @@ public class CreateCommitmentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        CommitmentsViewModel viewModel = new ViewModelProvider(requireActivity())
+                .get(CommitmentsViewModel.class);
 
         Calendar startCalendar = Calendar.getInstance(TimeZone.getDefault());
         Calendar endCalendar = Calendar.getInstance(TimeZone.getDefault());
@@ -257,6 +277,41 @@ public class CreateCommitmentFragment extends Fragment {
 
                 timePicker.show(
                         requireActivity().getSupportFragmentManager(), timePicker.toString());
+            }
+        });
+
+        Button createButton = view.findViewById(R.id.button_commitment_create);
+        EditText name = view.findViewById(R.id.editText_commitment_name);
+        EditText location = view.findViewById(R.id.editText_commitment_location);
+        EditText url = view.findViewById(R.id.editText_commitment_url);
+        EditText notes = view.findViewById(R.id.editText_commitment_notes);
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commitment.setName(name.getText().toString());
+                commitment.setLocation(location.getText().toString());
+                commitment.setUrl(url.getText().toString());
+                commitment.setNotes(notes.getText().toString());
+
+                if (commitment.getName().isEmpty()) {
+                    Snackbar.make(view, R.string.commitment_name_error,
+                            Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                viewModel.updateCommitmentData(userEmail, commitment).observe(getViewLifecycleOwner(),
+                        updated -> {
+                    if (!updated) {
+                        Snackbar.make(view, R.string.commitment_create_error,
+                                Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    CalendarActivity calendarActivity = (CalendarActivity) getActivity();
+                    assert calendarActivity != null;
+                    calendarActivity.goToMonthlyView(YearMonth.now());
+                });
+
             }
         });
     }

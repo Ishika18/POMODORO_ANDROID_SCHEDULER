@@ -35,7 +35,7 @@
         android:layout_marginLeft="15sp"
         android:layout_marginTop="20sp"
         android:layout_marginRight="15sp"
-        android:layout_marginBottom="75sp"
+        android:layout_marginBottom="50sp"
         android:autofillHints="@string/location"
         android:backgroundTint="@color/rally_orange"
         android:ems="10"
@@ -50,7 +50,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20sp"
+        android:layout_marginVertical="10sp"
         android:orientation="horizontal">
 
         <TextView
@@ -95,7 +95,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20sp"
+        android:layout_marginVertical="10sp"
         android:orientation="horizontal">
 
         <TextView
@@ -141,7 +141,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20sp"
+        android:layout_marginVertical="10sp"
         android:orientation="horizontal">
 
         <TextView
@@ -194,5 +194,15 @@
         android:inputType="textUri"
         android:textColor="@color/white"
         android:textColorHint="@color/grey" />
+
+    <Button
+        android:id="@+id/button_commitment_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20sp"
+        android:backgroundTint="@color/white"
+        android:text="@string/create"
+        android:textColor="@color/black" />
 
 </LinearLayout>
