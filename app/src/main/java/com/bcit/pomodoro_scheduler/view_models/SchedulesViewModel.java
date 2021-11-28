@@ -17,7 +17,6 @@ import java.util.List;
 
 public class SchedulesViewModel extends ViewModel implements ScheduleRepository.OnFirestoreTaskComplete {
 
-    private final Context context;
     private final String userEmail;
 
     private final MutableLiveData<HashMap<LocalDate, ArrayList<Task>>>
@@ -37,8 +36,7 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
     private final ScheduleRepository scheduleRepository = new ScheduleRepository(this);
 
 
-    public SchedulesViewModel(Context context, String userEmail) {
-        this.context = context;
+    public SchedulesViewModel(String userEmail) {
         this.userEmail = userEmail;
         scheduleRepository.getSchedulesData(userEmail);
     }

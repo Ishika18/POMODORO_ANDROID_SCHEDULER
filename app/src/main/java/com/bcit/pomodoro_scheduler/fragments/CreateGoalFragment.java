@@ -11,16 +11,21 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bcit.pomodoro_scheduler.CalendarActivity;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.Timestamp;
 
+import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -35,11 +40,15 @@ import java.util.stream.Stream;
  */
 public class CreateGoalFragment extends Fragment {
 
+    private static final String USER_EMAIL = "userEmail";
+
     private static final int HOUR_DAY_LIMIT = 10;
     private static final int HOUR_TO_MINUTES = 60;
     private static final int DAY_TO_MINUTES = 1440;
 
     private final Map<String, Integer> taskTimeOptions;
+
+    private String userEmail;
 
     public CreateGoalFragment() {
         this.taskTimeOptions = new LinkedHashMap<>();
@@ -50,15 +59,23 @@ public class CreateGoalFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
+     * @param userEmail account email from login
      * @return A new instance of fragment CreateGoalFragment.
      */
-    public static CreateGoalFragment newInstance() {
-        return new CreateGoalFragment();
+    public static CreateGoalFragment newInstance(String userEmail) {
+        CreateGoalFragment fragment = new CreateGoalFragment();
+        Bundle args = new Bundle();
+        args.putString(USER_EMAIL, userEmail);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userEmail = getArguments().getString(USER_EMAIL);
+        }
     }
 
     @Override
@@ -72,7 +89,9 @@ public class CreateGoalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Calendar deadlineCalendar = Calendar.getInstance(TimeZone.getTimeZone("PST"));
+        GoalsViewModel viewModel = new ViewModelProvider(requireActivity())
+                .get(GoalsViewModel.class);
+        Calendar deadlineCalendar = Calendar.getInstance(TimeZone.getDefault());
         Button deadlineDate = view.findViewById(R.id.button_goal_deadline_date);
         Button deadlineTime = view.findViewById(R.id.button_goal_deadline_time);
 
@@ -157,8 +176,8 @@ public class CreateGoalFragment extends Fragment {
                     Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     c.setTimeInMillis(selection);
 
-                    deadlineCalendar.set(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
-                            c.get(Calendar.YEAR));
+                    deadlineCalendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+                            c.get(Calendar.DAY_OF_MONTH));
 
                     goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
                     deadlineDate.setText(getFormattedDate(deadlineCalendar));
@@ -196,7 +215,27 @@ public class CreateGoalFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (name.getText().toString().isEmpty()) {
+                    Snackbar.make(view, R.string.goal_name_error, Snackbar.LENGTH_LONG).show();
+                    return;
+                }
 
+                goal.setName(name.getText().toString());
+                goal.setLocation(location.getText().toString());
+                goal.setUrl(url.getText().toString());
+                goal.setNotes(notes.getText().toString());
+
+                viewModel.updateGoalData(userEmail, goal).observe(getViewLifecycleOwner(),
+                        updated -> {
+                            if (!updated) {
+                                Snackbar.make(view, R.string.goal_create_error,
+                                        Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                            CalendarActivity calendarActivity = (CalendarActivity) getActivity();
+                            assert calendarActivity != null;
+                            calendarActivity.goToMonthlyView(YearMonth.now());
+                        });
             }
         });
     }

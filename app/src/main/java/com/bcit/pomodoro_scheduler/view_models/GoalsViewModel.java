@@ -18,7 +18,6 @@ import java.util.List;
 
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
 
-    private final Context context;
     private final String userEmail;
 
     private final MutableLiveData<List<Goal>> goalsModelData = new MutableLiveData<>();
@@ -41,8 +40,7 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
 
     private final GoalRepository goalRepository = new GoalRepository(this);
 
-    public GoalsViewModel(Context context, String userEmail){
-        this.context = context;
+    public GoalsViewModel(String userEmail){
         this.userEmail = userEmail;
         goalRepository.getGoalsData(userEmail);
     }

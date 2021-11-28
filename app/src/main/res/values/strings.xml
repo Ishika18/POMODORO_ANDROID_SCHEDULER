@@ -61,6 +61,13 @@
         Error: Cannot create a commitment without a name!
     </string>
 
+    <string name="goal_create_error">
+        Error: Something went wrong when trying to create a commitment.
+    </string>
+    <string name="goal_name_error">
+        Error: Cannot create a goal without a name!
+    </string>
+
     <string name="server_client_id">812168882963-3gnv2a44ej6llphevtt25da9iqubjhda.apps.googleusercontent.com</string>
     <string name="logOut_btnText">Log Out</string>
     <string name="launch_btnText">Launch</string>

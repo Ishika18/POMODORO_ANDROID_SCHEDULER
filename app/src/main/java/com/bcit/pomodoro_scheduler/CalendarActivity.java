@@ -60,7 +60,7 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void getDataFromFirebaseViewModels() {
-        ViewModelFactory factory = new ViewModelFactory(getApplicationContext(), userEmail);
+        ViewModelFactory factory = new ViewModelFactory(userEmail);
 
         GoalsViewModel goalsViewModel = new ViewModelProvider(this, factory).get(GoalsViewModel.class);
         goalsViewModel.getGoalsModelData().observe(this, goals -> {
@@ -159,7 +159,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateGoalFragment.newInstance(),
+                CreateGoalFragment.newInstance(userEmail),
                 CREATE_GOAL_FRAGMENT_TAG
         );
         ft.commit();
