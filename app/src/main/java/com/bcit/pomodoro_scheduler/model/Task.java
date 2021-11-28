@@ -6,13 +6,15 @@ public class Task implements Comparable<Task> {
     private int startTime;
     private int endTime;
     private TaskType type;
+    private int daysLeft;
 
-    public Task(String ID, String name, int startTime, int endTime, TaskType type) {
+    public Task(String ID, String name, int startTime, int endTime, int daysLeft, TaskType type) {
         this.ID = ID;
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
         this.type = type;
+        this.daysLeft = daysLeft;
     }
 
     public String getID() {
@@ -29,6 +31,10 @@ public class Task implements Comparable<Task> {
 
     public int getEndTime() {
         return endTime;
+    }
+
+    public int getDaysLeft() {
+        return daysLeft;
     }
 
     public TaskType getType() {

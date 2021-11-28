@@ -7,8 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.repositories.GoalRepository;
 
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
@@ -35,4 +39,5 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
     public void onError(Exception e) {
         Log.w("Fail", "Error getting documents.", e);
     }
+
 }

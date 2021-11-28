@@ -41,6 +41,7 @@ public class ScheduleRepository {
                 (String) result.get("name"),
                 ((Long) result.get("startTime")).intValue(),
                 ((Long) result.get("endTime")).intValue(),
+                0,
                 TaskType.valueOf((String) result.get("type"))
         );
     }

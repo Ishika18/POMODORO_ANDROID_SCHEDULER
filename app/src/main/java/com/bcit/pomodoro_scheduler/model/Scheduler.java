@@ -6,6 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class Scheduler {
     private final int workBlockL = 50;
 
     private int interleaveIndex = 0;
-    private int maxInterleaves = 10; // hard coded?
+    private int maxInterleaves = 3; // hard coded?
 
     public Scheduler() {
         this.repeatCommitments = getStudentCommitments();
@@ -70,7 +71,6 @@ public class Scheduler {
     }
 
     public Scheduler(HashMap<Repeat, List<Commitment>> commitmentHashMap, List<Goal> goals) {
-        // TODO - ask Owen for default values of startMinutes, endMinutes and maxInterleaves
         this.repeatCommitments = getRepeatCommitments(commitmentHashMap);
         this.singleCommitments = getSingleCommitments(
                 Objects.requireNonNull(commitmentHashMap.get(Repeat.NEVER))
@@ -87,7 +87,7 @@ public class Scheduler {
 
     private ArrayList<GoalDataForScheduler> getGoalDataForScheduler(List<Goal> goals) {
         ArrayList<GoalDataForScheduler> goalDataForSchedulers = new ArrayList<>();
-        for (Goal goal: goals) {
+        for (Goal goal : goals) {
             int days = getDaysBetween(goal.getDeadline().toDate(), new Date());
             GoalDataForScheduler goalData = new GoalDataForScheduler(
                     goal.getId(),
@@ -106,15 +106,12 @@ public class Scheduler {
         LocalDate dateBefore = LocalDate.parse(date1.toString());
         LocalDate dateAfter = LocalDate.parse(date2.toString());
         int noOfDaysBetween = (int) ChronoUnit.DAYS.between(dateBefore, dateAfter);
-        if (noOfDaysBetween == 0) {
-            return 1;
-        }
         return noOfDaysBetween;
     }
 
     private HashMap<LocalDate, ArrayList<Task>> getSingleCommitments(List<Commitment> commitments) {
         HashMap<LocalDate, ArrayList<Task>> singleCommitmentHashMap = new HashMap<>();
-        for (Commitment commitment: commitments) {
+        for (Commitment commitment : commitments) {
             Date date = commitment.getStartTime().toDate();
             LocalDate key = LocalDate.parse(date.toString());
 
@@ -137,7 +134,7 @@ public class Scheduler {
             DayOfWeek key = DayOfWeek.valueOf(entry.getKey().toString());
             repeatCommitmentHashMap.put(key, new ArrayList<>());
 
-            for (Commitment commitment: entry.getValue()) {
+            for (Commitment commitment : entry.getValue()) {
                 Task task = getTaskFromCommitment(commitment);
                 Objects.requireNonNull(repeatCommitmentHashMap.get(key)).add(task);
             }
@@ -146,12 +143,20 @@ public class Scheduler {
     }
 
     private Task getTaskFromCommitment(Commitment commitment) {
-        // TODO - confirm start/end time coversion
+        Date startTimeDate = commitment.getStartTime().toDate();
+        Date endTimeDate = commitment.getEndTime().toDate();
+        Calendar startTimeCalendar = Calendar.getInstance();
+        Calendar endTimeCalendar = Calendar.getInstance();
+        startTimeCalendar.setTime(startTimeDate);
+        endTimeCalendar.setTime(endTimeDate);
+        int startTime = startTimeCalendar.HOUR_OF_DAY * 60 + startTimeCalendar.MINUTE;
+        int endTime = endTimeCalendar.HOUR_OF_DAY * 60 + endTimeCalendar.MINUTE;
         return new Task(
                 commitment.getId(),
                 commitment.getName(),
-                (int) commitment.getStartTime().getSeconds(),
-                (int) commitment.getEndTime().getSeconds(),
+                startTime,
+                endTime,
+                1,
                 TaskType.COMMITMENT
         );
     }
@@ -197,7 +202,8 @@ public class Scheduler {
         ArrayList<Task> scheduleToday = new ArrayList<>();
 
         ArrayList<Task> allCommitmentsToday = repeatCommitments.get(today.getDayOfWeek());
-        if (singleCommitments.get(today) != null) allCommitmentsToday.addAll(singleCommitments.get(today));
+        if (singleCommitments.get(today) != null)
+            allCommitmentsToday.addAll(singleCommitments.get(today));
         Collections.sort(allCommitmentsToday);
 
         currentMinutes = startMinutes;
@@ -225,20 +231,24 @@ public class Scheduler {
         while (workBlockMinutes > 0 && goalsLeft()) {
             if (workBlockMinutes >= workBlockSize) {
                 Task task = getGoalWorkBlock(workBlockL, currentMinutes);
-                int restSize = workBlockSize - workBlockL;
-                Task rest = new Task("rest", "Break " + restSize, task.getEndTime(),
-                        task.getEndTime() + restSize, TaskType.BREAK);
-                scheduleToday.add(task);
-                scheduleToday.add(rest);
-                currentMinutes += workBlockSize;
-                workBlockMinutes -= workBlockSize;
-                longRest = longRest == false ? true : false;
-                workBlockSize = longRest ? workBlockL + 20 : workBlockL + 10;
+                if (task.getDaysLeft() > 0) {
+                    int restSize = workBlockSize - workBlockL;
+                    Task rest = new Task("rest", "Break " + restSize, task.getEndTime(),
+                            task.getEndTime() + restSize, 1, TaskType.BREAK);
+                    scheduleToday.add(task);
+                    scheduleToday.add(rest);
+                    currentMinutes += workBlockSize;
+                    workBlockMinutes -= workBlockSize;
+                    longRest = longRest == false ? true : false;
+                    workBlockSize = longRest ? workBlockL + 20 : workBlockL + 10;
+                }
             } else {
                 Task task = getGoalWorkBlock(workBlockMinutes, currentMinutes);
-                scheduleToday.add(task);
-                currentMinutes += workBlockMinutes;
-                workBlockMinutes = 0;
+                if (task.getDaysLeft() > 0) {
+                    scheduleToday.add(task);
+                    currentMinutes += workBlockMinutes;
+                    workBlockMinutes = 0;
+                }
             }
         }
     }
@@ -248,12 +258,12 @@ public class Scheduler {
         GoalDataForScheduler data = dataList.get(interleaveIndex);
         int taskTime = data.takeMinutes(minutes);
         Task goalWorkBlock = new Task(data.getID(), data.getName(), startMinutes,
-                startMinutes + taskTime, TaskType.GOAL);
+                startMinutes + taskTime, data.getDays_left(), TaskType.GOAL);
         if (data.getMinutes() < workBlockL / 3) {
             dataList.remove(interleaveIndex);
             interleaveIndex = interleaveIndex > dataList.size() - 1 ? 0 : interleaveIndex;
         } else {
-            interleaveIndex = (interleaveIndex + 1 >=  dataList.size() - 1 || interleaveIndex + 1 > maxInterleaves)
+            interleaveIndex = (interleaveIndex + 1 >= dataList.size() - 1 || interleaveIndex + 1 > maxInterleaves)
                     ? 0 : interleaveIndex + 1;
         }
         return goalWorkBlock;
@@ -280,17 +290,17 @@ public class Scheduler {
         ArrayList s = new ArrayList();
         ArrayList s2 = new ArrayList();
 
-        Task a = new Task("ID", "OOP 2 Lec", 510, 600, TaskType.COMMITMENT);
-        Task a1 = new Task("ID", "Android Lab", 630, 720, TaskType.COMMITMENT);
-        Task a2 = new Task("ID", "Math Lab", 570, 680, TaskType.COMMITMENT);
-        Task a3 = new Task("ID", "OOP 2 Lab", 690, 780, TaskType.COMMITMENT);
-        Task a4 = new Task("ID", "Android Lec", 510, 600, TaskType.COMMITMENT);
-        Task a5 = new Task("ID", "Pred A Lec", 630, 720, TaskType.COMMITMENT);
-        Task a6 = new Task("ID", "Pred A Lab", 810, 960, TaskType.COMMITMENT);
-        Task a7 = new Task("ID", "OOP 2 Lec", 510, 600, TaskType.COMMITMENT);
-        Task a8 = new Task("ID", "Math Lec", 870, 960, TaskType.COMMITMENT);
-        Task b = new Task("ID", "Eat Dinner", 1080, 1140, TaskType.COMMITMENT);
-        Task c = new Task("ID", "Morning Prep", 420, 510, TaskType.COMMITMENT);
+        Task a = new Task("ID", "OOP 2 Lec", 510, 600, 0, TaskType.COMMITMENT);
+        Task a1 = new Task("ID", "Android Lab", 630, 720, 0, TaskType.COMMITMENT);
+        Task a2 = new Task("ID", "Math Lab", 570, 680, 0, TaskType.COMMITMENT);
+        Task a3 = new Task("ID", "OOP 2 Lab", 690, 780, 0, TaskType.COMMITMENT);
+        Task a4 = new Task("ID", "Android Lec", 510, 600, 0, TaskType.COMMITMENT);
+        Task a5 = new Task("ID", "Pred A Lec", 630, 720, 0, TaskType.COMMITMENT);
+        Task a6 = new Task("ID", "Pred A Lab", 810, 960, 0, TaskType.COMMITMENT);
+        Task a7 = new Task("ID", "OOP 2 Lec", 510, 600, 0, TaskType.COMMITMENT);
+        Task a8 = new Task("ID", "Math Lec", 870, 960, 0, TaskType.COMMITMENT);
+        Task b = new Task("ID", "Eat Dinner", 1080, 1140, 0, TaskType.COMMITMENT);
+        Task c = new Task("ID", "Morning Prep", 420, 510, 0, TaskType.COMMITMENT);
 
         m.add(a);
         t.add(a1);
@@ -317,8 +327,8 @@ public class Scheduler {
         f.add(c);
 
 
-        s.add(new Task("ID", "League of Legends", 420, 900, TaskType.COMMITMENT));
-        s2.add(new Task("ID", "League of Legends", 420, 900, TaskType.COMMITMENT));
+        s.add(new Task("ID", "League of Legends", 420, 900, 0, TaskType.COMMITMENT));
+        s2.add(new Task("ID", "League of Legends", 420, 900, 0, TaskType.COMMITMENT));
 
         schedule.put(DayOfWeek.MONDAY, m);
         schedule.put(DayOfWeek.TUESDAY, t);
@@ -350,7 +360,7 @@ public class Scheduler {
     public static void main(String[] args) {
         Scheduler s = new Scheduler();
         HashMap<LocalDate, ArrayList<Task>> sched = s.getSchedule();
-        for (LocalDate date: sched.keySet()) {
+        for (LocalDate date : sched.keySet()) {
             System.out.println("DATE------" + date.toString());
             ArrayList<Task> tasks = sched.get(date);
             for (Task task : tasks) {

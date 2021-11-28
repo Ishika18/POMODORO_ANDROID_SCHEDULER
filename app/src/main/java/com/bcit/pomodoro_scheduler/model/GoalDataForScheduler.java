@@ -72,8 +72,10 @@ public class GoalDataForScheduler implements Comparable<GoalDataForScheduler> {
         if (this_priority.compareTo(other_priority) != 0)
             return this_priority.compareTo(other_priority);
 
-        Integer this_weighted_minutes = (minutes / days_left);
-        Integer other_weighted_minutes = (o.getMinutes() / o.getDays_left());
+        int thisDaysLeft = days_left < 1 ? 1 : days_left;
+        int otherDaysLeft = o.getDays_left() < 1 ? 1 : o.getDays_left();
+        Integer this_weighted_minutes = (minutes / thisDaysLeft);
+        Integer other_weighted_minutes = (o.getMinutes() / otherDaysLeft);
         return this_weighted_minutes.compareTo(other_weighted_minutes);
     }
 }
