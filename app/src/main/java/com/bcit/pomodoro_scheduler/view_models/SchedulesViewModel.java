@@ -13,7 +13,6 @@ import com.bcit.pomodoro_scheduler.repositories.ScheduleRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class SchedulesViewModel extends ViewModel implements ScheduleRepository.OnFirestoreTaskComplete {
 
@@ -38,6 +37,7 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
 
     public SchedulesViewModel(String userEmail) {
         this.userEmail = userEmail;
+        scheduleRepository.createDocForNewUser(this.userEmail);
         scheduleRepository.getSchedulesData(userEmail);
     }
     

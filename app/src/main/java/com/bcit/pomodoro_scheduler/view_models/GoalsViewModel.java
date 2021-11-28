@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.repositories.GoalRepository;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
@@ -39,6 +41,7 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
 
     public GoalsViewModel(String userEmail){
         this.userEmail = userEmail;
+        goalRepository.createDocForNewUser(this.userEmail);
         goalRepository.getGoalsData(userEmail);
     }
     

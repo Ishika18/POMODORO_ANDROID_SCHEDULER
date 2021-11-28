@@ -1,10 +1,13 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
+import android.util.Log;
+
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.model.TaskType;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -91,6 +94,16 @@ public class ScheduleRepository {
             taskObjects.add(createTaskObject(task));
         }
         return taskObjects;
+    }
+
+    public void createDocForNewUser(String userEmail) {
+        HashMap<String, Object> data = new HashMap<>();
+        taskRef.document(userEmail).set(data, SetOptions.merge())
+                .addOnSuccessListener(unused -> {
+                    Log.d("SCHEDULE_DOC", "new doc created or merged with prev");
+                }).addOnFailureListener(e -> {
+            Log.d("SCHEDULE_DOC_FAIL", "error while creating/merging user doc.");
+        }       );
     }
 
     public HashMap<String, Object> createTaskObject (

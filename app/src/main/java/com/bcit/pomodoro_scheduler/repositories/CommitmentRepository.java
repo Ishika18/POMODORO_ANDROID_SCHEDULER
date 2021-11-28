@@ -1,11 +1,18 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,6 +124,16 @@ public class CommitmentRepository {
                 (String) result.get("url"),
                 (String) result.get("notes")
         );
+    }
+
+    public void createDocForNewUser(String userEmail) {
+        HashMap<String, Object> data = new HashMap<>();
+        taskRef.document(userEmail).set(data, SetOptions.merge())
+                .addOnSuccessListener(unused -> {
+                    Log.d("COMMITMENT_DOC", "new doc created or merged with prev");
+                }).addOnFailureListener(e -> {
+                    Log.d("COMMITMENT_DOC_FAIL", "error while creating/merging user doc.");
+        }       );
     }
 
     public interface OnFirestoreTaskComplete {

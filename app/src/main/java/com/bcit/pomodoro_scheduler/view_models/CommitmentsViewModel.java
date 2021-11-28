@@ -43,6 +43,7 @@ public class CommitmentsViewModel extends ViewModel implements CommitmentReposit
 
     public CommitmentsViewModel(String userEmail) {
         this.userEmail = userEmail;
+        commitmentRepository.createDocForNewUser(this.userEmail);
         commitmentRepository.getCommitmentsData(this.userEmail);
     }
 
