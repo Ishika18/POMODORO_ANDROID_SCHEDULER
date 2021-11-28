@@ -1,6 +1,5 @@
 package com.bcit.pomodoro_scheduler.view_models;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -8,12 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.repositories.GoalRepository;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
@@ -28,13 +23,13 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
         return goalsModelData;
     }
 
-    public LiveData<Boolean> updateGoalData(String userEmail, Goal goal) {
+    public LiveData<Boolean> updateGoalData(Goal goal) {
         goalRepository.addOrUpdateGoal(userEmail, goal);
         goalRepository.getGoalsData(userEmail);
         return goalDataUpdated;
     }
 
-    public LiveData<Boolean> deleteGoalData(String userEmail, String goalId) {
+    public LiveData<Boolean> deleteGoalData(String goalId) {
         goalRepository.deleteGoal(userEmail, goalId);
         goalRepository.getGoalsData(userEmail);
         return goalDataDeleted;

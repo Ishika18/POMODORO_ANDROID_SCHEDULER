@@ -140,7 +140,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateCommitmentFragment.newInstance(userEmail, null),
+                CreateCommitmentFragment.newInstance(null),
                 CREATE_COMMITMENT_FRAGMENT_TAG
         );
         ft.commit();
@@ -150,7 +150,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateGoalFragment.newInstance(userEmail, null),
+                CreateGoalFragment.newInstance(null),
                 CREATE_GOAL_FRAGMENT_TAG
         );
         ft.commit();
