@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.bcit.pomodoro_scheduler.firebase.FirebaseDB;
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
@@ -25,7 +24,6 @@ import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDate;
 import java.time.YearMonth;

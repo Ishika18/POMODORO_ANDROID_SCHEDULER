@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.repositories.ScheduleRepository;
 
@@ -19,9 +18,16 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
 
     private final MutableLiveData<HashMap<LocalDate, ArrayList<Task>>>
             schedulesModelData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> scheduleDataUpdated = new MutableLiveData<>();
 
     public LiveData<HashMap<LocalDate, ArrayList<Task>>> getSchedulesModelData() {
         return schedulesModelData;
+    }
+
+    public LiveData<Boolean> updateScheduleData(String userEmail, HashMap<LocalDate,
+            ArrayList<com.bcit.pomodoro_scheduler.model.Task>> schedule) {
+        scheduleRepository.addOrUpdateSchedule(userEmail, schedule);
+        return scheduleDataUpdated;
     }
 
     private final ScheduleRepository scheduleRepository = new ScheduleRepository(this);
@@ -37,7 +43,17 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
     }
 
     @Override
-    public void onError(Exception e) {
+    public void scheduleDataUpdated() {
+        scheduleDataUpdated.setValue(Boolean.TRUE);
+    }
+
+    @Override
+    public void onErrorUpdateScheduleData(Exception e) {
+        scheduleDataUpdated.setValue(Boolean.FALSE);
+    }
+
+    @Override
+    public void onErrorGetScheduleData(Exception e) {
         Log.w("Fail", "Error getting documents.", e);
     }
 }

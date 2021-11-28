@@ -1,10 +1,7 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
-import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.model.TaskType;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +29,7 @@ public class ScheduleRepository {
     public void getSchedulesData(String userEmail){
         taskRef.document(userEmail).get()
                 .addOnSuccessListener(this::onSuccess)
-                .addOnFailureListener(onFirestoreTaskComplete::onError);
+                .addOnFailureListener(onFirestoreTaskComplete::onErrorGetScheduleData);
     }
 
     private Task getTaskDataFromMap(HashMap<String, Object> result) {
@@ -64,8 +61,53 @@ public class ScheduleRepository {
         }
     }
 
+    public void addOrUpdateSchedule(
+            String userEmail, HashMap<LocalDate,
+            ArrayList<com.bcit.pomodoro_scheduler.model.Task>> schedule
+    ) {
+        for (Map.Entry<LocalDate, ArrayList<com.bcit.pomodoro_scheduler.model.Task>>
+                entry : schedule.entrySet()) {
+            taskRef.document(userEmail)
+                    .set(createScheduleObject(entry.getKey(), entry.getValue()))
+                    .addOnSuccessListener(unused -> onFirestoreTaskComplete.scheduleDataUpdated())
+                    .addOnFailureListener(onFirestoreTaskComplete::onErrorUpdateScheduleData);
+        }
+    }
+
+    public HashMap<String, Object> createScheduleObject(
+            LocalDate key, ArrayList<com.bcit.pomodoro_scheduler.model.Task> tasks
+    ) {
+        HashMap<String, Object> scheduleObject = new HashMap<>();
+        scheduleObject.put(key.toString(), createTasksListObject(tasks));
+        return scheduleObject;
+    }
+
+    public ArrayList<Object> createTasksListObject (
+            ArrayList<com.bcit.pomodoro_scheduler.model.Task> tasks
+    ) {
+        ArrayList<Object> taskObjects = new ArrayList<>();
+        for (com.bcit.pomodoro_scheduler.model.Task task: tasks) {
+            taskObjects.add(createTaskObject(task));
+        }
+        return taskObjects;
+    }
+
+    public HashMap<String, Object> createTaskObject (
+            com.bcit.pomodoro_scheduler.model.Task task
+    ) {
+        HashMap<String, Object> taskObject = new HashMap<>();
+        taskObject.put("id", task.getID());
+        taskObject.put("name", task.getName());
+        taskObject.put("startTime", task.getEndTime());
+        taskObject.put("endTime", task.getEndTime());
+        taskObject.put("type", task.getType().name());
+        return taskObject;
+    }
+
     public interface OnFirestoreTaskComplete{
         void schedulesDataAdded(HashMap<LocalDate, ArrayList<Task>> schedulesModel);
-        void onError(Exception e);
+        void scheduleDataUpdated();
+        void onErrorUpdateScheduleData(Exception e);
+        void onErrorGetScheduleData(Exception e);
     }
 }
