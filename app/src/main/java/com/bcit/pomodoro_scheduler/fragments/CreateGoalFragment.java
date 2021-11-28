@@ -1,6 +1,5 @@
 package com.bcit.pomodoro_scheduler.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +40,6 @@ import java.util.stream.Stream;
  */
 public class CreateGoalFragment extends Fragment {
 
-    private static final String USER_EMAIL = "userEmail";
     private static final String GOAL = "goal";
 
     private static final int HOUR_DAY_LIMIT = 10;
@@ -50,7 +48,6 @@ public class CreateGoalFragment extends Fragment {
 
     private final Map<String, Integer> taskTimeOptions;
 
-    private String userEmail;
     private Goal goal;
 
     public CreateGoalFragment() {
@@ -62,14 +59,12 @@ public class CreateGoalFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param userEmail account email from login
      * @param goal the goal to update if updating
      * @return A new instance of fragment CreateGoalFragment.
      */
-    public static CreateGoalFragment newInstance(String userEmail, Goal goal) {
+    public static CreateGoalFragment newInstance(Goal goal) {
         CreateGoalFragment fragment = new CreateGoalFragment();
         Bundle args = new Bundle();
-        args.putString(USER_EMAIL, userEmail);
         args.putSerializable(GOAL, goal);
         fragment.setArguments(args);
         return fragment;
@@ -79,7 +74,6 @@ public class CreateGoalFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userEmail = getArguments().getString(USER_EMAIL);
             if (getArguments().getSerializable(GOAL) != null) {
                 goal = (Goal) getArguments().getSerializable(GOAL);
             }
@@ -122,9 +116,7 @@ public class CreateGoalFragment extends Fragment {
                                     taskTime.setText(taskTimes[selection]);
                                 }))
                         .setSingleChoiceItems(taskTimes, selection,
-                                ((dialogInterface, i) -> {
-                                    setSelection(i);
-                                })).show();
+                                ((dialogInterface, i) -> setSelection(i))).show();
             }
             private void setSelection(int i) {
                 selection = i;
@@ -150,12 +142,8 @@ public class CreateGoalFragment extends Fragment {
                                     goal.setPriority(Priority.fromValue(selection));
                                     priority.setText(goal.getPriority().name());
                                 }))
-                        .setSingleChoiceItems(priorities, selection, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setSelection(i);
-                            }
-                        }).show();
+                        .setSingleChoiceItems(priorities, selection,
+                                (dialogInterface, i) -> setSelection(i)).show();
             }
 
             private void setSelection(int i) {
@@ -193,75 +181,66 @@ public class CreateGoalFragment extends Fragment {
         priority.setText(goal.getPriority().name());
         taskTime.setText(getKeyByTaskTimeValue(goal.getTotalTimeInMinutes()));
 
-        deadlineDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
-                        .datePicker()
-                        .setTitleText(getResources().getString(R.string.deadline_picker_title))
-                        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                        .build();
+        deadlineDate.setOnClickListener(view1 -> {
+            MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
+                    .datePicker()
+                    .setTitleText(getResources().getString(R.string.deadline_picker_title))
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build();
 
-                datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                    c.setTimeInMillis(selection);
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                c.setTimeInMillis(selection);
 
-                    deadlineCalendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
-                            c.get(Calendar.DAY_OF_MONTH));
+                deadlineCalendar.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+                        c.get(Calendar.DAY_OF_MONTH));
 
-                    goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
-                    deadlineDate.setText(getFormattedDate(deadlineCalendar));
-                });
-                datePicker.show(
-                        requireActivity().getSupportFragmentManager(), datePicker.toString());
-            }
+                goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
+                deadlineDate.setText(getFormattedDate(deadlineCalendar));
+            });
+            datePicker.show(
+                    requireActivity().getSupportFragmentManager(), datePicker.toString());
         });
 
-        deadlineTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
-                        .setTimeFormat(TimeFormat.CLOCK_24H)
-                        .setTitleText("Select Deadline Time")
-                        .build();
+        deadlineTime.setOnClickListener(view12 -> {
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setTitleText("Select Deadline Time")
+                    .build();
 
-                timePicker.addOnPositiveButtonClickListener(selection -> {
-                    deadlineCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                    deadlineCalendar.set(Calendar.MINUTE, timePicker.getMinute());
+            timePicker.addOnPositiveButtonClickListener(selection -> {
+                deadlineCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                deadlineCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                    goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
-                    deadlineTime.setText(getFormattedTime(deadlineCalendar));
-                });
-                timePicker.show(
-                        requireActivity().getSupportFragmentManager(), timePicker.toString());
-            }
+                goal.setDeadline(new Timestamp(deadlineCalendar.getTime()));
+                deadlineTime.setText(getFormattedTime(deadlineCalendar));
+            });
+            timePicker.show(
+                    requireActivity().getSupportFragmentManager(), timePicker.toString());
         });
 
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (name.getText().toString().isEmpty()) {
-                    Snackbar.make(view, R.string.goal_name_error, Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                goal.setName(name.getText().toString());
-                goal.setLocation(location.getText().toString());
-                goal.setUrl(url.getText().toString());
-                goal.setNotes(notes.getText().toString());
-
-                viewModel.updateGoalData(userEmail, goal).observe(getViewLifecycleOwner(),
-                        updated -> {
-                            if (!updated) {
-                                Snackbar.make(view, R.string.goal_create_error,
-                                        Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
-                            CalendarActivity calendarActivity = (CalendarActivity) getActivity();
-                            assert calendarActivity != null;
-                            calendarActivity.goToMonthlyView(YearMonth.now());
-                        });
+        createButton.setOnClickListener(view13 -> {
+            if (name.getText().toString().isEmpty()) {
+                Snackbar.make(view13, R.string.goal_name_error, Snackbar.LENGTH_LONG).show();
+                return;
             }
+
+            goal.setName(name.getText().toString());
+            goal.setLocation(location.getText().toString());
+            goal.setUrl(url.getText().toString());
+            goal.setNotes(notes.getText().toString());
+
+            viewModel.updateGoalData(goal).observe(getViewLifecycleOwner(),
+                    updated -> {
+                        if (!updated) {
+                            Snackbar.make(view13, R.string.goal_create_error,
+                                    Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
+                        CalendarActivity calendarActivity = (CalendarActivity) getActivity();
+                        assert calendarActivity != null;
+                        calendarActivity.goToMonthlyView(YearMonth.now());
+                    });
         });
     }
 

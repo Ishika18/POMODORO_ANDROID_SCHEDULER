@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
-import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
@@ -106,7 +105,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             public void onClick(View view) {
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragmentContainerView_main,
-                        CreateGoalFragment.newInstance(userEmail,
+                        CreateGoalFragment.newInstance(
                                 goals.get(viewHolder.getAdapterPosition())));
                 ft.commit();
             }

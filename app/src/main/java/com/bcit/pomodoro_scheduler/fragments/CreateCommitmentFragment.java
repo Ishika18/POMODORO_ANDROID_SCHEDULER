@@ -42,10 +42,8 @@ import java.util.stream.Stream;
  */
 public class CreateCommitmentFragment extends Fragment {
 
-    private static final String USER_EMAIL = "USER_EMAIL";
     private static final String COMMITMENT = "commitment";
 
-    private String userEmail;
     private Commitment commitment;
 
     public CreateCommitmentFragment() {
@@ -56,14 +54,12 @@ public class CreateCommitmentFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param userEmail User account email from login
      * @param commitment commitment to update if updating
      * @return A new instance of fragment CreateCommitmentFragment.
      */
-    public static CreateCommitmentFragment newInstance(String userEmail, Commitment commitment) {
+    public static CreateCommitmentFragment newInstance(Commitment commitment) {
         CreateCommitmentFragment fragment = new CreateCommitmentFragment();
         Bundle args = new Bundle();
-        args.putString(USER_EMAIL, userEmail);
         args.putSerializable(COMMITMENT, commitment);
         fragment.setArguments(args);
         return fragment;
@@ -73,7 +69,6 @@ public class CreateCommitmentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            userEmail = getArguments().getString(USER_EMAIL);
             if (getArguments().getSerializable(COMMITMENT) != null) {
                 commitment = (Commitment) getArguments().getSerializable(COMMITMENT);
             }
@@ -301,7 +296,7 @@ public class CreateCommitmentFragment extends Fragment {
                 commitment.setUrl(url.getText().toString());
                 commitment.setNotes(notes.getText().toString());
 
-                viewModel.updateCommitmentData(userEmail, commitment).observe(getViewLifecycleOwner(),
+                viewModel.updateCommitmentData(commitment).observe(getViewLifecycleOwner(),
                         updated -> {
                     if (!updated) {
                         Snackbar.make(view, R.string.commitment_create_error,
