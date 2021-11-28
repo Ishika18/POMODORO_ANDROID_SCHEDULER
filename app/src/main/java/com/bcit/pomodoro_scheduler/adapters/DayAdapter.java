@@ -11,6 +11,7 @@ import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.model.Task;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,6 +35,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             endTime = view.findViewById(R.id.textView_itemDay_end);
             task = view.findViewById(R.id.textView_itemDay_taskName);
         }
+
         public TextView getEndTime() {
             return endTime;
         }
@@ -73,8 +75,16 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getStartTime().setText("8:00");
-        viewHolder.getEndTime().setText("12:00");
+
+        int startTime = localDataSet.get(position).getStartTime();
+        LocalTime startLocalTime = LocalTime.of(startTime / 60, startTime % 60);
+
+        int endTime = localDataSet.get(position).getEndTime();
+        LocalTime endLocalTime = LocalTime.of(endTime / 60, endTime % 60);
+
+
+        viewHolder.getStartTime().setText(startLocalTime.toString());
+        viewHolder.getEndTime().setText(endLocalTime.toString());
         viewHolder.getTask().setText(localDataSet.get(position).getName());
     }
 
