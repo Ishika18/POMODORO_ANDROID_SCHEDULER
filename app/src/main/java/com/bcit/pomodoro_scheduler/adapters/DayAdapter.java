@@ -8,11 +8,16 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.model.Task;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
-    private String[] localDataSet;
+    private ArrayList<Task> localDataSet;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -48,7 +53,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
      * @param dataSet String[] containing the data to populate views to be used
      *                by RecyclerView.
      */
-    public DayAdapter(String[] dataSet) {
+    public DayAdapter(ArrayList<Task> dataSet) {
         localDataSet = dataSet;
     }
 
@@ -70,12 +75,12 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
         // contents of the view with that element
         viewHolder.getStartTime().setText("8:00");
         viewHolder.getEndTime().setText("12:00");
-        viewHolder.getTask().setText(localDataSet[position]);
+        viewHolder.getTask().setText(localDataSet.get(position).getName());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return localDataSet.size();
     }
 }

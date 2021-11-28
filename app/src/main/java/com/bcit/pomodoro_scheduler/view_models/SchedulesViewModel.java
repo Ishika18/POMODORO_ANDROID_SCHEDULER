@@ -26,7 +26,7 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
         return schedulesModelData;
     }
 
-    public LiveData<Boolean> updateScheduleData(String userEmail, HashMap<LocalDate,
+    public LiveData<Boolean> updateScheduleData(HashMap<LocalDate,
             ArrayList<com.bcit.pomodoro_scheduler.model.Task>> schedule) {
         scheduleRepository.addOrUpdateSchedule(userEmail, schedule);
         return scheduleDataUpdated;
