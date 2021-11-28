@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -184,6 +185,18 @@ public class CreateGoalFragment extends Fragment {
                 });
                 timePicker.show(
                         requireActivity().getSupportFragmentManager(), timePicker.toString());
+            }
+        });
+
+        Button createButton = view.findViewById(R.id.button_goal_create);
+        EditText name = view.findViewById(R.id.editText_goal_name);
+        EditText location = view.findViewById(R.id.editText_goal_location);
+        EditText url = view.findViewById(R.id.editText_goal_url);
+        EditText notes = view.findViewById(R.id.editText_goal_notes);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

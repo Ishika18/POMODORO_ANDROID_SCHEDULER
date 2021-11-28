@@ -87,9 +87,11 @@ public class CommitmentRepository {
         commitmentDescription.put("id", commitment.getId());
         commitmentDescription.put("name", commitment.getName());
         commitmentDescription.put("location", commitment.getLocation());
-        commitmentDescription.put("startTime", commitment.getEndTime());
+        commitmentDescription.put("startTime", commitment.getStartTime());
         commitmentDescription.put("endTime", commitment.getEndTime());
         commitmentDescription.put("repeat", commitment.getRepeat().name());
+        commitmentDescription.put("url", commitment.getUrl());
+        commitmentDescription.put("notes", commitment.getNotes());
         commitmentObject.put(commitment.getId(), commitmentDescription);
         return commitmentObject;
     }

@@ -1,5 +1,6 @@
 package com.bcit.pomodoro_scheduler.view_models;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,6 +13,9 @@ import com.bcit.pomodoro_scheduler.repositories.GoalRepository;
 import java.util.List;
 
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
+
+    private final Context context;
+    private final String userEmail;
 
     private final MutableLiveData<List<Goal>> goalsModelData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> goalDataUpdated = new MutableLiveData<>();
@@ -33,7 +37,9 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
 
     private final GoalRepository goalRepository = new GoalRepository(this);
 
-    public GoalsViewModel(String userEmail){
+    public GoalsViewModel(Context context, String userEmail){
+        this.context = context;
+        this.userEmail = userEmail;
         goalRepository.getGoalsData(userEmail);
     }
     

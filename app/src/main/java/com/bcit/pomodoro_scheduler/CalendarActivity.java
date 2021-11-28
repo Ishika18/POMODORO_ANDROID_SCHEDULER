@@ -3,6 +3,7 @@ package com.bcit.pomodoro_scheduler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
+import com.bcit.pomodoro_scheduler.view_models.ViewModelFactory;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
 
@@ -41,6 +43,10 @@ public class CalendarActivity extends AppCompatActivity {
     private HashMap<Repeat, List<Commitment>> commitmentHashMap;
     private HashMap<LocalDate, ArrayList<Task>> scheduleHashMap;
 
+    private CommitmentsViewModel commitmentsViewModel;
+    private GoalsViewModel goalsViewModel;
+    private SchedulesViewModel schedulesViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,27 +64,29 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void getDataFromFirebaseViewModels() {
-        GoalsViewModel goalsViewModel = new GoalsViewModel(userEmail);
-        goalsViewModel.getGoalsModelData().observe(this, goals -> {
+        ViewModelFactory factory = new ViewModelFactory(getApplicationContext(), userEmail);
+
+        this.goalsViewModel = new ViewModelProvider(this, factory).get(GoalsViewModel.class);
+        this.goalsViewModel.getGoalsModelData().observe(this, goals -> {
             this.goals = goals;
         });
 
-        Goal goal = new Goal(
-                "goalId", "goalName", "goalLocation",
-                60, Timestamp.now(), Priority.HIGH, "url", "notes");
-        goalsViewModel.updateGoalData(userEmail, goal).observe(this, aBoolean -> {
-            Log.d("CALENDAR_ACTIVITY", aBoolean.toString());
-        });
-
-        CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel(userEmail);
-
-        commitmentsViewModel.getCommitmentsModelData()
+        this.commitmentsViewModel = new ViewModelProvider(this, factory)
+                .get(CommitmentsViewModel.class);
+        this.commitmentsViewModel.getCommitmentsModelData()
                 .observe(this, commitmentsMap -> {
                     this.commitmentHashMap = commitmentsMap;
                 });
 
-        SchedulesViewModel schedulesViewModel = new SchedulesViewModel(userEmail);
-        schedulesViewModel.getSchedulesModelData()
+        this.commitmentsViewModel.deleteCommitmentData(userEmail, testCommitment.getId()).observe(
+                this, aBoolean -> {
+                    Log.d("CALENDAR ACTIVITY", aBoolean.toString());
+                }
+        );
+
+        this.schedulesViewModel = new ViewModelProvider(this, factory)
+                .get(SchedulesViewModel.class);
+        this.schedulesViewModel.getSchedulesModelData()
                 .observe(this, scheduleMap -> {
                     this.scheduleHashMap = scheduleMap;
                 });
@@ -151,7 +159,7 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragmentContainerView_main,
-                CreateCommitmentFragment.newInstance(),
+                CreateCommitmentFragment.newInstance(userEmail),
                 CREATE_COMMITMENT_FRAGMENT_TAG
         );
         ft.commit();

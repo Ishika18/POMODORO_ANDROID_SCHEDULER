@@ -1,5 +1,6 @@
 package com.bcit.pomodoro_scheduler.view_models;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -15,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SchedulesViewModel extends ViewModel implements ScheduleRepository.OnFirestoreTaskComplete {
+
+    private final Context context;
+    private final String userEmail;
 
     private final MutableLiveData<HashMap<LocalDate, ArrayList<Task>>>
             schedulesModelData = new MutableLiveData<>();
@@ -33,7 +37,9 @@ public class SchedulesViewModel extends ViewModel implements ScheduleRepository.
     private final ScheduleRepository scheduleRepository = new ScheduleRepository(this);
 
 
-    public SchedulesViewModel(String userEmail){
+    public SchedulesViewModel(Context context, String userEmail) {
+        this.context = context;
+        this.userEmail = userEmail;
         scheduleRepository.getSchedulesData(userEmail);
     }
     
