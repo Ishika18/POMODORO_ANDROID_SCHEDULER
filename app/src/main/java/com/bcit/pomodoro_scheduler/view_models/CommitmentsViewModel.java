@@ -23,13 +23,13 @@ public class CommitmentsViewModel extends ViewModel implements CommitmentReposit
         return commitmentsModelData;
     }
 
-    public LiveData<Boolean> updateCommitmentData(String userEmail, Commitment commitment) {
+    public LiveData<Boolean> updateCommitmentData(Commitment commitment) {
         commitmentRepository.addOrUpdateCommitment(userEmail, commitment);
         commitmentRepository.getCommitmentsData(userEmail);
         return commitmentUpdated;
     }
 
-    public LiveData<Boolean> deleteCommitmentData(String userEmail, String id) {
+    public LiveData<Boolean> deleteCommitmentData(String id) {
         commitmentRepository.deleteCommitment(userEmail, id);
         commitmentRepository.getCommitmentsData(userEmail);
         return commitmentDeleted;
@@ -43,6 +43,7 @@ public class CommitmentsViewModel extends ViewModel implements CommitmentReposit
 
     public CommitmentsViewModel(String userEmail) {
         this.userEmail = userEmail;
+        commitmentRepository.createDocForNewUser(this.userEmail);
         commitmentRepository.getCommitmentsData(this.userEmail);
     }
 

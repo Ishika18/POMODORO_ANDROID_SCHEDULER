@@ -124,7 +124,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             public void onClick(View view) {
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragmentContainerView_main,
-                        CreateCommitmentFragment.newInstance(userEmail,
+                        CreateCommitmentFragment.newInstance(
                                 commitments.get(viewHolder.getAdapterPosition())));
                 ft.commit();
             }

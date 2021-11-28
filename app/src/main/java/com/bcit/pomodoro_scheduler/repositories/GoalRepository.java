@@ -1,5 +1,7 @@
 package com.bcit.pomodoro_scheduler.repositories;
 
+import android.util.Log;
+
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Priority;
 import com.google.firebase.firestore.CollectionReference;
@@ -7,6 +9,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.SetOptions;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +58,16 @@ public class GoalRepository {
                 .update(task)
                 .addOnSuccessListener(unused -> onFirestoreTaskComplete.goalDataUpdated())
                 .addOnFailureListener(onFirestoreTaskComplete::onErrorGoalDataUpdated);
+    }
+
+    public void createDocForNewUser(String userEmail) {
+        HashMap<String, Object> data = new HashMap<>();
+        taskRef.document(userEmail).set(data, SetOptions.merge())
+                .addOnSuccessListener(unused -> {
+                    Log.d("GOAl_DOC", "new doc created or merged with prev");
+                }).addOnFailureListener(e -> {
+            Log.d("GOAL_DOC_FAIL", "error while creating/merging user doc.");
+        }       );
     }
 
     public HashMap<String, Object> createGoalObject(Goal goal) {

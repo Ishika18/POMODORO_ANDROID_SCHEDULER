@@ -105,7 +105,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             public void onClick(View view) {
                 FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragmentContainerView_main,
-                        CreateGoalFragment.newInstance(userEmail,
+                        CreateGoalFragment.newInstance(
                                 goals.get(viewHolder.getAdapterPosition())));
                 ft.commit();
             }
