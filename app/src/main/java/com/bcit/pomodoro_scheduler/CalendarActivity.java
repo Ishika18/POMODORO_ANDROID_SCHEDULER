@@ -17,6 +17,7 @@ import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
@@ -64,28 +65,19 @@ public class CalendarActivity extends AppCompatActivity {
             this.goals = goals;
         });
 
+        Goal goal = new Goal(
+                "goalId", "goalName", "goalLocation",
+                60, Timestamp.now(), Priority.HIGH, "url", "notes");
+        goalsViewModel.updateGoalData(userEmail, goal).observe(this, aBoolean -> {
+            Log.d("CALENDAR_ACTIVITY", aBoolean.toString());
+        });
+
         CommitmentsViewModel commitmentsViewModel = new CommitmentsViewModel(userEmail);
 
         commitmentsViewModel.getCommitmentsModelData()
                 .observe(this, commitmentsMap -> {
                     this.commitmentHashMap = commitmentsMap;
                 });
-
-        Commitment testCommitment = new Commitment(
-                "test3",
-                "testName",
-                "testLocation",
-                Timestamp.now(),
-                Timestamp.now(),
-                Repeat.FRI,
-                "url",
-                "notes"
-        );
-        commitmentsViewModel.deleteCommitmentData(userEmail, testCommitment.getId()).observe(
-                this, aBoolean -> {
-                    Log.d("CALENDAR ACTIVITY", aBoolean.toString());
-                }
-        );
 
         SchedulesViewModel schedulesViewModel = new SchedulesViewModel(userEmail);
         schedulesViewModel.getSchedulesModelData()

@@ -14,13 +14,24 @@ import java.util.List;
 public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirestoreTaskComplete {
 
     private final MutableLiveData<List<Goal>> goalsModelData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> goalDataUpdated = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> goalDataDeleted = new MutableLiveData<>();
 
     public LiveData<List<Goal>> getGoalsModelData() {
         return goalsModelData;
     }
 
-    private final GoalRepository goalRepository = new GoalRepository(this);
+    public LiveData<Boolean> updateGoalData(String userEmail, Goal goal) {
+        goalRepository.addOrUpdateGoal(userEmail, goal);
+        return goalDataUpdated;
+    }
 
+    public LiveData<Boolean> deleteGoalData(String userEmail, String goalId) {
+        goalRepository.deleteGoal(userEmail, goalId);
+        return goalDataDeleted;
+    }
+
+    private final GoalRepository goalRepository = new GoalRepository(this);
 
     public GoalsViewModel(String userEmail){
         goalRepository.getGoalsData(userEmail);
@@ -32,7 +43,27 @@ public class GoalsViewModel extends ViewModel implements GoalRepository.OnFirest
     }
 
     @Override
-    public void onError(Exception e) {
+    public void goalDataUpdated() {
+        goalDataUpdated.setValue(Boolean.TRUE);
+    }
+
+    @Override
+    public void goalDataDeleted() {
+        goalDataDeleted.setValue(Boolean.TRUE);
+    }
+
+    @Override
+    public void onErrorGoalDataDeleted(Exception e) {
+        goalDataDeleted.setValue(Boolean.FALSE);
+    }
+
+    @Override
+    public void onErrorGoalDataUpdated(Exception e) {
+        goalDataUpdated.setValue(Boolean.FALSE);
+    }
+
+    @Override
+    public void onErrorGetGoalsData(Exception e) {
         Log.w("Fail", "Error getting documents.", e);
     }
 }

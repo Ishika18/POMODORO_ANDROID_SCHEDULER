@@ -64,7 +64,7 @@ public class CommitmentRepository {
     public void addOrUpdateCommitment(String userEmail, Commitment commitment) {
         HashMap<String, Object> commitmentObject = createCommitmentObject(commitment);
 
-        firebaseFirestore.collection("commitments").document(userEmail)
+        taskRef.document(userEmail)
                 .update(commitmentObject)
                 .addOnSuccessListener(unused -> {
                     onFirestoreTaskComplete.onCommitmentUpdated();
@@ -75,7 +75,7 @@ public class CommitmentRepository {
     public void deleteCommitment(String userEmail, String commitmentID) {
         Map<String, Object> deleteCommitment = new HashMap<>();
         deleteCommitment.put(commitmentID, FieldValue.delete());
-        firebaseFirestore.collection("commitments").document(userEmail)
+        taskRef.document(userEmail)
                 .update(deleteCommitment)
                 .addOnSuccessListener(unused -> onFirestoreTaskComplete.onCommitmentDeleted())
                 .addOnFailureListener(onFirestoreTaskComplete::onErrorDeleteCommitmentData);
