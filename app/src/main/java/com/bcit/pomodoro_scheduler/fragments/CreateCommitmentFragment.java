@@ -234,6 +234,9 @@ public class CreateCommitmentFragment extends Fragment {
                     endCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour() + 1);
                     endCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
+                    commitment.setStartTime(new Timestamp(startCalendar.getTime()));
+                    commitment.setEndTime(new Timestamp(endCalendar.getTime()));
+
                     startTimeTime.setText(getFormattedTime(startCalendar));
                     endTimeTime.setText(getFormattedTime(endCalendar));
                     endTimeDate.setText(getFormattedDate(endCalendar));
@@ -253,7 +256,7 @@ public class CreateCommitmentFragment extends Fragment {
                         .build();
 
                 timePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar calendar = Calendar.getInstance();
+                    Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
                     calendar.setTime(endCalendar.getTime());
                     calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                     calendar.set(Calendar.MINUTE, timePicker.getMinute());

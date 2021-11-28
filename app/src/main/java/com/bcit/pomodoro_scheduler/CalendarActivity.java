@@ -13,11 +13,11 @@ import android.view.View;
 
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
+import com.bcit.pomodoro_scheduler.fragments.EditScheduleFragment;
 import com.bcit.pomodoro_scheduler.fragments.MonthFragment;
 import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.model.Priority;
 import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
@@ -25,7 +25,6 @@ import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.SchedulesViewModel;
 import com.bcit.pomodoro_scheduler.view_models.ViewModelFactory;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.firebase.Timestamp;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -38,6 +37,7 @@ public class CalendarActivity extends AppCompatActivity {
     private static final String WEEK_FRAGMENT_TAG = "WEEK_FRAGMENT";
     private static final String CREATE_COMMITMENT_FRAGMENT_TAG = "CREATE_COMMITMENT_FRAGMENT";
     private static final String CREATE_GOAL_FRAGMENT_TAG = "CREATE_GOAL_FRAGMENT";
+    private static final String EDIT_SCHEDULE_TAG = "EDIT_SCHEDULE_FRAGMENT";
     private String userEmail;
     private List<Goal> goals;
     private HashMap<Repeat, List<Commitment>> commitmentHashMap;
@@ -91,23 +91,9 @@ public class CalendarActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MonthFragment monthFragment = (MonthFragment) getSupportFragmentManager()
                         .findFragmentByTag(MONTH_FRAGMENT_TAG);
-                WeekFragment weekFragment = (WeekFragment) getSupportFragmentManager()
-                        .findFragmentByTag(WEEK_FRAGMENT_TAG);
-                CreateCommitmentFragment createCommitmentFragment =
-                        (CreateCommitmentFragment) getSupportFragmentManager()
-                                .findFragmentByTag(CREATE_COMMITMENT_FRAGMENT_TAG);
-                CreateGoalFragment createGoalFragment =
-                        (CreateGoalFragment) getSupportFragmentManager()
-                                .findFragmentByTag(CREATE_GOAL_FRAGMENT_TAG);
                 if (monthFragment != null && monthFragment.isVisible()) {
                     finish();
-                } else if (weekFragment != null && weekFragment.isVisible()) {
-                    // just go to the current date
-                    goToMonthlyView(YearMonth.now());
-                } else if (createCommitmentFragment != null
-                        && createCommitmentFragment.isVisible()) {
-                    goToMonthlyView(YearMonth.now());
-                } else if (createGoalFragment != null && createGoalFragment.isVisible()) {
+                } else {
                     goToMonthlyView(YearMonth.now());
                 }
             }
@@ -116,9 +102,11 @@ public class CalendarActivity extends AppCompatActivity {
         topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.option_1) {
+                if (item.getItemId() == R.id.menu_appbar_edit) {
+                    goToEditScheduleFragment();
+                } else if (item.getItemId() == R.id.menu_appbar_add_task) {
                     goToCreateGoalView();
-                } else if (item.getItemId() == R.id.option_2) {
+                } else if (item.getItemId() == R.id.menu_appbar_add_commitment) {
                     goToCreateCommitmentView();
                 }
 
@@ -163,6 +151,16 @@ public class CalendarActivity extends AppCompatActivity {
                 R.id.fragmentContainerView_main,
                 CreateGoalFragment.newInstance(userEmail),
                 CREATE_GOAL_FRAGMENT_TAG
+        );
+        ft.commit();
+    }
+
+    public void goToEditScheduleFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(
+                R.id.fragmentContainerView_main,
+                EditScheduleFragment.newInstance(userEmail),
+                EDIT_SCHEDULE_TAG
         );
         ft.commit();
     }

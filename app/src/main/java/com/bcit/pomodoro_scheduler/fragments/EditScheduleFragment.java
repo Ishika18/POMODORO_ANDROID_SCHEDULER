@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,14 @@ import android.widget.ImageButton;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.CommitmentAdapter;
 import com.bcit.pomodoro_scheduler.adapters.GoalAdapter;
+import com.bcit.pomodoro_scheduler.model.Commitment;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Repeat;
+import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,9 +35,8 @@ import com.bcit.pomodoro_scheduler.adapters.GoalAdapter;
 public class EditScheduleFragment extends Fragment {
 
     private static final String USER_EMAIL = "USER_EMAIL";
-    private static boolean isEditingGoals;
+    private boolean isEditingGoals = true;
     private String userEmail;
-    private String[] mockData;
 
     public EditScheduleFragment() {
         // Required empty public constructor
@@ -65,25 +74,24 @@ public class EditScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        try {
-            RecyclerView rv = view.findViewById(R.id.recyclerView_fragmentWeek_days);
-            mockData = new String[]{"Benis"};
-            setUpRecyclerView(rv);
-            setUpRecyclerViewScrollButtons(view, rv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        RecyclerView rv = view.findViewById(
+                R.id.recyclerView__FragmentEditSchedule_scheduleEvents);
+        setUpRecyclerView(rv);
+        setUpRecyclerViewScrollButtons(view, rv);
+
     }
 
     private void setUpRecyclerView(RecyclerView rv) {
         if (isEditingGoals) {
-            GoalAdapter adapter = new GoalAdapter(mockData);
+            GoalAdapter adapter = new GoalAdapter(requireActivity());
             rv.setAdapter(adapter);
         } else {
-            CommitmentAdapter adapter = new CommitmentAdapter(mockData);
+            CommitmentAdapter adapter = new CommitmentAdapter(requireActivity());
             rv.setAdapter(adapter);
         }
-        rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(), RecyclerView.HORIZONTAL, false));
+        rv.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext(),
+                RecyclerView.VERTICAL, false));
     }
 
     private void setUpRecyclerViewScrollButtons(View view, RecyclerView rv) {

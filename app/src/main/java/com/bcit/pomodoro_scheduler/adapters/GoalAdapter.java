@@ -1,20 +1,27 @@
 package com.bcit.pomodoro_scheduler.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
+import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.card.MaterialCardView;
+
+import java.util.List;
 
 
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
-    private String[] localDataSet;
+    private List<Goal> goals;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -50,11 +57,14 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param dataSet String[] containing the data to populate views to be used
-     *                by RecyclerView.
+     * @param activity The FragmentActivity this GoalAdapter needs for MVVM context
      */
-    public GoalAdapter(String[] dataSet) {
-        localDataSet = dataSet;
+    public GoalAdapter(FragmentActivity activity) {
+        GoalsViewModel goalsViewModel = new ViewModelProvider(activity).get(GoalsViewModel.class);
+        goalsViewModel.getGoalsModelData().observe(activity, goalsData -> {
+            this.goals = goalsData;
+        });
+        Log.d("GOAL_ADAPTER", goals.toString() + "Size: " + goals.size());
     }
 
     // Create new views (invoked by the layout manager)
@@ -73,14 +83,15 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getGoalTitle().setText(localDataSet[position]);
-        viewHolder.getGoalHours().setText(localDataSet[position]);
+        viewHolder.getGoalTitle().setText(goals.get(position).getName());
+        String goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
+        viewHolder.getGoalHours().setText(goalHours);
         viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return goals.size();
     }
 }

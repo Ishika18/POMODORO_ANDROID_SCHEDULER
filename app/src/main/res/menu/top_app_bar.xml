@@ -2,8 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/option_1"
+    <item
+        android:id="@+id/menu_appbar_edit"
+        android:icon="@drawable/ic_sharp_edit_24"
+        android:title="Edit"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_appbar_add_task"
         android:title="@string/menu_topAppBar_addTask" />
-    <item android:id="@+id/option_2"
-        android:title="@string/menu_topAppBar_Commitment" />
+    <item android:id="@+id/menu_appbar_add_commitment"
+        android:title="@string/menu_topAppBar_Commitment" ></item>
 </menu>
