@@ -105,7 +105,15 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getCommitmentTitle().setText(commitments.get(position).getName());
+        if (commitments.get(position).getName().length() < 20) {
+            viewHolder.getCommitmentTitle()
+                    .setText(commitments.get(position).getName());
+        } else {
+            String title = commitments.get(position).getName()
+                            .substring(0, 18) + "...";
+            viewHolder.getCommitmentTitle().setText(title);
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append(commitments.get(position).getRepeat().name()).append(" ");
         sb.append(Instant.ofEpochMilli(commitments.get(position).getStartTime().getSeconds() * 1000)

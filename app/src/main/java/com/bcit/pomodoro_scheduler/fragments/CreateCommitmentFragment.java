@@ -111,6 +111,13 @@ public class CreateCommitmentFragment extends Fragment {
                                 ((dialogInterface, i) -> {
                                     commitment.setRepeat(Repeat.fromValue(repeats[selection]));
                                     repeat.setText(repeats[selection].toUpperCase());
+                                    if (commitment.getRepeat() != Repeat.NEVER) {
+                                        startTimeDate.setVisibility(View.GONE);
+                                        endTimeDate.setVisibility(View.GONE);
+                                    } else {
+                                        startTimeDate.setVisibility(View.VISIBLE);
+                                        endTimeDate.setVisibility(View.VISIBLE);
+                                    }
                                 }))
                         .setSingleChoiceItems(repeats, selection, new DialogInterface.OnClickListener() {
                             @Override
@@ -135,6 +142,11 @@ public class CreateCommitmentFragment extends Fragment {
                     Repeat.NEVER, "", "");
         }
 
+        if (commitment.getRepeat() != Repeat.NEVER) {
+            startTimeDate.setVisibility(View.GONE);
+            endTimeDate.setVisibility(View.GONE);
+        }
+
         startCalendar.setTime(commitment.getStartTime().toDate());
         endCalendar.setTime(commitment.getEndTime().toDate());
 
@@ -157,6 +169,7 @@ public class CreateCommitmentFragment extends Fragment {
         location.setText(commitment.getLocation());
         url.setText(commitment.getUrl());
         notes.setText(commitment.getNotes());
+        repeat.setText(commitment.getRepeat().name());
 
         startTimeDate.setOnClickListener(new View.OnClickListener() {
             @Override

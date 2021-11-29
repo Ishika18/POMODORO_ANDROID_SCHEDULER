@@ -102,8 +102,22 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getGoalTitle().setText(goals.get(position).getName());
-        String goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
+        if (goals.get(position).getName().length() < 20) {
+            viewHolder.getGoalTitle()
+                    .setText(goals.get(position).getName());
+        } else {
+            String title = goals.get(position).getName()
+                    .substring(0, 18) + "...";
+            viewHolder.getGoalTitle().setText(title);
+        }
+
+        String goalHours;
+        if (goals.get(position).getTotalTimeInMinutes() < 60) {
+            goalHours = goals.get(position).getTotalTimeInMinutes() + " Mins";
+        } else {
+            goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
+        }
+
         viewHolder.getGoalHours().setText(goalHours);
         viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_green));
         viewHolder.getEditButton().setOnClickListener(new View.OnClickListener() {
