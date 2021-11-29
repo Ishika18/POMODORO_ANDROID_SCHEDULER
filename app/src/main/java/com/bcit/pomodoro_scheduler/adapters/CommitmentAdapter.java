@@ -16,8 +16,10 @@ import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
+import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -32,7 +34,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
 
     private final FragmentActivity activity;
     private final String userEmail;
-    private final List<Commitment> commitments;
+    private List<Commitment> commitments = new ArrayList<>();
 
     /**
      * Provide a reference to the type of views that you are using
@@ -84,22 +86,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
     public CommitmentAdapter(FragmentActivity activity, String userEmail) {
         this.activity = activity;
         this.userEmail = userEmail;
-        this.commitments = new ArrayList<>();
-        HashMap<String, Commitment> commitmentsMap = new HashMap<>();
-        CommitmentsViewModel viewModel = new ViewModelProvider(activity)
-                .get(CommitmentsViewModel.class);
-
-        viewModel.getCommitmentsModelData().observe(activity, commitmentHashMap -> {
-            for (List<Commitment> listValue : commitmentHashMap.values()) {
-                if (listValue != null) {
-                    for (Commitment commitment : listValue) {
-                        commitmentsMap.put(commitment.getId(), commitment);
-                    }
-                }
-            }
-            this.commitments.addAll(commitmentsMap.values());
-        });
-
+        updateCommitmentsData();
     }
 
     // Create new views (invoked by the layout manager)
@@ -144,6 +131,16 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             }
         });
         viewHolder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+            private void onChanged(Boolean deleted) {
+                if (deleted) {
+                    commitments.clear();
+                    updateCommitmentsData();
+                    notifyDataSetChanged();
+                } else {
+                    Snackbar.make(viewHolder.itemView, R.string.goal_delete_error, Snackbar.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onClick(View v) {
                 new MaterialAlertDialogBuilder(v.getContext())
@@ -153,9 +150,32 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
                                 })
                         .setPositiveButton("Confirm",
                                 ((dialogInterface, i) -> {
-                                    System.out.println(commitments.get(viewHolder.getAdapterPosition()).getId());
+                                    String commitmentID = commitments
+                                            .get(viewHolder.getAdapterPosition()).getId();
+
+                                    CommitmentsViewModel commitmentsViewModel = new ViewModelProvider(activity)
+                                            .get(CommitmentsViewModel.class);
+                                    commitmentsViewModel.deleteCommitmentData(commitmentID)
+                                            .observe(activity, this::onChanged);
                                 })).show();
             }
+        });
+    }
+
+    public void updateCommitmentsData() {
+        HashMap<String, Commitment> commitmentsMap = new HashMap<>();
+        CommitmentsViewModel viewModel = new ViewModelProvider(activity)
+                .get(CommitmentsViewModel.class);
+
+        viewModel.getCommitmentsModelData().observe(activity, commitmentHashMap -> {
+            for (List<Commitment> listValue : commitmentHashMap.values()) {
+                if (listValue != null) {
+                    for (Commitment commitment : listValue) {
+                        commitmentsMap.put(commitment.getId(), commitment);
+                    }
+                }
+            }
+            this.commitments.addAll(commitmentsMap.values());
         });
     }
 

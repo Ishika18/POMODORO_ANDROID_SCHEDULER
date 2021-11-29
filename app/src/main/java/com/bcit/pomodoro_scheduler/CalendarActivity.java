@@ -19,7 +19,6 @@ import com.bcit.pomodoro_scheduler.fragments.WeekFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.model.Goal;
 import com.bcit.pomodoro_scheduler.model.Repeat;
-import com.bcit.pomodoro_scheduler.model.Scheduler;
 import com.bcit.pomodoro_scheduler.model.Task;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
@@ -102,7 +101,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_appbar_edit) {
-                    goToEditScheduleFragment();
+                    goToEditScheduleFragment(Boolean.TRUE);
                 } else if (item.getItemId() == R.id.menu_appbar_add_task) {
                     goToCreateGoalView();
                 } else if (item.getItemId() == R.id.menu_appbar_add_commitment) {
@@ -154,11 +153,13 @@ public class CalendarActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    public void goToEditScheduleFragment() {
+    public void goToEditScheduleFragment(Boolean isEditingGoals) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        EditScheduleFragment editScheduleFragment = EditScheduleFragment.newInstance(userEmail);
+        editScheduleFragment.setIsEditingGoals(isEditingGoals);
         ft.replace(
                 R.id.fragmentContainerView_main,
-                EditScheduleFragment.newInstance(userEmail),
+                editScheduleFragment,
                 EDIT_SCHEDULE_TAG
         );
         ft.commit();

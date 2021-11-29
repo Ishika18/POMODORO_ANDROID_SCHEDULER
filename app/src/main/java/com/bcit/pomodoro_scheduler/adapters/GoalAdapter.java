@@ -155,7 +155,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             this.goals = goalsData;
         });
     }
-    
+
     @Override
     public int getItemCount() {
         return goals.size();

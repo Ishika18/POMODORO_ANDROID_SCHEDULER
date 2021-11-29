@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +17,6 @@ import android.widget.TextView;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.adapters.CommitmentAdapter;
 import com.bcit.pomodoro_scheduler.adapters.GoalAdapter;
-import com.bcit.pomodoro_scheduler.model.Commitment;
-import com.bcit.pomodoro_scheduler.model.Goal;
-import com.bcit.pomodoro_scheduler.model.Repeat;
-import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
-import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +46,10 @@ public class EditScheduleFragment extends Fragment {
         args.putString(USER_EMAIL, userEmail);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setIsEditingGoals(Boolean value) {
+        this.isEditingGoals = value;
     }
 
     @Override

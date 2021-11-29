@@ -305,7 +305,7 @@ public class CreateCommitmentFragment extends Fragment {
                     }
                     CalendarActivity calendarActivity = (CalendarActivity) getActivity();
                     assert calendarActivity != null;
-                    calendarActivity.goToMonthlyView(YearMonth.now());
+                    calendarActivity.goToEditScheduleFragment(Boolean.FALSE);
                 });
 
             }
