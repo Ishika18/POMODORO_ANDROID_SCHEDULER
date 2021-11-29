@@ -40,6 +40,7 @@ https://firebase.google.com/
 ## Notes
 1. Goals are colored green, breaks are colored blue and commitments red.
 2. Schedule starts from the today's date, not earlier.
+3. Schedule will continue until you run out of goals to accomplish
 
 ## Members
 
