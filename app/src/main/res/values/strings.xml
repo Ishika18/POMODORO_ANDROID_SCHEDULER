@@ -49,7 +49,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="menu_topActionBar_addIconTitle">AddTask</string>
-    <string name="menu_topAppBar_addTask">+ Task</string>
+    <string name="menu_topAppBar_addGoal">+ Goal</string>
     <string name="menu_topAppBar_Commitment">+ Commitment</string>
     <string name="menu_topAppBar_edit">Edit</string>
 
