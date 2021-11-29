@@ -53,7 +53,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             commitmentTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             commitmentTime = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-            editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
+            editButton = view.findViewById(R.id.button__itemEvent_editButton);
             deleteButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
@@ -130,6 +130,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
                 ft.commit();
             }
         });
+
         viewHolder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
             private void onChanged(Boolean deleted) {
                 if (deleted) {
