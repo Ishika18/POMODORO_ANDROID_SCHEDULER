@@ -64,7 +64,10 @@
     </string>
 
     <string name="goal_create_error">
-        Error: Something went wrong when trying to create a commitment.
+        Error: Something went wrong when trying to create a goal.
+    </string>
+    <string name="goal_delete_error">
+        Error: Something went wrong when trying to delete a goal.
     </string>
     <string name="goal_name_error">
         Error: Cannot create a goal without a name!

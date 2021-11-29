@@ -21,6 +21,7 @@ import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -81,10 +82,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     public GoalAdapter(FragmentActivity activity, String userEmail) {
         this.activity = activity;
         this.userEmail = userEmail;
-        GoalsViewModel goalsViewModel = new ViewModelProvider(activity).get(GoalsViewModel.class);
-        goalsViewModel.getGoalsModelData().observe(activity, goalsData -> {
-            this.goals = goalsData;
-        });
+        updateGoalsData();
         Log.d("GOAL_ADAPTER", goals.toString() + "Size: " + goals.size());
     }
 
@@ -120,6 +118,15 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         });
 
         viewHolder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+            private void onChanged(Boolean deleted) {
+                if (deleted) {
+                    updateGoalsData();
+                    notifyDataSetChanged();
+                } else {
+                    Snackbar.make(viewHolder.itemView, R.string.goal_delete_error, Snackbar.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onClick(View v) {
                 new MaterialAlertDialogBuilder(v.getContext())
@@ -129,13 +136,26 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
                                 })
                         .setPositiveButton("Confirm",
                                 ((dialogInterface, i) -> {
-                                    System.out.println(goals.get(viewHolder.getAdapterPosition()).getId());
+                                    String goalID = goals
+                                            .get(viewHolder.getAdapterPosition()).getId();
+
+                                    GoalsViewModel goalsViewModel = new ViewModelProvider(activity)
+                                            .get(GoalsViewModel.class);
+                                    goalsViewModel.deleteGoalData(goalID)
+                                            .observe(activity, this::onChanged);
+
                                 })).show();
             }
         });
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    public void updateGoalsData() {
+        GoalsViewModel goalsViewModel = new ViewModelProvider(activity).get(GoalsViewModel.class);
+        goalsViewModel.getGoalsModelData().observe(activity, goalsData -> {
+            this.goals = goalsData;
+        });
+    }
+    
     @Override
     public int getItemCount() {
         return goals.size();
