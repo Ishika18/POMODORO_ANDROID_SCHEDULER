@@ -140,4 +140,5 @@ public class MainActivity extends AppCompatActivity {
 
         mGoogleSignInClient.signOut();
     }
+
 }

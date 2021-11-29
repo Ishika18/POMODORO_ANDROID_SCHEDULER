@@ -25,40 +25,89 @@
         app:strokeWidth="2dp">
 
         <LinearLayout
-            android:id="@+id/linearLayout_itemEvent_cardHoriz"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linearLayout_itemEvent_cardInner"
-                android:layout_width="wrap_content"
+                android:id="@+id/linearLayout_itemEvent_cardHoriz"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="clip_horizontal|top"
+                android:orientation="horizontal">
 
-                <!-- Title, secondary and supporting text -->
-                <TextView
-                    android:id="@+id/textview_itemEvent_cardMain"
+                <LinearLayout
+                    android:id="@+id/linearLayout_itemEvent_cardInner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_regular"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
-
-                <TextView
-                    android:id="@+id/textview_itemEvent_cardSub"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="0"
-                    android:fontFamily="@font/eczar_regular"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Title, secondary and supporting text -->
+                    <TextView
+                        android:id="@+id/textview_itemEvent_cardMain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_condensed_regular"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/textview_itemEvent_cardSub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="0"
+                        android:fontFamily="@font/eczar_regular"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView_itenEvent_spacer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_itemEvent_butthonHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/button__itemEvent_editButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:layout_weight="0"
+                        android:background="@color/background"
+                        android:padding="10sp"
+                        android:src="@drawable/ic_sharp_edit_note_40"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/button__itemEvent_deleteButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0"
+                        android:background="@color/background"
+                        android:padding="10sp"
+                        android:src="@drawable/ic_baseline_delete_30"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -66,34 +115,5 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout_itemEvent_butthonHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/button__itemEvent_deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="0"
-            android:background="@color/background"
-            android:padding="10sp"
-            android:src="@drawable/ic_baseline_delete_30"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <ImageButton
-            android:id="@+id/button__itemEvent_editButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="0dp"
-            android:layout_weight="0"
-            android:background="@color/background"
-            android:padding="10sp"
-            android:src="@drawable/ic_sharp_edit_note_40"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-    </LinearLayout>
 </LinearLayout>

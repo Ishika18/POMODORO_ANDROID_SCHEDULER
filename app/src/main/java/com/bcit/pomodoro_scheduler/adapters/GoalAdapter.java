@@ -1,5 +1,6 @@
 package com.bcit.pomodoro_scheduler.adapters;
 
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.fragments.CreateGoalFragment;
 import com.bcit.pomodoro_scheduler.model.Goal;
+import com.bcit.pomodoro_scheduler.model.Repeat;
 import com.bcit.pomodoro_scheduler.view_models.GoalsViewModel;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -37,6 +40,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         private final TextView goalHours;
         private final MaterialCardView card;
         private final ImageButton editButton;
+        private final ImageButton deleteButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -44,7 +48,8 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
             goalTitle = view.findViewById(R.id.textview_itemEvent_cardMain);
             goalHours = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
-            editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
+            editButton = view.findViewById(R.id.button__itemEvent_editButton);
+            deleteButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
         public TextView getGoalTitle() {
@@ -61,6 +66,10 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
         public ImageButton getEditButton() {
             return editButton;
+        }
+
+        public ImageButton getDeleteButton() {
+            return deleteButton;
         }
     }
 
@@ -99,7 +108,6 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         String goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
         viewHolder.getGoalHours().setText(goalHours);
         viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
-
         viewHolder.getEditButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +116,21 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
                         CreateGoalFragment.newInstance(
                                 goals.get(viewHolder.getAdapterPosition())));
                 ft.commit();
+            }
+        });
+
+        viewHolder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialAlertDialogBuilder(v.getContext())
+                        .setTitle("Delete " + goals.get(viewHolder.getAdapterPosition()).getName() + "?")
+                        .setNeutralButton("Cancel",
+                                (dialogInterface, i) -> {
+                                })
+                        .setPositiveButton("Confirm",
+                                ((dialogInterface, i) -> {
+                                    System.out.println(goals.get(viewHolder.getAdapterPosition()).getId());
+                                })).show();
             }
         });
     }
