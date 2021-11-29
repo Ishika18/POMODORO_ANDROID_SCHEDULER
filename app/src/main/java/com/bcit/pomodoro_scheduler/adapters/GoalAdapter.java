@@ -105,7 +105,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         viewHolder.getGoalTitle().setText(goals.get(position).getName());
         String goalHours = goals.get(position).getTotalTimeInMinutes() / 60 + " Hours";
         viewHolder.getGoalHours().setText(goalHours);
-        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
+        viewHolder.getCard().setStrokeColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_green));
         viewHolder.getEditButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

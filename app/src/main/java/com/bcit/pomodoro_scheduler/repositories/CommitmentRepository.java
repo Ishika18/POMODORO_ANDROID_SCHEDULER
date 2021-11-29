@@ -54,7 +54,7 @@ public class CommitmentRepository {
                         Stream.of(Repeat.values())
                                 .forEach(
                                         c -> {
-                                            if (c != Repeat.DAILY) {
+                                            if (c != Repeat.DAILY && c != Repeat.NEVER) {
                                                 Objects.requireNonNull(commitmentRepeats
                                                         .get(c))
                                                         .add(getCommitmentFromDocumentMap(result));

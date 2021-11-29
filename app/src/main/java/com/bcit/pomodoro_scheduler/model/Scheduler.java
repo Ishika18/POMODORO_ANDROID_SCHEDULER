@@ -88,7 +88,7 @@ public class Scheduler {
 
         this.startMinutes = 420;
         this.endMinutes = 1200;
-        this.maxInterleaves = 1;
+        this.maxInterleaves = 3;
 
         createSchedule();
     }
