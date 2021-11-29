@@ -17,6 +17,7 @@ import com.bcit.pomodoro_scheduler.fragments.CreateCommitmentFragment;
 import com.bcit.pomodoro_scheduler.model.Commitment;
 import com.bcit.pomodoro_scheduler.view_models.CommitmentsViewModel;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -42,6 +43,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         private final TextView commitmentTime;
         private final MaterialCardView card;
         private final ImageButton editButton;
+        private final ImageButton deleteButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -50,6 +52,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
             commitmentTime = view.findViewById(R.id.textview_itemEvent_cardSub);
             card = view.findViewById(R.id.card_itemEvent_eventInfo);
             editButton = view.findViewById(R.id.button__itemEvent_deleteButton);
+            deleteButton = view.findViewById(R.id.button__itemEvent_deleteButton);
         }
 
         public TextView getCommitmentTitle() {
@@ -66,6 +69,10 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
 
         public ImageButton getEditButton() {
             return editButton;
+        }
+
+        public ImageButton getDeleteButton() {
+            return deleteButton;
         }
     }
 
@@ -85,7 +92,7 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
         viewModel.getCommitmentsModelData().observe(activity, commitmentHashMap -> {
             for (List<Commitment> listValue : commitmentHashMap.values()) {
                 if (listValue != null) {
-                    for (Commitment commitment: listValue) {
+                    for (Commitment commitment : listValue) {
                         commitmentsMap.put(commitment.getId(), commitment);
                     }
                 }
@@ -134,6 +141,20 @@ public class CommitmentAdapter extends RecyclerView.Adapter<CommitmentAdapter.Vi
                         CreateCommitmentFragment.newInstance(
                                 commitments.get(viewHolder.getAdapterPosition())));
                 ft.commit();
+            }
+        });
+        viewHolder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialAlertDialogBuilder(v.getContext())
+                        .setTitle("Delete " + commitments.get(viewHolder.getAdapterPosition()).getName() + "?")
+                        .setNeutralButton("Cancel",
+                                (dialogInterface, i) -> {
+                                })
+                        .setPositiveButton("Confirm",
+                                ((dialogInterface, i) -> {
+                                    System.out.println(commitments.get(viewHolder.getAdapterPosition()).getId());
+                                })).show();
             }
         });
     }
