@@ -13,7 +13,7 @@
    auto updates google console. In case of any error, double check if the key
    is the same.
 
-# Google OAuth Initlization
+# Google OAuth Initialization
 
 https://developers.google.com/identity/sign-in/android/start-integrating
 1. Configure a google project, if not already done.
@@ -22,7 +22,7 @@ https://developers.google.com/identity/sign-in/android/start-integrating
 4. Add the web oauth client inside "google_services.json" oauth_client.
 5. Add the web oauth client to the string resources with name "server_client_id"
 
-# Firebase Initalization
+# Firebase Initialization
 https://firebase.google.com/
 
 1. Make a firebase account 
