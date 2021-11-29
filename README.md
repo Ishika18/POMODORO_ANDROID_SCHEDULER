@@ -32,13 +32,16 @@ https://firebase.google.com/
 5. Go to firebase project settings and add SHA1 key to the SHA certificate fingerprints. 
 
 # How App Works?
+
 1. Sign in using your google Account.
 2. Click "+" on action menu and create new tasks or commitments.
 3. Go to the calendar view, pick the date you want to see schedule for.
 4. Check your auto created schedule.
 5. To edit your schedule click the pencil sign on the app bar and select what you want to edit.
 ## Notes
+### Tasks
 1. Goals are colored green, breaks are colored blue and commitments red.
+### Schedule
 2. Schedule starts from the today's date, not earlier.
 3. Schedule will continue until you run out of goals to accomplish.
 4. Schedule will complete all goals in the priority order (high to low).
