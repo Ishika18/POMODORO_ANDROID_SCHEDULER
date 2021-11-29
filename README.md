@@ -42,7 +42,7 @@ https://firebase.google.com/
 ### Tasks
 1. Goals are colored green, breaks are colored blue and commitments red.
 ### Schedule
-2. Schedule starts from the today's date, not earlier.
+2. Schedule starts from the today's date, 7am to 8pm.
 3. Schedule will continue until you run out of goals to accomplish.
 4. Schedule will complete all goals in the priority order (high to low).
 
