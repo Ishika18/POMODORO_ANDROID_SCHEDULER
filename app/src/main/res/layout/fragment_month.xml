@@ -23,18 +23,19 @@
                 android:background="@color/background"
                 android:padding="10sp"
                 android:src="@drawable/ic_sharp_arrow_back_ios_24" />
+
             <TextView
                 android:id="@+id/button__FragmentEditSchedule_currentRecycler"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="20sp"
-                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_condensed_regular"
                 android:padding="10sp"
+                android:pointerIcon="arrow"
                 android:text=""
                 android:textAlignment="center"
-                android:pointerIcon="arrow"
-                />
+                android:textColor="@color/white"
+                android:textSize="24sp" />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:id="@+id/button__FragmentEditSchedule_next"

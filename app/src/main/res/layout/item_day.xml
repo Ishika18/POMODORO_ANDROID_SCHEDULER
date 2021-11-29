@@ -29,6 +29,7 @@
             android:textSize="24sp" />
 
         <View
+            android:id="@+id/view_itemDay_line"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@color/rally_green" />
@@ -47,10 +48,11 @@
         android:id="@+id/textView_itemDay_taskName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
         android:layout_weight="1"
         android:fontFamily="@font/roboto_condensed_regular"
         android:text="TextView"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="24sp" />
 </LinearLayout>

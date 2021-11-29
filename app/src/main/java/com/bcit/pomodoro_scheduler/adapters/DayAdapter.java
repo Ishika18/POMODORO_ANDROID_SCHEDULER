@@ -5,10 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcit.pomodoro_scheduler.R;
 import com.bcit.pomodoro_scheduler.model.Task;
+import com.bcit.pomodoro_scheduler.model.TaskType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,12 +30,14 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
         private final TextView startTime;
         private final TextView endTime;
         private final TextView task;
+        private final View line;
 
         public ViewHolder(View view) {
             super(view);
             startTime = view.findViewById(R.id.textView_itemDay_start);
             endTime = view.findViewById(R.id.textView_itemDay_end);
             task = view.findViewById(R.id.textView_itemDay_taskName);
+            line = view.findViewById(R.id.view_itemDay_line);
         }
 
         public TextView getEndTime() {
@@ -46,6 +50,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
 
         public TextView getTask() {
             return task;
+        }
+
+        public View getLine() {
+            return line;
         }
     }
 
@@ -86,6 +94,18 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
         viewHolder.getStartTime().setText(startLocalTime.toString());
         viewHolder.getEndTime().setText(endLocalTime.toString());
         viewHolder.getTask().setText(localDataSet.get(position).getName());
+
+        TaskType taskType = localDataSet.get(position).getType();
+        View line = viewHolder.getLine();
+        if (taskType == TaskType.BREAK){
+            line.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_blue));
+        }
+        if (taskType == TaskType.COMMITMENT){
+            line.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_orange));
+        }
+        if (taskType == TaskType.GOAL){
+            line.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.rally_green));
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
